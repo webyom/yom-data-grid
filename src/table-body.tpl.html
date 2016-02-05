@@ -1,0 +1,52 @@
+<%
+var item, columnValue, displayValue, title, ids;
+for(i = 0, l = data.length; i < l; i++) {
+	item = dataProperty ? data[i][dataProperty] : data[i];%>
+	<tr data-grid-row="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=i % 2 === 0 ? 'yom-data-grid-row-odd' : ''%>">
+		<%for(j = 0, l2 = columns.length; j < l2; j++) {
+			column = columns[j];%>
+			<td id="yom-data-grid-<%=name%>-cell-<%=i%>-<%=j + columnOffset%>" class="<%=column.type == 'sequence' ? 'yom-data-grid-sequence-cell' : column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : ''%> <%=j == l2 - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>">
+				<%
+				ids = column.id.split('.');
+				columnValue = item[ids.shift()];
+				while(ids.length && columnValue) {
+					columnValue = columnValue[ids.shift()];
+				}
+				if(column.renderer) {
+					displayValue = column.renderer(columnValue, i, item, j + columnOffset, column);
+				} else {
+					displayValue = $encodeHtml(columnValue || '');
+				}
+				if(column.titleRenderer) {
+					title = column.titleRenderer(columnValue, i, item, j + columnOffset, column);
+				} else if(typeof column.title != 'undefined') {
+					if(column.title == '__content__') {
+						title = displayValue;
+					} else {
+						title = column.title;
+					}
+				} else {
+					title = columnValue || '';
+				}
+				%>
+				<div class="yom-data-grid-cell-inner" title="<%==title%>" style="text-align: <%=column.textAlign || 'left'%>;">
+					<%if(column.type == 'sequence') {%>
+						<%=i + 1%>
+					<%} else if(column.type == 'checkbox') {
+						if(checkbox && checkbox.checkable) {
+							if(checkbox.checkable(item, i)) {%>
+								<input class="yom-data-grid-check-box" data-row-index="<%=i%>" type="checkbox" />
+							<%} else {%>
+								<input type="checkbox" disabled />
+							<%}
+						} else {%>
+							<input class="yom-data-grid-check-box" data-row-index="<%=i%>" type="checkbox" />
+						<%}
+					} else {%>
+						<%=displayValue || '&nbsp;'%>
+					<%}%>
+				</div>
+			</td>
+		<%}%>
+	</tr>
+<%}%>

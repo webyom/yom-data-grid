@@ -1,0 +1,18 @@
+<%
+var filterOption = column.filterOption || {};
+%>
+
+<h3><i class="fa fa-filter"></i> 筛选</h3>
+
+<form>
+	<div class="form-group">
+		<input type="text" class="form-control" />
+	</div>
+	<div class="checkbox">
+		<label>
+			<input type="checkbox"> 空（未填写）
+		</label>
+	</div>
+	<button type="submit" class="btn btn-primary btn-sm">确定</button> 
+	<button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">取消</button>
+</form>

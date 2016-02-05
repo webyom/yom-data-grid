@@ -1,0 +1,135 @@
+<%
+var i, j, l, l2, column, columns, columnWidth, columnHeader, columnOffset;
+var scrollX = false;
+var lockedTableWidth = 0;
+var scrollTableWidth = 0;
+var lockedDisplayColumns = [];
+var lockedColumnWidth = [];
+var lockedColumnHeader = [];
+var scrollDisplayColumns = [];
+var scrollColumnWidth = [];
+var scrollColumnHeader = [];
+var noWidthScrollColumns = [];
+%>
+<%for(i = 0, l = lockedColumns.length; i < l; i++) {
+	column = lockedColumns[i];
+	if(column.hidden) {
+		continue;
+	}
+	lockedDisplayColumns.push(column);
+	lockedTableWidth += column.width;
+	columnWidth = lockedColumnWidth;
+	columnHeader = lockedColumnHeader;
+	%>
+	<!-- include "./table-header.tpl.html" -->
+<%}%>
+<%for(i = 0, l = scrollColumns.length; i < l; i++) {
+	column = scrollColumns[i];
+	if(column.hidden) {
+		continue;
+	}
+	scrollDisplayColumns.push(column);
+	if(!column.width) {
+		noWidthScrollColumns.push(column);
+	} else {
+		scrollTableWidth += column.width;
+	}
+	columnWidth = scrollColumnWidth;
+	columnHeader = scrollColumnHeader;
+	%>
+	<!-- include "./table-header.tpl.html" -->
+<%}%>
+<%
+if(width > 0) {
+	if(noWidthScrollColumns.length) {
+		if(width - lockedTableWidth - scrollTableWidth < noWidthScrollColumns.length * DEFAULT_COLUMN_WIDTH) {
+			for(i = 0, l = noWidthScrollColumns.length; i < l; i++) {
+				noWidthScrollColumns[i].width = DEFAULT_COLUMN_WIDTH;
+			}
+			scrollTableWidth += noWidthScrollColumns.length * DEFAULT_COLUMN_WIDTH;
+			scrollColumnWidth = [];
+			for(i = 0, l = scrollDisplayColumns.length; i < l; i++) {
+				column = scrollDisplayColumns[i];%>
+				<%->scrollColumnWidth%>
+					<colgroup>
+						<col style="width: <%=column.width || DEFAULT_COLUMN_WIDTH%>px;">
+					</colgroup>
+				<%<-%>
+			<%
+			}
+			scrollX = true;
+		} else {
+			width = 'auto';
+		}
+	} else {
+		if(lockedTableWidth + scrollTableWidth > width) {
+			scrollX = true;
+		} else {
+			width = 'auto';
+		}
+	}
+}
+%>
+<div class="yom-data-grid <%=lockedDisplayColumns.length ? 'yom-data-grid-locked' : ''%> <%=bordered ? 'yom-data-grid-bordered' : ''%> <%=striped ? 'yom-data-grid-striped' : ''%>" style="overflow: hidden;">
+	<table border="0" cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;">
+		<tr>
+			<%if(lockedDisplayColumns.length) {%>
+				<td class="yom-data-grid-columns-container" style="width: <%=lockedTableWidth%>px;">
+					<div class="yom-data-grid-locked-columns" style="overflow: hidden;">
+						<div class="yom-data-grid-header">
+							<table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: <%=lockedTableWidth%>px;">
+								<%=lockedColumnWidth.join('')%>
+								<tbody>
+									<tr>
+										<%=lockedColumnHeader.join('')%>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="yom-data-grid-body" style="<%=scrollX ? 'overflow-x: scroll;' : '' %> width: <%=lockedTableWidth%>px;">
+							<table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: <%=lockedTableWidth%>px;">
+								<%=lockedColumnWidth.join('')%>
+								<tbody>
+									<%
+									columnOffset = 0;
+									columns = lockedDisplayColumns;
+									%>
+									<!-- include "./table-body.tpl.html" -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</td>
+			<%}%>
+
+			<%if(scrollDisplayColumns.length) {%>
+				<td class="yom-data-grid-columns-container">
+					<div class="yom-data-grid-columns">
+						<div class="yom-data-grid-header" style="width: 100%;">
+							<table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: <%=width > lockedTableWidth ? (width - lockedTableWidth) + 'px' : '100%'%>;">
+								<%=scrollColumnWidth.join('')%>
+								<tbody>
+									<tr>
+										<%=scrollColumnHeader.join('')%>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="yom-data-grid-body" style="<%=scrollX ? 'overflow-x: scroll;' : ''%> width: 100%;">
+							<table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: <%=width > lockedTableWidth ? (width - lockedTableWidth) + 'px' : '100%'%>;">
+								<%=scrollColumnWidth.join('')%>
+								<tbody>
+									<%
+									columnOffset = lockedDisplayColumns.length;
+									columns = scrollDisplayColumns;
+									%>
+									<!-- include "./table-body.tpl.html" -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</td>
+			<%}%>
+		</tr>
+	</table>
+</div>
