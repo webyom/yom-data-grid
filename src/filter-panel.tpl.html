@@ -1,18 +1,63 @@
 <%
+var filterCriteria = filterMap[column.id] || {};
 var filterOption = column.filterOption || {};
+var type = filterOption.type;
 %>
 
-<h3><i class="fa fa-filter"></i> 筛选</h3>
+<h3><i class="fa fa-filter"></i> <%==column.name || '筛选'%></h3>
 
-<form>
-	<div class="form-group">
-		<input type="text" class="form-control" />
+<form data-column-id="<%=column.id%>">
+	<div class="alert alert-danger hidden"></div>
+	<div class="filter-option <%=filterCriteria.findEmpty ? 'hidden': ''%>">
+		<%
+		if(type == 'set') {
+			var options = filterOption.options || [];
+			var valueMap = filterCriteria.valueMap || {};
+		%>
+			<div class="set-container">
+				<%
+				for(var i = 0, l = options.length; i < l; i++) {
+					var option = options[i];
+				%>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" value="<%==option.value%>" <%=valueMap[option.value] ? 'checked': ''%> /> <%==option.name%>
+						</label>
+					</div>
+				<%}%>
+			</div>
+		<%} else if(type == 'number') {%>
+			<div class="form-group">
+				<label>比较方式</label>
+				<select name="compareType" class="form-control">
+					<option value="eq" <%=filterCriteria.compareType == 'eq' ? 'selected' : ''%>>等于</option>
+					<option value="lt" <%=filterCriteria.compareType == 'lt' ? 'selected' : ''%>>小于</option>
+					<option value="gt" <%=filterCriteria.compareType == 'gt' ? 'selected' : ''%>>大于</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>比较值</label>
+				<input name="value" type="text" maxlength="10" value="<%=filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : ''%>" class="form-control" />
+			</div>
+		<%} else {%>
+			<div class="form-group">
+				<input name="value" type="text" value="<%=filterCriteria.value || ''%>" class="form-control" />
+			</div>
+		<%}%>
 	</div>
 	<div class="checkbox">
 		<label>
-			<input type="checkbox"> 空（未填写）
+			<input name="findEmpty" type="checkbox" <%=filterCriteria.findEmpty ? 'checked' : ''%> /> 空（未填写）
 		</label>
 	</div>
-	<button type="submit" class="btn btn-primary btn-sm">确定</button> 
-	<button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">取消</button>
+	<div class="row">
+		<div class="col-xs-8">
+			<button type="submit" class="btn btn-primary btn-sm btn-confirm">确定</button> 
+			<button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">取消</button> 
+		</div>
+		<div class="col-xs-4 text-right">
+			<%if(filterMap[column.id]) {%>
+				<a class="btn btn-remove" href="javascript:void(0);">清除</a>
+			<%}%>
+		</div>
 </form>

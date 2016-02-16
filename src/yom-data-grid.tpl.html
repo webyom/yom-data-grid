@@ -40,7 +40,7 @@ var noWidthScrollColumns = [];
 	<!-- include "./table-header.tpl.html" -->
 <%}%>
 <%
-if(width > 0) {
+if(!noScrollX && width > 0) {
 	if(noWidthScrollColumns.length) {
 		if(width - lockedTableWidth - scrollTableWidth < noWidthScrollColumns.length * DEFAULT_COLUMN_WIDTH) {
 			for(i = 0, l = noWidthScrollColumns.length; i < l; i++) {

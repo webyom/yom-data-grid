@@ -198,6 +198,14 @@
 		.yom-data-grid-filter-icon {
 			display: block;
 		}
+		.yom-data-grid-filter-remove-icon {
+			.icon-remove {
+				display: inline-block;
+			}
+			.icon-filter {
+				display: none;
+			}
+		}
 	}
 }
 .yom-data-grid-filter-panel {
@@ -212,6 +220,26 @@
 		font-size: @font-size-base;
 		margin: 0;
 		margin-bottom: 10px;
+		color: @gray-dark;
+	}
+	.alert-danger {
+		padding: 10px;
+	}
+	.set-container {
+		background-color: #f8f8f8;
+		padding-left: 10px;
+		overflow-x: hidden;
+		overflow-y: auto;
+		max-height: 138px;
+		.border-radius(2px);
+	}
+}
+.yom-data-grid-filter-remove-icon {
+	color: @gray-dark;
+	.icon-remove {
+		display: none;
+	}
+	&:hover {
 		color: @gray-dark;
 	}
 }

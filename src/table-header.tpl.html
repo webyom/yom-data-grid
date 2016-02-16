@@ -1,6 +1,6 @@
 <%->columnWidth%>
 	<colgroup>
-		<col style="width: <%=column.width%>px;">
+		<col style="width: <%=column.locked ? column.width : noScrollX ? 0 : column.width%>px;">
 	</colgroup>
 <%<-%>
 <%->columnHeader%>
@@ -11,6 +11,12 @@
 			<%} else if(column.type == 'sequence') {->columnHeader%>
 				<span title="<%==column.name%>"><%=column.name%></span>
 			<%} else {->columnHeader%>
+				<%if(filterMap[column.id]) {->columnHeader%>
+					<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="清除过滤条件">
+						<i class="fa fa-filter icon-filter"></i>
+						<i class="fa fa-remove icon-remove"></i>
+					</a> 
+				<%}%>
 				<%if(column.headerRenderer) {->columnHeader%>
 					<%=column.headerRenderer(column.name, i, column, sortColumnId, sortOrder)%>
 				<%} else if(column.sortable) {->columnHeader%>

@@ -22,6 +22,7 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._sortColumnId = opt.sortColumnId || '';
 	this._sortOrder = opt.sortOrder || '';
 	this._filterMap = opt.filterMap || {};
+	this._activeFilterColumn = null;
 	this._bind = {
 		scroll: function(evt) {return self._onScroll(evt);},
 		hideFilterPanel: function(evt) {return self._hideFilterPanel(evt);}
@@ -67,6 +68,7 @@ $.extend(YomDataGrid.prototype, {
 	},
 	
 	_showFilterPanel: function(column, icon) {
+		this._activeFilterColumn = column;
 		var offset = icon.offset();
 		var width = icon.outerWidth();
 		var height = icon.outerHeight();
@@ -74,7 +76,7 @@ $.extend(YomDataGrid.prototype, {
 		var top = offset.top + height;
 		this._filterPanel.html(filterPanelTpl.render({
 			column: column,
-			filterData: this._filterMap[column.id]
+			filterMap: this._filterMap
 		}));
 		this._filterPanel.show();
 		var filterPanelWidth = this._filterPanel.outerWidth();
@@ -98,6 +100,71 @@ $.extend(YomDataGrid.prototype, {
 			}
 		}
 		this._filterPanel && this._filterPanel.hide();
+		this._activeFilterColumn = null;
+	},
+	
+	_showFilterErrMsg: function(msg) {
+		$('.alert-danger', this._filterPanel).html(msg).removeClass('hidden');
+	},
+	
+	_submitFilterForm: function() {
+		var findEmpty = $('[name="findEmpty"]', this._filterPanel).prop('checked');
+		var column = this._activeFilterColumn;
+		var filterOption = column.filterOption || {};
+		var filterCriteria = {};
+		var value;
+		if(!findEmpty) {
+			if(filterOption.type == 'set') {
+				value = [];
+				var valueMap = {};
+				var set = $('.filter-option input', this._filterPanel).filter(function(i, item) {
+					return item.checked;
+				}).map(function(i, item) {
+					if(!valueMap[item.value]) {
+						value.push(item.value);
+					}
+					valueMap[item.value] = 1;
+					return item.value;
+				}).get();
+				if(!set.length) {
+					this._showFilterErrMsg('请选择筛选条件');
+					return;
+				}
+				filterCriteria.valueMap = valueMap;
+				filterCriteria.value = value;
+			} else if(filterOption.type == 'number') {
+				var compareType = $('[name="compareType"]', this._filterPanel).val();
+				value = parseFloat($.trim($('[name="value"]', this._filterPanel).val()));
+				if(isNaN(value)) {
+					this._showFilterErrMsg('请输入比较值');
+					return;
+				}
+				filterCriteria.compareType = compareType;
+				filterCriteria.value = value;
+			} else {
+				value = $.trim($('[name="value"]', this._filterPanel).val());
+				if(!value) {
+					this._showFilterErrMsg('请输入筛选条件');
+					return;
+				}
+				filterCriteria.value = value;
+			}
+		}
+		filterCriteria.type = filterOption.type;
+		filterCriteria.findEmpty = findEmpty;
+		this._filterMap[column.id] = filterCriteria;
+		this._hideFilterPanel();
+		if(this._opt.onStateChange) {
+			this._opt.onStateChange(this.getState());
+		}
+	},
+	
+	_removeFilter: function(columnId) {
+		this._hideFilterPanel();
+		delete this._filterMap[columnId];
+		if(this._opt.onStateChange) {
+			this._opt.onStateChange(this.getState());
+		}
 	},
 
 	_bindEvent: function() {
@@ -107,20 +174,22 @@ $.extend(YomDataGrid.prototype, {
 			var sortOrder = $('.yom-data-grid-sort-arrow-down', this).length ? 'asc' : 'desc';
 			self._sortOrder = sortOrder;
 			self._sortColumnId = columnId;
-			if(self._opt.onSort) {
-				self._opt.onSort(columnId, sortOrder);
-			} else {
+			if(self._opt.clientSort) {
 				self._clientSort();
+			} else if(self._opt.onStateChange) {
+				self._opt.onStateChange(self.getState());
 			}
 		}).delegate('.yom-data-grid-filter-icon', 'click', function(evt) {
 			var cell = $(this).closest('[data-column-id]');
 			var columnId = cell.data('column-id');
-			var column = self._allColumns.filter(function(item) {
-				return item.id == columnId;
-			})[0];
+			var column = self.getColumnById(columnId);
 			if(column) {
 				self._showFilterPanel(column, $(this));
 			}
+		}).delegate('.yom-data-grid-filter-remove-icon', 'click', function(evt) {
+			var cell = $(this).closest('[data-column-id]');
+			var columnId = cell.data('column-id');
+			self._removeFilter(columnId);
 		}).delegate('.yom-data-grid-check-box, .yom-data-grid-check-box-all', 'click', function(evt) {
 			var rowIndex = $(this).data('row-index');
 			var allChecked = true;
@@ -159,6 +228,18 @@ $.extend(YomDataGrid.prototype, {
 		});
 		this._filterPanel.delegate('form', 'submit', function(evt) {
 			evt.preventDefault();
+		}).delegate('[name="findEmpty"]', 'click', function(evt) {
+			if(evt.target.checked) {
+				self._filterPanel.find('.filter-option').addClass('hidden');
+			} else {
+				self._filterPanel.find('.filter-option').removeClass('hidden');
+			}
+		}).delegate('.btn-confirm', 'click', function(evt) {
+			self._submitFilterForm();
+		}).delegate('.btn-remove', 'click', function(evt) {
+			var ele = $(this).closest('[data-column-id]');
+			var columnId = ele.data('column-id');
+			self._removeFilter(columnId);
 		});
 		if(this._opt.hightLightRow) {
 			this._container.delegate('[data-grid-row]', 'mouseenter', function(evt) {
@@ -222,6 +303,13 @@ $.extend(YomDataGrid.prototype, {
 			}
 		});
 	},
+	
+	getColumnById: function(id) {
+		var column = this._allColumns.filter(function(item) {
+			return item.id == id;
+		})[0];
+		return column;
+	},
 
 	getAllColumns: function() {
 		return this._lockedColumns.concat(this._scrollColumns);
@@ -271,16 +359,48 @@ $.extend(YomDataGrid.prototype, {
 	dehightLightRows: function(className) {
 		$('[yom-data-grid-row]', this._container).removeClass(className || 'yom-data-grid-row-error');
 	},
+	
+	getState: function() {
+		return {
+			sortOrder: this._sortOrder,
+			sortColumnId: this._sortColumnId,
+			filterMap: $.extend({}, this._filterMap)
+		};
+	},
+	
+	getQueryString: function() {
+		var tmp = [];
+		if(this._sortColumnId) {
+			tmp.push('sortBy=' + this._sortColumnId);
+		}
+		if(this._sortOrder) {
+			tmp.push('sortOrder=' + this._sortOrder);
+		}
+		for(var p in this._filterMap) {
+			if(Object.prototype.hasOwnProperty.call(this._filterMap, p)) {
+				var criteria = this._filterMap[p];
+				var key = encodeURIComponent(p);
+				if(criteria.type == 'set') {
+					tmp.push(key + '=' + encodeURIComponent(criteria.value.join(',')));
+				} else if(criteria.type == 'number') {
+					tmp.push(key + '=' + encodeURIComponent(criteria.compareType + ',' +  criteria.value));
+				} else {
+					tmp.push(key + '=' + encodeURIComponent(criteria.value));
+				}
+			}
+		}
+		return tmp.join('&');
+	},
 
-	render: function(data, opt) {
-		opt = opt || {};
+	render: function(data, state) {
+		state = state || {};
 		if(!data || !data.length) {
 			return;
 		}
 		this._data = data;
-		this._sortColumnId = opt.sortColumnId || this._sortColumnId;
-		this._sortOrder = opt.sortOrder || this._sortOrder;
-		this._filterMap = opt.filterMap || this._filterMap;
+		this._sortColumnId = state.sortColumnId || this._sortColumnId;
+		this._sortOrder = state.sortOrder || this._sortOrder;
+		this._filterMap = state.filterMap || this._filterMap;
 		if(this._opt.onBeforeRender) {
 			this._opt.onBeforeRender();
 		}
@@ -290,7 +410,14 @@ $.extend(YomDataGrid.prototype, {
 		this._lockedBody = null;
 		this._scrollHeader = null;
 		this._scrollBody = null;
-		var width = this._width == 'auto' ? this._holder.width() : this._width;
+		var noScrollX = false;
+		var width;
+		if(this._allColumns.length < this._opt.minScrollXColumns || this._width == '100%') {
+			noScrollX = true;
+			width = '100%';
+		} else {
+			width = this._width == 'auto' ? this._holder.width() : this._width;
+		}
 		if(!width && this._opt.getHolderWidth) {
 			width = this._opt.getHolderWidth();
 		}
@@ -298,12 +425,14 @@ $.extend(YomDataGrid.prototype, {
 			DEFAULT_COLUMN_WIDTH: this._DEFAULT_COLUMN_WIDTH,
 			name: this._name,
 			width: width,
+			noScrollX: noScrollX,
 			lockedColumns: this._defaultLockedColumns.concat(this._lockedColumns),
 			scrollColumns: this._scrollColumns,
 			bordered: this._opt.bordered,
 			striped: this._opt.striped,
 			sortColumnId: this._sortColumnId,
 			sortOrder: this._sortOrder,
+			filterMap: this._filterMap,
 			checkbox: this._opt.checkbox,
 			data: this._data,
 			dataProperty: this._opt.dataProperty
