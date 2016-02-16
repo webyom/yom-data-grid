@@ -292,20 +292,51 @@
 		padding: 10px;
 	}
 	.columns-container {
+		position: relative;
+		padding-right: 40px;
+	}
+	.yom-data-grid-setting-columns-container-inner {
 		background-color: #f8f8f8;
-		padding-left: 10px;
 		overflow-x: hidden;
 		overflow-y: auto;
-		max-height: 258px;
+		max-height: 266px;
+		padding: 5px 0;
 		.border-radius(2px);
-		.checkbox {
-			padding-right: 20px;
-			cursor: move;
-		}
 	}
 	.lock-options {
 		margin-bottom: 10px;
 	}
+}
+.yom-data-grid-setting-column-item {
+	padding: 3px 10px;
+	position: relative;
+	cursor: pointer;
+	.yom-data-grid-setting-btn-move-up, .yom-data-grid-setting-btn-move-down {
+		position: absolute;
+		top: 0;
+		right: 2px;
+		display: inline-block;
+		width: 18px;
+		text-align: center;
+	}
+	.yom-data-grid-setting-btn-move-up {
+		right: 22px;
+	}
+	&.selected {
+		background-color: #ddd;
+	}
+}
+.yom-data-grid-setting-btn-move-up, .yom-data-grid-setting-btn-move-down {
+	position: absolute;
+	right: 0;
+	top: 50%;
+	margin-top: -40px;
+}
+.yom-data-grid-setting-btn-move-down {
+	position: absolute;
+	right: 0;
+	top: 50%;
+	margin-top: 10px;
 }
 
 // Hightlight

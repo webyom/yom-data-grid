@@ -6,16 +6,18 @@
 <div class="alert alert-danger hidden"></div>
 <h4>显示和排序</h4>
 <div class="columns-container">
-	<%
-	for(var i = 0, l = columns.length; i < l; i++) {
-		var column = columns[i];
-	%>
-		<div class="checkbox">
-			<label>
+	<div class="yom-data-grid-setting-columns-container-inner">
+		<%
+		for(var i = 0, l = columns.length; i < l; i++) {
+			var column = columns[i];
+		%>
+			<div class="yom-data-grid-setting-column-item">
 				<input type="checkbox" value="<%==column.id%>" <%=hiddenColumns.indexOf(column.id) >= 0 ? '' : 'checked'%> /> <%==column.name%>
-			</label>
-		</div>
-	<%}%>
+			</div>
+		<%}%>
+	</div>
+	<button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-up disabled" disabled><i class="fa fa-long-arrow-up "></i></button>
+	<button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-down disabled" disabled><i class="fa fa-long-arrow-down"></i></button>
 </div>
 <h4>锁定</h4>
 <div class="lock-options">
