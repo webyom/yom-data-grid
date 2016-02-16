@@ -1,6 +1,7 @@
 var $ = require('jquery') || window.jQuery || window.$;
 var mainTpl = require('./yom-data-grid.tpl.html');
 var filterPanelTpl = require('./filter-panel.tpl.html');
+var settingPanelTpl = require('./setting-panel.tpl.html');
 
 var YomDataGrid = function(holder, columns, opt) {
 	var self = this;
@@ -9,8 +10,9 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._name = opt.name || 'x';
 	this._width = opt.width;
 	this._holder = $(holder);
-	this._container = $('<div class="yom-data-grid-container' + (opt.height == '100%' ? ' yom-data-grid-container-height' : '') + '"></div>').appendTo(holder);
+	this._container = $('<div class="yom-data-grid-container' + (opt.height == '100%' ? ' yom-data-grid-container-height' : '') + (opt.sequence ? ' yom-data-grid-container-sequence' : '') + '"></div>').appendTo(holder);
 	this._filterPanel = $('<div class="yom-data-grid-filter-panel"></div>').appendTo(document.body);
+	this._settingPanel = null;
 	this._allColumns = [];
 	this._defaultLockedColumns = [];
 	this._lockedColumns = [];
@@ -19,15 +21,29 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._lockedBody = null;
 	this._scrollHeader = null;
 	this._scrollBody = null;
+	
+	// sortting
 	this._sortColumnId = opt.sortColumnId || '';
 	this._sortOrder = opt.sortOrder || '';
+	
+	// filter
 	this._filterMap = opt.filterMap || {};
 	this._activeFilterColumn = null;
+	
+	// column sortting & lock & hidden
+	this._lockColumnAmount = Math.min(this._MAX_LOCKED_COLUMNS, opt.lockColumnAmount || 0);
+	this._columnSequence = opt.columnSequence || [];
+	this._hiddenColumns = opt.hiddenColumns || [];
+	
 	this._bind = {
 		scroll: function(evt) {return self._onScroll(evt);},
-		hideFilterPanel: function(evt) {return self._hideFilterPanel(evt);}
+		documentClick: function(evt) {
+			self._hideFilterPanel(evt);
+			self._hideSettingPanel(evt);
+		}
 	};
-	this.setColumns(columns);
+	
+	this.setColumns(columns, this.getSetting());
 	this._bindEvent();
 };
 
@@ -49,7 +65,7 @@ $.extend(YomDataGrid.prototype, {
 		this._hideFilterPanel();
 	},
 
-	_clientSort: function(columnId, sortOrder) {
+	_clientSort: function() {
 		var sortOrder = this._sortOrder;
 		var columnId = this._sortColumnId;
 		var dataProperty = this._opt.dataProperty;
@@ -65,6 +81,54 @@ $.extend(YomDataGrid.prototype, {
 			}
 		});
 		this.render(this._data);
+	},
+	
+	_showSettingPanel: function() {
+		this._settingPanel.html(settingPanelTpl.render({
+			MAX_LOCKED_COLUMNS: this._MAX_LOCKED_COLUMNS,
+			lockColumnAmount: this._lockColumnAmount,
+			hiddenColumns: this._hiddenColumns,
+			columns: this._allColumns
+		}))
+		this._settingPanel.show();
+	},
+	
+	_hideSettingPanel: function(evt) {
+		if(evt) {
+			var target = $(evt.target);
+			if(target.hasClass('yom-data-grid-setting-icon') || target.closest('.yom-data-grid-setting-icon').length) {
+				return;
+			}
+			if((target.hasClass('yom-data-grid-setting-panel') || target.closest('.yom-data-grid-setting-panel').length) && target.data('toggle') != 'yom-data-grid-setting-panel') {
+				return;
+			}
+		}
+		this._settingPanel && this._settingPanel.hide();
+	},
+	
+	_showSettingErrMsg: function(msg) {
+		$('.alert-danger', this._settingPanel).html(msg).removeClass('hidden');
+	},
+	
+	_submitSettingForm: function() {
+		var hiddenColumns = $('.columns-container input:not(:checked)', this._settingPanel).map(function(i, item) {
+			return item.value;
+		}).get();
+		if(hiddenColumns.length == this._allColumns.length) {
+			this._showSettingErrMsg('至少显示一列');
+			return;
+		}
+		var columnSequence = $('.columns-container input', this._settingPanel).map(function(i, item) {
+			return item.value;
+		}).get();
+		var lockColumnAmount = parseInt($('[name="lock"]:checked', this._settingPanel).val()) || 0;
+		this._lockColumnAmount = lockColumnAmount;
+		this._columnSequence = columnSequence;
+		this._hiddenColumns = hiddenColumns;
+		this._hideSettingPanel();
+		if(this._opt.onSettingChange) {
+			this._opt.onSettingChange(this.getSetting());
+		}
 	},
 	
 	_showFilterPanel: function(column, icon) {
@@ -112,7 +176,7 @@ $.extend(YomDataGrid.prototype, {
 		var column = this._activeFilterColumn;
 		var filterOption = column.filterOption || {};
 		var filterCriteria = {};
-		var value;
+		var value, valueEl;
 		if(!findEmpty) {
 			if(filterOption.type == 'set') {
 				value = [];
@@ -134,7 +198,12 @@ $.extend(YomDataGrid.prototype, {
 				filterCriteria.value = value;
 			} else if(filterOption.type == 'number') {
 				var compareType = $('[name="compareType"]', this._filterPanel).val();
-				value = parseFloat($.trim($('[name="value"]', this._filterPanel).val()));
+				valueEl = $('[name="value"]', this._filterPanel);
+				if((/[,;]/).test(valueEl.val())) {
+					this._showFilterErrMsg('不能输入“,”和“;”');
+					return;
+				}
+				value = parseFloat($.trim(valueEl.val()));
 				if(isNaN(value)) {
 					this._showFilterErrMsg('请输入比较值');
 					return;
@@ -142,7 +211,12 @@ $.extend(YomDataGrid.prototype, {
 				filterCriteria.compareType = compareType;
 				filterCriteria.value = value;
 			} else {
-				value = $.trim($('[name="value"]', this._filterPanel).val());
+				valueEl = $('[name="value"]', this._filterPanel);
+				if((/[,;]/).test(valueEl.val())) {
+					this._showFilterErrMsg('不能输入“,”和“;”');
+					return;
+				}
+				value = $.trim(valueEl.val());
 				if(!value) {
 					this._showFilterErrMsg('请输入筛选条件');
 					return;
@@ -179,6 +253,10 @@ $.extend(YomDataGrid.prototype, {
 			} else if(self._opt.onStateChange) {
 				self._opt.onStateChange(self.getState());
 			}
+		}).delegate('.yom-data-grid-setting-icon', 'click', function(evt) {
+			self._showSettingPanel();
+		}).delegate('.yom-data-grid-btn-confirm-setting', 'click', function(evt) {
+			self._submitSettingForm();
 		}).delegate('.yom-data-grid-filter-icon', 'click', function(evt) {
 			var cell = $(this).closest('[data-column-id]');
 			var columnId = cell.data('column-id');
@@ -249,15 +327,20 @@ $.extend(YomDataGrid.prototype, {
 				$('[data-grid-row="' + $(this).data('grid-row') + '"]', self._container).removeClass('yom-data-grid-row-hl');
 			})
 		}
-		$(document).on('click', this._bind.hideFilterPanel);
+		$(document).on('click', this._bind.documentClick);
 	},
 
 	_unbindEvent: function() {
 		this._container.undelegate();
 		this._filterPanel.undelegate();
+		$(document).off('click', this._bind.documentClick);
 	},
 
-	setColumns: function(columns) {
+	setColumns: function(columns, setting) {
+		setting = setting || {};
+		this._lockColumnAmount = Math.min(this._MAX_LOCKED_COLUMNS, setting.lockColumnAmount >= 0 ? setting.lockColumnAmount : this._lockColumnAmount);
+		this._columnSequence = setting.columnSequence || this._columnSequence;
+		this._hiddenColumns = setting.hiddenColumns || this._hiddenColumns;
 		var self = this;
 		var checkbox = this._opt.checkbox;
 		var sequence = this._opt.sequence;
@@ -285,17 +368,30 @@ $.extend(YomDataGrid.prototype, {
 				locked: true
 			});
 		}
+		this._allColumns.sort(function(a, b) {
+			var as = self._columnSequence.indexOf(a.id);
+			var bs = self._columnSequence.indexOf(b.id);
+			as = as >= 0 ? as : 9999;
+			bs = bs >= 0 ? bs : 9999;
+			return as - bs;
+		});
 		$.each(this._allColumns, function(i, column) {
 			if(column) {
 				column.width = parseInt(column.width) || 0;
 				if(column.width > 0) {
 					column.width = Math.min(Math.max(column.width, self._MIN_COLUMN_WIDTH), self._MAX_COLUMN_WIDTH);
 				}
-				if(column.locked && lockedCount < self._MAX_LOCKED_COLUMNS) {
+				if(self._hiddenColumns.indexOf(column.id) >= 0) {
+					column.hidden = true;
+				} else {
+					column.hidden = false;
+				}
+				if(lockedCount < self._lockColumnAmount) {
 					column.width = column.width || self._DEFAULT_COLUMN_WIDTH;
 					column.width = Math.min(column.width, self._MAX_LOCKED_COLUMN_WIDTH);
+					column.locked = true;
 					self._lockedColumns.push(column);
-					lockedCount++;
+					column.hidden || lockedCount++;
 				} else {
 					column.locked = false;
 					self._scrollColumns.push(column);
@@ -360,6 +456,14 @@ $.extend(YomDataGrid.prototype, {
 		$('[yom-data-grid-row]', this._container).removeClass(className || 'yom-data-grid-row-error');
 	},
 	
+	getSetting: function() {
+		return {
+			lockColumnAmount: this._lockColumnAmount,
+			columnSequence: this._columnSequence,
+			hiddenColumns: this._hiddenColumns
+		};
+	},
+	
 	getState: function() {
 		return {
 			sortOrder: this._sortOrder,
@@ -369,33 +473,43 @@ $.extend(YomDataGrid.prototype, {
 	},
 	
 	getQueryString: function() {
-		var tmp = [];
+		var all = [];
+		var filters = [];
 		if(this._sortColumnId) {
-			tmp.push('sortBy=' + this._sortColumnId);
+			all.push('sortBy=' + encodeURIComponent(this._sortColumnId));
 		}
 		if(this._sortOrder) {
-			tmp.push('sortOrder=' + this._sortOrder);
+			all.push('sortOrder=' + this._sortOrder);
 		}
 		for(var p in this._filterMap) {
 			if(Object.prototype.hasOwnProperty.call(this._filterMap, p)) {
 				var criteria = this._filterMap[p];
-				var key = encodeURIComponent(p);
-				if(criteria.type == 'set') {
-					tmp.push(key + '=' + encodeURIComponent(criteria.value.join(',')));
-				} else if(criteria.type == 'number') {
-					tmp.push(key + '=' + encodeURIComponent(criteria.compareType + ',' +  criteria.value));
+				if(criteria.findEmpty) {
+					filters.push(p + ',1');
 				} else {
-					tmp.push(key + '=' + encodeURIComponent(criteria.value));
+					if(criteria.type == 'set') {
+						filters.push(p + ',0,' + criteria.value.join(','));
+					} else if(criteria.type == 'number') {
+						filters.push(p + ',0,' + criteria.compareType + ',' +  criteria.value);
+					} else {
+						filters.push(p + ',0,' + criteria.value);
+					}
 				}
 			}
 		}
-		return tmp.join('&');
+		if(filters.length) {
+			all.push('filters=' + encodeURIComponent(filters.join(';')));
+		}
+		return all.join('&');
 	},
 
-	render: function(data, state) {
+	render: function(data, state, setting) {
 		state = state || {};
 		if(!data || !data.length) {
 			return;
+		}
+		if(setting) {
+			this.setColumns(this._allColumns, setting);
 		}
 		this._data = data;
 		this._sortColumnId = state.sortColumnId || this._sortColumnId;
@@ -410,6 +524,7 @@ $.extend(YomDataGrid.prototype, {
 		this._lockedBody = null;
 		this._scrollHeader = null;
 		this._scrollBody = null;
+		this._settingPanel = null;
 		var noScrollX = false;
 		var width;
 		if(this._allColumns.length < this._opt.minScrollXColumns || this._width == '100%') {
@@ -441,6 +556,7 @@ $.extend(YomDataGrid.prototype, {
 		this._scrollHeader = $('.yom-data-grid-columns .yom-data-grid-header', this._container)[0];
 		this._scrollBody = $('.yom-data-grid-columns .yom-data-grid-body', this._container);
 		this._scrollBody.on('scroll', this._bind.scroll);
+		this._settingPanel = $('.yom-data-grid-setting-panel', this._container);
 	},
 
 	destroy: function() {

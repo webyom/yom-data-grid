@@ -83,6 +83,7 @@
 //
 .yom-data-grid-container {
 	height: 100%;
+	position: relative;
 }
 
 .yom-data-grid {
@@ -241,6 +242,69 @@
 	}
 	&:hover {
 		color: @gray-dark;
+	}
+}
+
+// Setting
+.yom-data-grid-setting-icon {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	top: -20px;
+	left: 0;
+	background-color: #eee;
+	cursor: pointer;
+	color: @gray-dark;
+	z-index: 1;
+	display: none;
+	.border-radius(2px);
+}
+.yom-data-grid-container-sequence .yom-data-grid-setting-icon {
+	top: 8px;
+	left: 8px;
+}
+.yom-data-grid-container:hover .yom-data-grid-setting-icon {
+	display: block;
+}
+.yom-data-grid-setting-panel {
+	position: absolute;
+	left: 0;
+	top: 0;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	width: 300px;
+	padding: 10px;
+	display: none;
+	z-index: 2;
+	.border-radius(2px);
+	h3, h4 {
+		font-size: @font-size-base;
+		margin: 0;
+		margin-bottom: 10px;
+		color: @gray-dark;
+	}
+	h4 {
+		margin-top: 10px;
+	}
+	.alert-danger {
+		padding: 10px;
+	}
+	.columns-container {
+		background-color: #f8f8f8;
+		padding-left: 10px;
+		overflow-x: hidden;
+		overflow-y: auto;
+		max-height: 258px;
+		.border-radius(2px);
+		.checkbox {
+			padding-right: 20px;
+			cursor: move;
+		}
+	}
+	.lock-options {
+		margin-bottom: 10px;
 	}
 }
 

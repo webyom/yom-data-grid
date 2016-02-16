@@ -1,0 +1,28 @@
+<%
+%>
+
+<h3><i class="fa fa-cog"></i> 设置</h3>
+
+<div class="alert alert-danger hidden"></div>
+<h4>显示和排序</h4>
+<div class="columns-container">
+	<%
+	for(var i = 0, l = columns.length; i < l; i++) {
+		var column = columns[i];
+	%>
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" value="<%==column.id%>" <%=hiddenColumns.indexOf(column.id) >= 0 ? '' : 'checked'%> /> <%==column.name%>
+			</label>
+		</div>
+	<%}%>
+</div>
+<h4>锁定</h4>
+<div class="lock-options">
+	<%for(var i = 1; i <= MAX_LOCKED_COLUMNS; i++) {%>
+		<label class="radio-inline"><input type="radio" name="lock" value="<%=i%>" <%=lockColumnAmount == i ? 'checked' : ''%> /> <%=i%>列</label>  
+	<%}%>
+	<label class="radio-inline"><input type="radio" name="lock" value="0" <%=lockColumnAmount == 0 ? 'checked' : ''%> /> 不锁定</label>
+</div>
+<button type="submit" class="btn btn-primary btn-sm yom-data-grid-btn-confirm-setting">确定</button> 
+<button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-setting-panel">取消</button> 
