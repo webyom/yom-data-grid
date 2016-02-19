@@ -1,6 +1,6 @@
 {
   "name": "yom-data-grid",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A data grid.",
   "keywords": [
     "data grid"
@@ -25,6 +25,7 @@
     }
   ],
   "main": "lib/index.js",
+  "typings": "src/yom-data-grid.d.ts",
   "engines": {
     "node": ">= 0.8.0"
   },
