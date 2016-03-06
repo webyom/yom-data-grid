@@ -2,6 +2,7 @@ var $ = window.jQuery || window.$;
 var mainTpl = require('./yom-data-grid.tpl.html');
 var filterPanelTpl = require('./filter-panel.tpl.html');
 var settingPanelTpl = require('./setting-panel.tpl.html');
+require('./yom-data-grid.less');
 
 var YomDataGrid = function(holder, columns, opt) {
 	var self = this;

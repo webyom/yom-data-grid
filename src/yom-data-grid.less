@@ -87,9 +87,10 @@
 }
 
 .yom-data-grid {
-	.clearfix();
 	border: solid 1px @yom-data-grid-border-color;
 	height: 100%;
+	.border-radius(2px);
+	.clearfix();
 }
 
 .yom-data-grid-locked table {
@@ -216,6 +217,7 @@
 	width: 220px;
 	padding: 10px;
 	display: none;
+	z-index: 1;
 	.border-radius(2px);
 	h3 {
 		font-size: @font-size-base;
