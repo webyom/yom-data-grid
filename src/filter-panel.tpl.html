@@ -6,7 +6,7 @@ var type = filterOption.type;
 
 <h3><i class="fa fa-filter"></i> <%==column.name || '筛选'%></h3>
 
-<form data-column-id="<%=column.id%>">
+<div data-column-id="<%=column.id%>">
 	<div class="alert alert-danger hidden"></div>
 	<div class="filter-option <%=filterCriteria.findEmpty ? 'hidden': ''%>">
 		<%
@@ -61,4 +61,4 @@ var type = filterOption.type;
 			<%}%>
 		</div>
 	</div>
-</form>
+</div>
