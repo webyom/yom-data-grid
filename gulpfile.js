@@ -6,8 +6,9 @@ gulp.task('bundle', function() {
 		.pipe(bundler({
 			beautifyTemplate: true
 		}))
-		//.pipe(gulp.dest('dist'));
-		.pipe(gulp.dest('../react-router-redux-demo/dist/js/vendor/yom-data-grid'));
+		.pipe(gulp.dest('dist'));
+		//.pipe(gulp.dest('../react-router-redux-demo/dist/js/vendor/yom-data-grid'))
+		//.pipe(gulp.dest('../react-router-redux-demo/node_modules/yom-data-grid/dist'));
 });
 
 gulp.task('default', ['bundle']);

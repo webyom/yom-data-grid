@@ -28,9 +28,9 @@
 					<span title="<%==column.name%>"><%=column.name%></span>
 				<%}%>
 				<%if(column.filterable) {->columnHeader%>
-					<div class="yom-data-grid-filter-icon <%=column.textAlign == 'right' ? 'yom-data-grid-filter-icon-left' : ''%>">
+					<a href="javascript:void(0);" class="yom-data-grid-filter-icon <%=column.textAlign == 'right' ? 'yom-data-grid-filter-icon-left' : ''%>">
 						<i class="fa fa-filter"></i>
-					</div>
+					</a>
 				<%}%>
 			<%}->columnHeader%>
 		</div>

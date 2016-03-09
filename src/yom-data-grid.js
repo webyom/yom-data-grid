@@ -302,7 +302,7 @@ $.extend(YomDataGrid.prototype, {
 			var columnId = cell.data('column-id');
 			var column = self.getColumnById(columnId);
 			if(column) {
-				self.showFilterPanel(column, $(this));
+				self.showFilterPanel(column, $(this), 'right');
 			}
 		}).delegate('.yom-data-grid-filter-remove-icon', 'click', function(evt) {
 			var cell = $(this).closest('[data-column-id]');
@@ -365,7 +365,7 @@ $.extend(YomDataGrid.prototype, {
 		$(document).off('click', this._bind.documentClick);
 	},
 	
-	showFilterPanel: function(column, target) {
+	showFilterPanel: function(column, target, align) {
 		target = $(target);
 		this._activeFilterColumn = column;
 		var offset = target.offset();
@@ -379,8 +379,10 @@ $.extend(YomDataGrid.prototype, {
 		}));
 		this._filterPanel.show();
 		var filterPanelWidth = this._filterPanel.outerWidth();
-		if(left > filterPanelWidth) {
-			left = left - filterPanelWidth + width;
+		if (align == 'right') {
+			if(left > filterPanelWidth) {
+				left = left - filterPanelWidth + width;
+			}
 		}
 		this._filterPanel.css({
 			left: left + 'px',

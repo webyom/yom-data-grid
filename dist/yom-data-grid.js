@@ -134,28 +134,6 @@ $.extend(YomDataGrid.prototype, {
 		}
 	},
 	
-	_showFilterPanel: function(column, icon) {
-		this._activeFilterColumn = column;
-		var offset = icon.offset();
-		var width = icon.outerWidth();
-		var height = icon.outerHeight();
-		var left = offset.left;
-		var top = offset.top + height;
-		this._filterPanel.html(filterPanelTpl.render({
-			column: column,
-			filterMap: this._filterMap
-		}));
-		this._filterPanel.show();
-		var filterPanelWidth = this._filterPanel.outerWidth();
-		if(left > filterPanelWidth) {
-			left = left - filterPanelWidth + width;
-		}
-		this._filterPanel.css({
-			left: left + 'px',
-			top: top + 'px'
-		});
-	},
-	
 	_hideFilterPanel: function(evt) {
 		if(evt) {
 			var target = $(evt.target);
@@ -245,42 +223,14 @@ $.extend(YomDataGrid.prototype, {
 	},
 	
 	_setFilterMap: function(filterMap) {
-		var self = this;
-		if(typeof filterMap == 'string') {
-			var res = {};
-			filterMap.split(';').forEach(function(item) {
-				var filterCriteria = {};
-				var parts  = item.split(',');
-				var column = self.getColumnById(parts.shift());
-				if(column) {
-					var filterOption = column.filterOption || {};
-					filterCriteria.findEmpty = parts.shift() == '1';
-					if(!filterCriteria.findEmpty) {
-						var value;
-						if(filterOption.type == 'set') {
-							value = parts;
-							var valueMap = {};
-							value.forEach(function(id) {
-								valueMap[id] = 1;
-							});
-							filterCriteria.valueMap = valueMap;
-							filterCriteria.value = value;
-						} else if(filterOption.type == 'number') {
-							var compareType = parts.shift();
-							value = parseFloat(parts.shift()) || '';
-							filterCriteria.compareType = compareType;
-							filterCriteria.value = value;
-						} else {
-							value = parts.shift();
-							filterCriteria.value = value;
-						}
-					}
-					res[column.id] = filterCriteria;
+		filterMap = this.parseFilterMap(filterMap);
+		if(filterMap) {
+			this._filterMap = {};
+			for(var p in filterMap) {
+				if(filterMap.hasOwnProperty(p)) {
+					this._filterMap[p] = filterMap[p];
 				}
-			});
-			this._filterMap = res;
-		} else if(filterMap) {
-			this._filterMap = filterMap;
+			}
 		}
 	},
 	
@@ -353,7 +303,7 @@ $.extend(YomDataGrid.prototype, {
 			var columnId = cell.data('column-id');
 			var column = self.getColumnById(columnId);
 			if(column) {
-				self._showFilterPanel(column, $(this));
+				self.showFilterPanel(column, $(this), 'right');
 			}
 		}).delegate('.yom-data-grid-filter-remove-icon', 'click', function(evt) {
 			var cell = $(this).closest('[data-column-id]');
@@ -362,20 +312,11 @@ $.extend(YomDataGrid.prototype, {
 		}).delegate('.yom-data-grid-check-box, .yom-data-grid-check-box-all', 'click', function(evt) {
 			var rowIndex = $(this).data('row-index');
 			var allChecked = true;
+			var checked = this.checked;
 			if(!(rowIndex >= 0)) {//all
-				if(this.checked) {
-					$('.yom-data-grid-check-box', self._container).each(function(i, item) {
-						item.checked = true;
-						$(item).closest('.mockup-checkbox').addClass('on');
-					});
-				} else {
-					$('.yom-data-grid-check-box', self._container).each(function(i, item) {
-						item.checked = false;
-						$(item).closest('.mockup-checkbox').removeClass('on');
-					});
-				}
+				self.setAllSelection(checked);
 			} else {
-				if(this.checked) {
+				if(checked) {
 					$('.yom-data-grid-check-box[data-row-index]', self._container).each(function(i, item) {
 						if(!item.checked) {
 							allChecked = false;
@@ -392,12 +333,10 @@ $.extend(YomDataGrid.prototype, {
 				}
 			}
 			if(self._opt.onSelect) {
-				self._opt.onSelect(rowIndex, this.checked, rowIndex >= 0 && self._data[rowIndex] || undefined);
+				self._opt.onSelect(rowIndex, checked, rowIndex >= 0 && self._data[rowIndex] || undefined);
 			}
 		});
-		this._filterPanel.delegate('form', 'submit', function(evt) {
-			evt.preventDefault();
-		}).delegate('[name="findEmpty"]', 'click', function(evt) {
+		this._filterPanel.delegate('[name="findEmpty"]', 'click', function(evt) {
 			if(evt.target.checked) {
 				self._filterPanel.find('.filter-option').addClass('hidden');
 			} else {
@@ -426,12 +365,37 @@ $.extend(YomDataGrid.prototype, {
 		this._filterPanel.undelegate();
 		$(document).off('click', this._bind.documentClick);
 	},
+	
+	showFilterPanel: function(column, target, align) {
+		target = $(target);
+		this._activeFilterColumn = column;
+		var offset = target.offset();
+		var width = target.outerWidth();
+		var height = target.outerHeight();
+		var left = offset.left;
+		var top = offset.top + height;
+		this._filterPanel.html(filterPanelTpl.render({
+			column: column,
+			filterMap: this._filterMap
+		}));
+		this._filterPanel.show();
+		var filterPanelWidth = this._filterPanel.outerWidth();
+		if (align == 'right') {
+			if(left > filterPanelWidth) {
+				left = left - filterPanelWidth + width;
+			}
+		}
+		this._filterPanel.css({
+			left: left + 'px',
+			top: top + 'px'
+		});
+	},
 
 	setColumns: function(columns, setting) {
 		setting = setting || {};
 		this._lockColumnAmount = Math.min(this._MAX_LOCKED_COLUMNS, setting.lockColumnAmount >= 0 ? setting.lockColumnAmount : this._lockColumnAmount);
-		this._columnSequence = setting.columnSequence || this._columnSequence;
-		this._hiddenColumns = setting.hiddenColumns || this._hiddenColumns;
+		this._columnSequence = Array.isArray(setting.columnSequence) && setting.columnSequence.concat() || this._columnSequence;
+		this._hiddenColumns = Array.isArray(setting.hiddenColumns) && setting.hiddenColumns.concat() || this._hiddenColumns;
 		var self = this;
 		var checkbox = this._opt.checkbox;
 		var sequence = this._opt.sequence;
@@ -538,6 +502,12 @@ $.extend(YomDataGrid.prototype, {
 		}
 		return res;
 	},
+	
+	setAllSelection: function(checked) {
+		$('.yom-data-grid-check-box, .yom-data-grid-check-box-all', this._container).each(function(i, item) {
+			item.checked = !!checked;
+		});
+	},
 
 	hightLightRow: function(index, className) {
 		$('[yom-data-grid-row="' + index + '"]', this._container).addClass(className || 'yom-data-grid-row-error');
@@ -550,8 +520,8 @@ $.extend(YomDataGrid.prototype, {
 	getSetting: function() {
 		return {
 			lockColumnAmount: this._lockColumnAmount,
-			columnSequence: this._columnSequence,
-			hiddenColumns: this._hiddenColumns
+			columnSequence: this._columnSequence.concat(),
+			hiddenColumns: this._hiddenColumns.concat()
 		};
 	},
 	
@@ -563,11 +533,55 @@ $.extend(YomDataGrid.prototype, {
 		};
 	},
 	
-	getFilterMapString: function() {
+	parseFilterMap: function(filterMap) {
+		var self = this;
+		var res = {};
+		if(typeof filterMap == 'string') {
+			filterMap.split(';').forEach(function(item) {
+				var filterCriteria = {};
+				var parts  = item.split(',');
+				var column = self.getColumnById(parts.shift());
+				if(column) {
+					var filterOption = column.filterOption || {};
+					filterCriteria.findEmpty = parts.shift() == '1';
+					if(!filterCriteria.findEmpty) {
+						var value;
+						if(filterOption.type == 'set') {
+							value = parts;
+							var valueMap = {};
+							value.forEach(function(id) {
+								valueMap[id] = 1;
+							});
+							filterCriteria.valueMap = valueMap;
+							filterCriteria.value = value;
+						} else if(filterOption.type == 'number') {
+							var compareType = parts.shift();
+							value = parseFloat(parts.shift()) || '';
+							filterCriteria.compareType = compareType;
+							filterCriteria.value = value;
+						} else {
+							value = parts.shift();
+							filterCriteria.value = value;
+						}
+					}
+					res[column.id] = filterCriteria;
+				}
+			});
+		} else {
+			res = filterMap;
+		}
+		return res;
+	},
+	
+	getFilterMapString: function(filterMap) {
+		filterMap = filterMap || this._filterMap;
+		if (typeof filterMap == 'string') {
+			return filterMap;
+		}
 		var filters = [];
-		for(var p in this._filterMap) {
-			if(Object.prototype.hasOwnProperty.call(this._filterMap, p)) {
-				var criteria = this._filterMap[p];
+		for(var p in filterMap) {
+			if(Object.prototype.hasOwnProperty.call(filterMap, p)) {
+				var criteria = filterMap[p];
 				if(criteria.findEmpty) {
 					filters.push(p + ',1');
 				} else {
@@ -725,7 +739,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                                 columnHeader.push('<span title="', $encodeHtml(column.name), '">', column.name, "</span>");
                             }
                             if (column.filterable) {
-                                columnHeader.push('<div class="yom-data-grid-filter-icon ', column.textAlign == "right" ? "yom-data-grid-filter-icon-left" : "", '"><i class="fa fa-filter"></i></div>');
+                                columnHeader.push('<a href="javascript:void(0);" class="yom-data-grid-filter-icon ', column.textAlign == "right" ? "yom-data-grid-filter-icon-left" : "", '"><i class="fa fa-filter"></i></a>');
                             }
                         }
                         columnHeader.push("</div></th>");
@@ -766,7 +780,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                                 columnHeader.push('<span title="', $encodeHtml(column.name), '">', column.name, "</span>");
                             }
                             if (column.filterable) {
-                                columnHeader.push('<div class="yom-data-grid-filter-icon ', column.textAlign == "right" ? "yom-data-grid-filter-icon-left" : "", '"><i class="fa fa-filter"></i></div>');
+                                columnHeader.push('<a href="javascript:void(0);" class="yom-data-grid-filter-icon ', column.textAlign == "right" ? "yom-data-grid-filter-icon-left" : "", '"><i class="fa fa-filter"></i></a>');
                             }
                         }
                         columnHeader.push("</div></th>");
@@ -797,7 +811,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                     }
                 }
             }
-            _$out_.push('<div class="yom-data-grid-setting-icon"><i class="fa fa-cog"></i></div><div class="yom-data-grid-setting-panel"></div><div class="yom-data-grid ', lockedDisplayColumns.length ? "yom-data-grid-locked" : "", " ", bordered ? "yom-data-grid-bordered" : "", " ", striped ? "yom-data-grid-striped" : "", '" style="overflow: hidden;"><table border="0" cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;"><tr>');
+            _$out_.push('<a class="yom-data-grid-setting-icon" href="javascript:void(0);"><i class="fa fa-cog"></i></a><div class="yom-data-grid-setting-panel"></div><div class="yom-data-grid ', lockedDisplayColumns.length ? "yom-data-grid-locked" : "", " ", bordered ? "yom-data-grid-bordered" : "", " ", striped ? "yom-data-grid-striped" : "", '" style="overflow: hidden;"><table border="0" cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;"><tr>');
             if (lockedDisplayColumns.length) {
                 _$out_.push('<td class="yom-data-grid-columns-container" style="width: ', lockedTableWidth, 'px;"><div class="yom-data-grid-locked-columns" style="overflow: hidden;"><div class="yom-data-grid-header"><table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: ', lockedTableWidth, 'px;">', lockedColumnWidth.join(""), "<tbody><tr>", lockedColumnHeader.join(""), '</tr></tbody></table></div><div class="yom-data-grid-body" style="', scrollX ? "overflow-x: scroll;" : "", " width: ", lockedTableWidth, 'px;"><table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: ', lockedTableWidth, 'px;">', lockedColumnWidth.join(""), "<tbody>");
                 columnOffset = 0;
@@ -934,7 +948,7 @@ define('./filter-panel.tpl.html', [ "require", "exports", "module" ], function(r
             var filterCriteria = filterMap[column.id] || {};
             var filterOption = column.filterOption || {};
             var type = filterOption.type;
-            _$out_.push('<h3><i class="fa fa-filter"></i> ', $encodeHtml(column.name || "筛选"), '</h3><form data-column-id="', column.id, '"><div class="alert alert-danger hidden"></div><div class="filter-option ', filterCriteria.findEmpty ? "hidden" : "", '">');
+            _$out_.push('<h3><i class="fa fa-filter"></i> ', $encodeHtml(column.name || "筛选"), '</h3><div data-column-id="', column.id, '"><div class="alert alert-danger hidden"></div><div class="filter-option ', filterCriteria.findEmpty ? "hidden" : "", '">');
             if (type == "set") {
                 var options = filterOption.options || [];
                 var valueMap = filterCriteria.valueMap || {};
@@ -953,7 +967,7 @@ define('./filter-panel.tpl.html', [ "require", "exports", "module" ], function(r
             if (filterMap[column.id]) {
                 _$out_.push('<a class="btn btn-remove" href="javascript:void(0);">清除</a>');
             }
-            _$out_.push("</div></div></form>");
+            _$out_.push("</div></div></div>");
         }
         return _$out_.join("");
     };
@@ -986,7 +1000,7 @@ define('./setting-panel.tpl.html', [ "require", "exports", "module" ], function(
 });
 
 define('./yom-data-grid.less', ['require', 'exports', 'module'], function(require, exports, module) {
-    var cssContent = '.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:21px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:9px;margin-top:-10px;background-color:#eee;cursor:pointer;color:#555;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-icon{display:block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:220px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:138px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:8px;left:8px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:266px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-up{position:absolute;top:0;right:2px;display:inline-block;width:18px;text-align:center}.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-up{right:22px}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-container-height .yom-data-grid-columns-container{position:relative}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;left:0;top:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}';
+    var cssContent = '.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:21px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:9px;margin-top:-10px;background-color:#eee;cursor:pointer;color:#555;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-icon{display:block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:220px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:138px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:266px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-up{position:absolute;top:0;right:2px;display:inline-block;width:18px;text-align:center}.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-up{right:22px}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-container-height .yom-data-grid-columns-container{position:relative}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;left:0;top:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}';
     var moduleUri = module && module.uri;
     var head = document.head || document.getElementsByTagName("head")[0];
     var styleTagId = "yom-style-module-inject-tag";
