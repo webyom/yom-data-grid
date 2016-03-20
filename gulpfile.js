@@ -7,8 +7,8 @@ gulp.task('bundle', function() {
 			beautifyTemplate: true
 		}))
 		.pipe(gulp.dest('dist'));
-		//.pipe(gulp.dest('../react-router-redux-demo/dist/js/vendor/yom-data-grid'))
-		//.pipe(gulp.dest('../react-router-redux-demo/node_modules/yom-data-grid/dist'));
+		//.pipe(gulp.dest('../../ddicar/react-demo/dist/js/vendor/yom-data-grid'))
+		//.pipe(gulp.dest('../../ddicar/react-demo/node_modules/yom-data-grid/dist'));
 });
 
 gulp.task('default', ['bundle']);

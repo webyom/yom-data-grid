@@ -37,7 +37,12 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._hiddenColumns = [];
 	
 	this._bind = {
-		scroll: function(evt) {return self._onScroll(evt);},
+		scroll: function(evt) {
+			self._onScroll(evt);
+		},
+		autoResize: function(evt) {
+			self.render();
+		},
 		documentClick: function(evt) {
 			self._hideFilterPanel(evt);
 			self._hideSettingPanel(evt);
@@ -357,12 +362,18 @@ $.extend(YomDataGrid.prototype, {
 			})
 		}
 		$(document).on('click', this._bind.documentClick);
+		if(this._width == 'auto') {
+			$(window).on('resize', this._bind.autoResize);
+		}
 	},
 
 	_unbindEvent: function() {
 		this._container.undelegate();
 		this._filterPanel.undelegate();
 		$(document).off('click', this._bind.documentClick);
+		if(this._width == 'auto') {
+			$(window).off('resize', this._bind.autoResize);
+		}
 	},
 	
 	showFilterPanel: function(column, target, align) {
@@ -613,17 +624,17 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	render: function(data, state, setting) {
-		state = state || {};
-		if(!data || !data.length) {
-			return;
+		if(data && data.length) {
+			this._data = data;
+		}
+		if(state) {
+			this._sortColumnId = state.sortColumnId || this._sortColumnId;
+			this._sortOrder = state.sortOrder || this._sortOrder;
+			this._setFilterMap(state.filterMap);
 		}
 		if(setting) {
 			this.setColumns(this._allColumns, setting);
 		}
-		this._data = data;
-		this._sortColumnId = state.sortColumnId || this._sortColumnId;
-		this._sortOrder = state.sortOrder || this._sortOrder;
-		this._setFilterMap(state.filterMap);
 		if(this._opt.onBeforeRender) {
 			this._opt.onBeforeRender();
 		}
