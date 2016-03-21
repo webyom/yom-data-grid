@@ -79,7 +79,7 @@ if(!noScrollX && width > 0) {
 		<tr>
 			<%if(lockedDisplayColumns.length) {%>
 				<td class="yom-data-grid-columns-container" style="width: <%=lockedTableWidth%>px;">
-					<div class="yom-data-grid-locked-columns" style="overflow: hidden;">
+					<div class="yom-data-grid-locked-columns" style="width: <%=lockedTableWidth%>px; overflow: hidden;">
 						<div class="yom-data-grid-header">
 							<table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: <%=lockedTableWidth%>px;">
 								<%=lockedColumnWidth.join('')%>
@@ -108,7 +108,7 @@ if(!noScrollX && width > 0) {
 
 			<%if(scrollDisplayColumns.length) {%>
 				<td class="yom-data-grid-columns-container">
-					<div class="yom-data-grid-columns">
+					<div class="yom-data-grid-columns" style="left: <%=lockedTableWidth%>px;">
 						<div class="yom-data-grid-header" style="width: 100%;">
 							<table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: <%=width > lockedTableWidth ? (width - lockedTableWidth) + 'px' : '100%'%>;">
 								<%=scrollColumnWidth.join('')%>
