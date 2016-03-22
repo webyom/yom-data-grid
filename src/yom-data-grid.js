@@ -148,6 +148,10 @@ $.extend(YomDataGrid.prototype, {
 				return;
 			}
 		}
+		var dateFromDom = $('.date-from', this._filterPanel);
+		var dateToDom = $('.date-to', this._filterPanel);
+		dateFromDom.length && dateFromDom.datetimepicker('remove');
+		dateToDom.length && dateToDom.datetimepicker('remove');
 		this._filterPanel && this._filterPanel.hide();
 		this._activeFilterColumn = null;
 	},
@@ -195,6 +199,25 @@ $.extend(YomDataGrid.prototype, {
 				}
 				filterCriteria.compareType = compareType;
 				filterCriteria.value = value;
+			} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
+				var dateFromDom = $('.date-from', this._filterPanel);
+				var dateToDom = $('.date-to', this._filterPanel);
+				if(dateFromDom.attr('data-value')) {
+					filterCriteria.fromValue = parseInt(dateFromDom.attr('data-value'));
+					filterCriteria.fromDisplay = dateFromDom.find('input').val();
+				}
+				if(dateToDom.attr('data-value')) {
+					filterCriteria.toValue = parseInt(dateToDom.attr('data-value'));
+					filterCriteria.toDisplay = dateToDom.find('input').val();
+				}
+				if(!filterCriteria.fromValue && !filterCriteria.toValue) {
+					this._showFilterErrMsg('请至少指定一个日期');
+					return;
+				}
+				if(filterCriteria.fromValue > filterCriteria.toValue) {
+					this._showFilterErrMsg('开始日期不能晚于结束日期');
+					return;
+				}
 			} else {
 				valueEl = $('[name="value"]', this._filterPanel);
 				if((/[,;]/).test(valueEl.val())) {
@@ -384,10 +407,35 @@ $.extend(YomDataGrid.prototype, {
 		var height = target.outerHeight();
 		var left = offset.left;
 		var top = offset.top + height;
+		var type = column.filterOption && column.filterOption.type;
 		this._filterPanel.html(filterPanelTpl.render({
 			column: column,
 			filterMap: this._filterMap
 		}));
+		if(type == 'date' || type == 'datetime') {
+			var pickerOpt = {
+				language: 'zh-CN',
+				bootcssVer: 3,
+				fontAwesome: true,
+				pickerPosition: 'bottom-left',
+				autoclose: true,
+				todayBtn: true,
+				todayHighlight: true,
+				minView: type == 'datetime' ? 0 : 2
+			};
+			var dateFromDom = $('.date-from', this._filterPanel);
+			var dateToDom = $('.date-to', this._filterPanel);
+			dateFromDom.datetimepicker($.extend({
+				container: dateFromDom[0]
+			}, pickerOpt)).on('changeDate', (evt) => {
+				dateFromDom.attr('data-value', evt.date.getTime());
+			});
+			dateToDom.datetimepicker($.extend({
+				container: dateToDom[0]
+			}, pickerOpt)).on('changeDate', (evt) => {
+				dateToDom.attr('data-value', evt.date.getTime());
+			});
+		}
 		this._filterPanel.show();
 		var filterPanelWidth = this._filterPanel.outerWidth();
 		if (align == 'right') {
@@ -553,6 +601,7 @@ $.extend(YomDataGrid.prototype, {
 				var column = self.getColumnById(parts.shift());
 				if(column) {
 					var filterOption = column.filterOption || {};
+					filterCriteria.type = filterOption.type;
 					filterCriteria.findEmpty = parts.shift() == '1';
 					if(!filterCriteria.findEmpty) {
 						var value;
@@ -569,6 +618,17 @@ $.extend(YomDataGrid.prototype, {
 							value = parseFloat(parts.shift()) || '';
 							filterCriteria.compareType = compareType;
 							filterCriteria.value = value;
+						} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
+							var fromValue = parseInt(parts.shift());
+							var toValue = parseInt(parts.shift());
+							if(fromValue) {
+								filterCriteria.fromValue = fromValue;
+								filterCriteria.fromDisplay = filterOption.formatter(fromValue);
+							}
+							if(toValue) {
+								filterCriteria.toValue = toValue;
+								filterCriteria.toDisplay = filterOption.formatter(toValue);
+							}
 						} else {
 							value = parts.shift();
 							filterCriteria.value = value;
@@ -599,6 +659,8 @@ $.extend(YomDataGrid.prototype, {
 						filters.push(p + ',0,' + criteria.value.join(','));
 					} else if(criteria.type == 'number') {
 						filters.push(p + ',0,' + criteria.compareType + ',' +  criteria.value);
+					} else if(criteria.type == 'date' || criteria.type == 'datetime') {
+						filters.push(p + ',0,' + (criteria.fromValue || '') + ',' +  (criteria.toValue || ''));
 					} else {
 						filters.push(p + ',0,' + criteria.value);
 					}

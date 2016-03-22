@@ -149,6 +149,10 @@ $.extend(YomDataGrid.prototype, {
 				return;
 			}
 		}
+		var dateFromDom = $('.date-from', this._filterPanel);
+		var dateToDom = $('.date-to', this._filterPanel);
+		dateFromDom.length && dateFromDom.datetimepicker('remove');
+		dateToDom.length && dateToDom.datetimepicker('remove');
 		this._filterPanel && this._filterPanel.hide();
 		this._activeFilterColumn = null;
 	},
@@ -196,6 +200,25 @@ $.extend(YomDataGrid.prototype, {
 				}
 				filterCriteria.compareType = compareType;
 				filterCriteria.value = value;
+			} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
+				var dateFromDom = $('.date-from', this._filterPanel);
+				var dateToDom = $('.date-to', this._filterPanel);
+				if(dateFromDom.attr('data-value')) {
+					filterCriteria.fromValue = parseInt(dateFromDom.attr('data-value'));
+					filterCriteria.fromDisplay = dateFromDom.find('input').val();
+				}
+				if(dateToDom.attr('data-value')) {
+					filterCriteria.toValue = parseInt(dateToDom.attr('data-value'));
+					filterCriteria.toDisplay = dateToDom.find('input').val();
+				}
+				if(!filterCriteria.fromValue && !filterCriteria.toValue) {
+					this._showFilterErrMsg('请至少指定一个日期');
+					return;
+				}
+				if(filterCriteria.fromValue > filterCriteria.toValue) {
+					this._showFilterErrMsg('开始日期不能晚于结束日期');
+					return;
+				}
 			} else {
 				valueEl = $('[name="value"]', this._filterPanel);
 				if((/[,;]/).test(valueEl.val())) {
@@ -385,10 +408,35 @@ $.extend(YomDataGrid.prototype, {
 		var height = target.outerHeight();
 		var left = offset.left;
 		var top = offset.top + height;
+		var type = column.filterOption && column.filterOption.type;
 		this._filterPanel.html(filterPanelTpl.render({
 			column: column,
 			filterMap: this._filterMap
 		}));
+		if(type == 'date' || type == 'datetime') {
+			var pickerOpt = {
+				language: 'zh-CN',
+				bootcssVer: 3,
+				fontAwesome: true,
+				pickerPosition: 'bottom-left',
+				autoclose: true,
+				todayBtn: true,
+				todayHighlight: true,
+				minView: type == 'datetime' ? 0 : 2
+			};
+			var dateFromDom = $('.date-from', this._filterPanel);
+			var dateToDom = $('.date-to', this._filterPanel);
+			dateFromDom.datetimepicker($.extend({
+				container: dateFromDom[0]
+			}, pickerOpt)).on('changeDate', (evt) => {
+				dateFromDom.attr('data-value', evt.date.getTime());
+			});
+			dateToDom.datetimepicker($.extend({
+				container: dateToDom[0]
+			}, pickerOpt)).on('changeDate', (evt) => {
+				dateToDom.attr('data-value', evt.date.getTime());
+			});
+		}
 		this._filterPanel.show();
 		var filterPanelWidth = this._filterPanel.outerWidth();
 		if (align == 'right') {
@@ -554,6 +602,7 @@ $.extend(YomDataGrid.prototype, {
 				var column = self.getColumnById(parts.shift());
 				if(column) {
 					var filterOption = column.filterOption || {};
+					filterCriteria.type = filterOption.type;
 					filterCriteria.findEmpty = parts.shift() == '1';
 					if(!filterCriteria.findEmpty) {
 						var value;
@@ -570,6 +619,17 @@ $.extend(YomDataGrid.prototype, {
 							value = parseFloat(parts.shift()) || '';
 							filterCriteria.compareType = compareType;
 							filterCriteria.value = value;
+						} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
+							var fromValue = parseInt(parts.shift());
+							var toValue = parseInt(parts.shift());
+							if(fromValue) {
+								filterCriteria.fromValue = fromValue;
+								filterCriteria.fromDisplay = filterOption.formatter(fromValue);
+							}
+							if(toValue) {
+								filterCriteria.toValue = toValue;
+								filterCriteria.toDisplay = filterOption.formatter(toValue);
+							}
 						} else {
 							value = parts.shift();
 							filterCriteria.value = value;
@@ -600,6 +660,8 @@ $.extend(YomDataGrid.prototype, {
 						filters.push(p + ',0,' + criteria.value.join(','));
 					} else if(criteria.type == 'number') {
 						filters.push(p + ',0,' + criteria.compareType + ',' +  criteria.value);
+					} else if(criteria.type == 'date' || criteria.type == 'datetime') {
+						filters.push(p + ',0,' + (criteria.fromValue || '') + ',' +  (criteria.toValue || ''));
 					} else {
 						filters.push(p + ',0,' + criteria.value);
 					}
@@ -971,6 +1033,8 @@ define('./filter-panel.tpl.html', [ "require", "exports", "module" ], function(r
                 _$out_.push("</div>");
             } else if (type == "number") {
                 _$out_.push('<div class="form-group"><label>比较方式</label><select name="compareType" class="form-control"><option value="eq" ', filterCriteria.compareType == "eq" ? "selected" : "", '>等于</option><option value="lt" ', filterCriteria.compareType == "lt" ? "selected" : "", '>小于</option><option value="gt" ', filterCriteria.compareType == "gt" ? "selected" : "", '>大于</option></select></div><div class="form-group"><label>比较值</label><input name="value" type="text" maxlength="10" value="', filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "", '" class="form-control" /></div>');
+            } else if (type == "date" || type == "datetime") {
+                _$out_.push('<div class="form-group"><label>开始</label><div class="datetimepicker-component input-group date date-from" data-date="', filterCriteria.fromDisplay || "", '" data-date-format="', filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd"), '" data-value="', filterCriteria.fromValue || "", '"><input class="form-control" type="text" name="fromDate" value="', filterCriteria.fromDisplay || "", '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div><div class="form-group"><label>结束</label><div class="datetimepicker-component input-group date date-to" data-date="', filterCriteria.toDisplay || "", '" data-date-format="', filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd"), '" data-value="', filterCriteria.toValue || "", '"><input class="form-control" type="text" name="toDate" value="', filterCriteria.toDisplay || "", '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div>');
             } else {
                 _$out_.push('<div class="form-group"><input name="value" type="text" value="', filterCriteria.value || "", '" class="form-control" /></div>');
             }
@@ -1011,7 +1075,7 @@ define('./setting-panel.tpl.html', [ "require", "exports", "module" ], function(
 });
 
 define('./yom-data-grid.less', ['require', 'exports', 'module'], function(require, exports, module) {
-    var cssContent = '.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:21px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:9px;margin-top:-10px;background-color:#eee;cursor:pointer;color:#555;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-icon{display:block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:220px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:138px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:266px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-up{position:absolute;top:0;right:2px;display:inline-block;width:18px;text-align:center}.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-up{right:22px}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;top:0;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}';
+    var cssContent = '.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:21px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:9px;margin-top:-10px;background-color:#eee;cursor:pointer;color:#555;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-icon{display:block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:252px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:138px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:266px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-up{position:absolute;top:0;right:2px;display:inline-block;width:18px;text-align:center}.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-up{right:22px}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;top:0;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}';
     var moduleUri = module && module.uri;
     var head = document.head || document.getElementsByTagName("head")[0];
     var styleTagId = "yom-style-module-inject-tag";
