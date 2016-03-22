@@ -427,12 +427,12 @@ $.extend(YomDataGrid.prototype, {
 			var dateToDom = $('.date-to', this._filterPanel);
 			dateFromDom.datetimepicker($.extend({
 				container: dateFromDom[0]
-			}, pickerOpt)).on('changeDate', (evt) => {
+			}, pickerOpt)).on('changeDate', function(evt) {
 				dateFromDom.attr('data-value', evt.date.getTime());
 			});
 			dateToDom.datetimepicker($.extend({
 				container: dateToDom[0]
-			}, pickerOpt)).on('changeDate', (evt) => {
+			}, pickerOpt)).on('changeDate', function(evt) {
 				dateToDom.attr('data-value', evt.date.getTime());
 			});
 		}
