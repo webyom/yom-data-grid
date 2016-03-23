@@ -1,8 +1,9 @@
-define(['require', 'exports', 'module', './yom-data-grid.tpl.html', './filter-panel.tpl.html', './setting-panel.tpl.html', './yom-data-grid.less'], function(require, exports, module) {
+define(['require', 'exports', 'module', './yom-data-grid.tpl.html', './filter-panel.tpl.html', './setting-panel.tpl.html', './i18n', './yom-data-grid.less'], function(require, exports, module) {
 var $ = window.jQuery || window.$;
 var mainTpl = require('./yom-data-grid.tpl.html');
 var filterPanelTpl = require('./filter-panel.tpl.html');
 var settingPanelTpl = require('./setting-panel.tpl.html');
+var i18n = require('./i18n');
 require('./yom-data-grid.less');
 
 var YomDataGrid = function(holder, columns, opt) {
@@ -10,6 +11,7 @@ var YomDataGrid = function(holder, columns, opt) {
 	opt = opt || {};
 	this._opt = opt;
 	this._name = opt.name || 'x';
+	this._i18n = i18n[opt.language] || i18n['en'];
 	this._width = opt.width;
 	this._holder = $(holder);
 	this._container = $('<div class="yom-data-grid-container' + (opt.height == '100%' ? ' yom-data-grid-container-height' : '') + (opt.sequence ? ' yom-data-grid-container-sequence' : '') + '"></div>').appendTo(holder);
@@ -94,6 +96,7 @@ $.extend(YomDataGrid.prototype, {
 	_showSettingPanel: function() {
 		this._settingPanel.html(settingPanelTpl.render({
 			MAX_LOCKED_COLUMNS: this._MAX_LOCKED_COLUMNS,
+			i18n: this._i18n,
 			lockColumnAmount: this._lockColumnAmount,
 			hiddenColumns: this._hiddenColumns,
 			columns: this._allColumns
@@ -123,7 +126,7 @@ $.extend(YomDataGrid.prototype, {
 			return item.value;
 		}).get();
 		if(hiddenColumns.length == this._allColumns.length) {
-			this._showSettingErrMsg('至少显示一列');
+			this._showSettingErrMsg(this._i18n.atLeastOneColumn);
 			return;
 		}
 		var columnSequence = $('.columns-container input', this._settingPanel).map(function(i, item) {
@@ -181,7 +184,7 @@ $.extend(YomDataGrid.prototype, {
 					return item.value;
 				}).get();
 				if(!set.length) {
-					this._showFilterErrMsg('请选择筛选条件');
+					this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
 					return;
 				}
 				filterCriteria.valueMap = valueMap;
@@ -190,12 +193,12 @@ $.extend(YomDataGrid.prototype, {
 				var compareType = $('[name="compareType"]', this._filterPanel).val();
 				valueEl = $('[name="value"]', this._filterPanel);
 				if((/[,;]/).test(valueEl.val())) {
-					this._showFilterErrMsg('不能输入“,”和“;”');
+					this._showFilterErrMsg(this._i18n.filterValueContainIllegalChar);
 					return;
 				}
 				value = parseFloat($.trim(valueEl.val()));
 				if(isNaN(value)) {
-					this._showFilterErrMsg('请输入比较值');
+					this._showFilterErrMsg(this._i18n.compareValueRequired);
 					return;
 				}
 				filterCriteria.compareType = compareType;
@@ -212,22 +215,22 @@ $.extend(YomDataGrid.prototype, {
 					filterCriteria.toDisplay = dateToDom.find('input').val();
 				}
 				if(!filterCriteria.fromValue && !filterCriteria.toValue) {
-					this._showFilterErrMsg('请至少指定一个日期');
+					this._showFilterErrMsg(this._i18n.atLeastOneDateRequired);
 					return;
 				}
 				if(filterCriteria.fromValue > filterCriteria.toValue) {
-					this._showFilterErrMsg('开始日期不能晚于结束日期');
+					this._showFilterErrMsg(this._i18n.startDateCanNotLaterThanEndDate);
 					return;
 				}
 			} else {
 				valueEl = $('[name="value"]', this._filterPanel);
 				if((/[,;]/).test(valueEl.val())) {
-					this._showFilterErrMsg('不能输入“,”和“;”');
+					this._showFilterErrMsg(this._i18n.filterValueContainIllegalChar);
 					return;
 				}
 				value = $.trim(valueEl.val());
 				if(!value) {
-					this._showFilterErrMsg('请输入筛选条件');
+					this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
 					return;
 				}
 				filterCriteria.value = value;
@@ -410,12 +413,13 @@ $.extend(YomDataGrid.prototype, {
 		var top = offset.top + height;
 		var type = column.filterOption && column.filterOption.type;
 		this._filterPanel.html(filterPanelTpl.render({
+			i18n: this._i18n,
 			column: column,
 			filterMap: this._filterMap
 		}));
 		if(type == 'date' || type == 'datetime') {
 			var pickerOpt = {
-				language: 'zh-CN',
+				language: this._opt.language,
 				bootcssVer: 3,
 				fontAwesome: true,
 				pickerPosition: 'bottom-left',
@@ -721,6 +725,7 @@ $.extend(YomDataGrid.prototype, {
 		}
 		this._container.html(mainTpl.render({
 			DEFAULT_COLUMN_WIDTH: this._DEFAULT_COLUMN_WIDTH,
+			i18n: this._i18n,
 			name: this._name,
 			width: width,
 			noScrollX: noScrollX,
@@ -802,7 +807,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                         } else {
                             columnHeader.push("");
                             if (filterMap[column.id]) {
-                                columnHeader.push('<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="清除过滤条件"><i class="fa fa-filter icon-filter"></i><i class="fa fa-remove icon-remove"></i></a> ');
+                                columnHeader.push('<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="', i18n.clearFilterCriteria, '"><i class="fa fa-filter icon-filter"></i><i class="fa fa-remove icon-remove"></i></a> ');
                             }
                             if (column.headerRenderer) {
                                 columnHeader.push("", column.headerRenderer(column.name, i, column, sortColumnId, sortOrder), "");
@@ -843,7 +848,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                         } else {
                             columnHeader.push("");
                             if (filterMap[column.id]) {
-                                columnHeader.push('<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="清除过滤条件"><i class="fa fa-filter icon-filter"></i><i class="fa fa-remove icon-remove"></i></a> ');
+                                columnHeader.push('<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="', i18n.clearFilterCriteria, '"><i class="fa fa-filter icon-filter"></i><i class="fa fa-remove icon-remove"></i></a> ');
                             }
                             if (column.headerRenderer) {
                                 columnHeader.push("", column.headerRenderer(column.name, i, column, sortColumnId, sortOrder), "");
@@ -1021,7 +1026,7 @@ define('./filter-panel.tpl.html', [ "require", "exports", "module" ], function(r
             var filterCriteria = filterMap[column.id] || {};
             var filterOption = column.filterOption || {};
             var type = filterOption.type;
-            _$out_.push('<h3><i class="fa fa-filter"></i> ', $encodeHtml(column.name || "筛选"), '</h3><div data-column-id="', column.id, '"><div class="alert alert-danger hidden"></div><div class="filter-option ', filterCriteria.findEmpty ? "hidden" : "", '">');
+            _$out_.push('<h3><i class="fa fa-filter"></i> ', $encodeHtml(column.name || i18n.filter), '</h3><div data-column-id="', $encodeHtml(column.id), '"><div class="alert alert-danger hidden"></div><div class="filter-option ', filterCriteria.findEmpty ? "hidden" : "", '">');
             if (type == "set") {
                 var options = filterOption.options || [];
                 var valueMap = filterCriteria.valueMap || {};
@@ -1032,15 +1037,15 @@ define('./filter-panel.tpl.html', [ "require", "exports", "module" ], function(r
                 }
                 _$out_.push("</div>");
             } else if (type == "number") {
-                _$out_.push('<div class="form-group"><label>比较方式</label><select name="compareType" class="form-control"><option value="eq" ', filterCriteria.compareType == "eq" ? "selected" : "", '>等于</option><option value="lt" ', filterCriteria.compareType == "lt" ? "selected" : "", '>小于</option><option value="gt" ', filterCriteria.compareType == "gt" ? "selected" : "", '>大于</option></select></div><div class="form-group"><label>比较值</label><input name="value" type="text" maxlength="10" value="', filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "", '" class="form-control" /></div>');
+                _$out_.push('<div class="form-group"><label>', i18n.compareMethod, '</label><select name="compareType" class="form-control"><option value="eq" ', filterCriteria.compareType == "eq" ? "selected" : "", ">", i18n.equal, '</option><option value="lt" ', filterCriteria.compareType == "lt" ? "selected" : "", ">", i18n.lessThan, '</option><option value="gt" ', filterCriteria.compareType == "gt" ? "selected" : "", ">", i18n.greaterThan, '</option></select></div><div class="form-group"><label>', i18n.compareValue, '</label><input name="value" type="text" maxlength="10" value="', $encodeHtml(filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : ""), '" class="form-control" /></div>');
             } else if (type == "date" || type == "datetime") {
-                _$out_.push('<div class="form-group"><label>开始</label><div class="datetimepicker-component input-group date date-from" data-date="', filterCriteria.fromDisplay || "", '" data-date-format="', filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd"), '" data-value="', filterCriteria.fromValue || "", '"><input class="form-control" type="text" name="fromDate" value="', filterCriteria.fromDisplay || "", '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div><div class="form-group"><label>结束</label><div class="datetimepicker-component input-group date date-to" data-date="', filterCriteria.toDisplay || "", '" data-date-format="', filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd"), '" data-value="', filterCriteria.toValue || "", '"><input class="form-control" type="text" name="toDate" value="', filterCriteria.toDisplay || "", '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div>');
+                _$out_.push('<div class="form-group"><label>', i18n.start, '</label><div class="datetimepicker-component input-group date date-from" data-date="', $encodeHtml(filterCriteria.fromDisplay || ""), '" data-date-format="', $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")), '" data-value="', $encodeHtml(filterCriteria.fromValue || ""), '"><input class="form-control" type="text" name="fromDate" value="', $encodeHtml(filterCriteria.fromDisplay || ""), '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div><div class="form-group"><label>', i18n.end, '</label><div class="datetimepicker-component input-group date date-to" data-date="', $encodeHtml(filterCriteria.toDisplay || ""), '" data-date-format="', $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")), '" data-value="', $encodeHtml(filterCriteria.toValue || ""), '"><input class="form-control" type="text" name="toDate" value="', $encodeHtml(filterCriteria.toDisplay || ""), '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div>');
             } else {
-                _$out_.push('<div class="form-group"><input name="value" type="text" value="', filterCriteria.value || "", '" class="form-control" /></div>');
+                _$out_.push('<div class="form-group"><input name="value" type="text" value="', $encodeHtml(filterCriteria.value || ""), '" class="form-control" /></div>');
             }
-            _$out_.push('</div><div class="checkbox"><label><input name="findEmpty" type="checkbox" ', filterCriteria.findEmpty ? "checked" : "", ' /> 空（未填写）</label></div><div class="row"><div class="col-xs-8"><button type="submit" class="btn btn-primary btn-sm btn-confirm">确定</button> <button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">取消</button> </div><div class="col-xs-4 text-right">');
+            _$out_.push('</div><div class="checkbox"><label><input name="findEmpty" type="checkbox" ', filterCriteria.findEmpty ? "checked" : "", " /> ", i18n.empty, '</label></div><div class="row"><div class="col-xs-8"><button type="submit" class="btn btn-primary btn-sm btn-confirm">', i18n.ok, '</button> <button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">', i18n.cancel, '</button> </div><div class="col-xs-4 text-right">');
             if (filterMap[column.id]) {
-                _$out_.push('<a class="btn btn-remove" href="javascript:void(0);">清除</a>');
+                _$out_.push('<a class="btn btn-remove" href="javascript:void(0);">', i18n.clear, "</a>");
             }
             _$out_.push("</div></div></div>");
         }
@@ -1059,23 +1064,85 @@ define('./setting-panel.tpl.html', [ "require", "exports", "module" ], function(
             _$out_.push(str);
         };
         with ($data) {
-            _$out_.push('<h3><i class="fa fa-cog"></i> 设置</h3><div class="alert alert-danger hidden"></div><h4>显示和排序</h4><div class="columns-container"><div class="yom-data-grid-setting-columns-container-inner">');
+            _$out_.push('<h3><i class="fa fa-cog"></i> ', i18n.setting, '</h3><div class="alert alert-danger hidden"></div><h4>', i18n.displayAndSorting, '</h4><div class="columns-container"><div class="yom-data-grid-setting-columns-container-inner">');
             for (var i = 0, l = columns.length; i < l; i++) {
                 var column = columns[i];
                 _$out_.push('<div class="yom-data-grid-setting-column-item"><input type="checkbox" value="', $encodeHtml(column.id), '" ', hiddenColumns.indexOf(column.id) >= 0 ? "" : "checked", " /> ", $encodeHtml(column.name), "</div>");
             }
-            _$out_.push('</div><button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-up disabled" disabled><i class="fa fa-long-arrow-up "></i></button><button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-down disabled" disabled><i class="fa fa-long-arrow-down"></i></button></div><h4>锁定</h4><div class="lock-options">');
+            _$out_.push('</div><button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-up disabled" disabled><i class="fa fa-long-arrow-up "></i></button><button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-down disabled" disabled><i class="fa fa-long-arrow-down"></i></button></div><h4>', i18n.locking, '</h4><div class="lock-options">');
             for (var i = 1; i <= MAX_LOCKED_COLUMNS; i++) {
-                _$out_.push('<label class="radio-inline"><input type="radio" name="lock" value="', i, '" ', lockColumnAmount == i ? "checked" : "", " /> ", i, "列</label> ");
+                _$out_.push('<label class="radio-inline"><input type="radio" name="lock" value="', i, '" ', lockColumnAmount == i ? "checked" : "", " /> ", i, " ", i18n.column, "</label> ");
             }
-            _$out_.push('<label class="radio-inline"><input type="radio" name="lock" value="0" ', lockColumnAmount == 0 ? "checked" : "", ' /> 不锁定</label></div><button type="submit" class="btn btn-primary btn-sm yom-data-grid-btn-confirm-setting">确定</button> <button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-setting-panel">取消</button> ');
+            _$out_.push('<label class="radio-inline"><input type="radio" name="lock" value="0" ', lockColumnAmount == 0 ? "checked" : "", " /> ", i18n.noLocking, '</label></div><button type="submit" class="btn btn-primary btn-sm yom-data-grid-btn-confirm-setting">', i18n.ok, '</button> <button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-setting-panel">', i18n.cancel, "</button> ");
         }
         return _$out_.join("");
     };
 });
 
+define('./i18n', ['require', 'exports', 'module'], function(require, exports, module) {
+module.exports = {
+	'en': {
+		ok: 'Ok',
+		cancel: 'Cancel',
+		
+		filter: 'Filter',
+		clear: 'Clear',
+		equal: 'Equal',
+		lessThan: 'Less Than',
+		greaterThan: 'Greater Than',
+		compareMethod: 'Compare Method',
+		compareValue: 'Compare Value',
+		start: 'Start',
+		end: 'End',
+		empty: 'Empty',
+		clearFilterCriteria: 'Clear filter criteria',
+		atLeastOneColumn: 'Need to display at least one column',
+		filterCriteriaRequired: 'Please input filter criteria',
+		filterValueContainIllegalChar: 'Can not input “,” and “;”',
+		compareValueRequired: 'Please input compare value',
+		atLeastOneDateRequired: 'Please at least choose one date',
+		startDateCanNotLaterThanEndDate: 'Start date can not be later than end date',
+		
+		setting: 'Setting',
+		displayAndSorting: 'Display and Sorting',
+		locking: 'Locking',
+		noLocking: 'No Locking',
+		column: 'column'
+	},
+	
+	'zh-CN': {
+		ok: '确定',
+		cancel: '取消',
+		
+		filter: '筛选',
+		clear: '清除',
+		equal: '等于',
+		lessThan: '小于',
+		greaterThan: '大于',
+		compareMethod: '比较方式',
+		compareValue: '比较值',
+		start: '开始',
+		end: '结束',
+		empty: '空（未填写）',
+		clearFilterCriteria: '清除过滤条件',
+		atLeastOneColumn: '至少显示一列',
+		filterCriteriaRequired: '请输入筛选条件',
+		filterValueContainIllegalChar: '不能输入“,”和“;”',
+		compareValueRequired: '请输入比较值',
+		atLeastOneDateRequired: '请至少指定一个日期',
+		startDateCanNotLaterThanEndDate: '开始日期不能晚于结束日期',
+		
+		setting: '设置',
+		displayAndSorting: '显示和排序',
+		locking: '锁定',
+		noLocking: '不锁定',
+		column: '列'
+	}
+};
+});
+
 define('./yom-data-grid.less', ['require', 'exports', 'module'], function(require, exports, module) {
-    var cssContent = '.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:21px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:9px;margin-top:-10px;background-color:#eee;cursor:pointer;color:#555;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-icon{display:block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:252px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:138px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:266px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-up{position:absolute;top:0;right:2px;display:inline-block;width:18px;text-align:center}.yom-data-grid-setting-column-item .yom-data-grid-setting-btn-move-up{right:22px}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;top:0;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}';
+    var cssContent = '.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:21px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:9px;margin-top:-10px;background-color:#eee;cursor:pointer;color:#555;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-icon{display:block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:252px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:138px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel .btn-default,.yom-data-grid-filter-panel .btn-primary{min-width:62px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:266px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-panel .lock-options .radio-inline{margin-left:0;margin-right:10px}.yom-data-grid-setting-panel .btn-default,.yom-data-grid-setting-panel .btn-primary{min-width:62px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px;min-width:0!important}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;top:0;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}';
     var moduleUri = module && module.uri;
     var head = document.head || document.getElementsByTagName("head")[0];
     var styleTagId = "yom-style-module-inject-tag";

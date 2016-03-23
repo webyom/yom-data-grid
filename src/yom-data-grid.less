@@ -236,6 +236,9 @@
 		max-height: 138px;
 		.border-radius(2px);
 	}
+	.btn-primary, .btn-default {
+		min-width: 62px;
+	}
 }
 .yom-data-grid-filter-remove-icon {
 	color: @gray-dark;
@@ -307,23 +310,19 @@
 	}
 	.lock-options {
 		margin-bottom: 10px;
+		.radio-inline {
+			margin-left: 0;
+			margin-right: 10px;
+		}
+	}
+	.btn-primary, .btn-default {
+		min-width: 62px;
 	}
 }
 .yom-data-grid-setting-column-item {
 	padding: 3px 10px;
 	position: relative;
 	cursor: pointer;
-	.yom-data-grid-setting-btn-move-up, .yom-data-grid-setting-btn-move-down {
-		position: absolute;
-		top: 0;
-		right: 2px;
-		display: inline-block;
-		width: 18px;
-		text-align: center;
-	}
-	.yom-data-grid-setting-btn-move-up {
-		right: 22px;
-	}
 	&.selected {
 		background-color: #ddd;
 	}
@@ -333,6 +332,7 @@
 	right: 0;
 	top: 50%;
 	margin-top: -40px;
+	min-width: 0 !important;
 }
 .yom-data-grid-setting-btn-move-down {
 	position: absolute;

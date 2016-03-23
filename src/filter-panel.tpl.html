@@ -4,9 +4,9 @@ var filterOption = column.filterOption || {};
 var type = filterOption.type;
 %>
 
-<h3><i class="fa fa-filter"></i> <%==column.name || '筛选'%></h3>
+<h3><i class="fa fa-filter"></i> <%==column.name || i18n.filter%></h3>
 
-<div data-column-id="<%=column.id%>">
+<div data-column-id="<%==column.id%>">
 	<div class="alert alert-danger hidden"></div>
 	<div class="filter-option <%=filterCriteria.findEmpty ? 'hidden': ''%>">
 		<%
@@ -28,51 +28,51 @@ var type = filterOption.type;
 			</div>
 		<%} else if(type == 'number') {%>
 			<div class="form-group">
-				<label>比较方式</label>
+				<label><%=i18n.compareMethod%></label>
 				<select name="compareType" class="form-control">
-					<option value="eq" <%=filterCriteria.compareType == 'eq' ? 'selected' : ''%>>等于</option>
-					<option value="lt" <%=filterCriteria.compareType == 'lt' ? 'selected' : ''%>>小于</option>
-					<option value="gt" <%=filterCriteria.compareType == 'gt' ? 'selected' : ''%>>大于</option>
+					<option value="eq" <%=filterCriteria.compareType == 'eq' ? 'selected' : ''%>><%=i18n.equal%></option>
+					<option value="lt" <%=filterCriteria.compareType == 'lt' ? 'selected' : ''%>><%=i18n.lessThan%></option>
+					<option value="gt" <%=filterCriteria.compareType == 'gt' ? 'selected' : ''%>><%=i18n.greaterThan%></option>
 				</select>
 			</div>
 			<div class="form-group">
-				<label>比较值</label>
-				<input name="value" type="text" maxlength="10" value="<%=filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : ''%>" class="form-control" />
+				<label><%=i18n.compareValue%></label>
+				<input name="value" type="text" maxlength="10" value="<%==filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : ''%>" class="form-control" />
 			</div>
 		<%} else if(type == 'date' || type == 'datetime') {%>
 			<div class="form-group">
-				<label>开始</label>
-				<div class="datetimepicker-component input-group date date-from" data-date="<%=filterCriteria.fromDisplay || ''%>" data-date-format="<%=filterOption.format || (type == 'datetime' ? 'yyyy-mm-dd hh:ii' : 'yyyy-mm-dd')%>" data-value="<%=filterCriteria.fromValue || ''%>">
-					<input class="form-control" type="text" name="fromDate" value="<%=filterCriteria.fromDisplay || ''%>" readonly />
+				<label><%=i18n.start%></label>
+				<div class="datetimepicker-component input-group date date-from" data-date="<%==filterCriteria.fromDisplay || ''%>" data-date-format="<%==filterOption.format || (type == 'datetime' ? 'yyyy-mm-dd hh:ii' : 'yyyy-mm-dd')%>" data-value="<%==filterCriteria.fromValue || ''%>">
+					<input class="form-control" type="text" name="fromDate" value="<%==filterCriteria.fromDisplay || ''%>" readonly />
 					<div class="input-group-addon"><i class="fa fa-calendar" /></div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label>结束</label>
-				<div class="datetimepicker-component input-group date date-to" data-date="<%=filterCriteria.toDisplay || ''%>" data-date-format="<%=filterOption.format || (type == 'datetime' ? 'yyyy-mm-dd hh:ii' : 'yyyy-mm-dd')%>" data-value="<%=filterCriteria.toValue || ''%>">
-					<input class="form-control" type="text" name="toDate" value="<%=filterCriteria.toDisplay || ''%>" readonly />
+				<label><%=i18n.end%></label>
+				<div class="datetimepicker-component input-group date date-to" data-date="<%==filterCriteria.toDisplay || ''%>" data-date-format="<%==filterOption.format || (type == 'datetime' ? 'yyyy-mm-dd hh:ii' : 'yyyy-mm-dd')%>" data-value="<%==filterCriteria.toValue || ''%>">
+					<input class="form-control" type="text" name="toDate" value="<%==filterCriteria.toDisplay || ''%>" readonly />
 					<div class="input-group-addon"><i class="fa fa-calendar" /></div>
 				</div>
 			</div>
 		<%} else {%>
 			<div class="form-group">
-				<input name="value" type="text" value="<%=filterCriteria.value || ''%>" class="form-control" />
+				<input name="value" type="text" value="<%==filterCriteria.value || ''%>" class="form-control" />
 			</div>
 		<%}%>
 	</div>
 	<div class="checkbox">
 		<label>
-			<input name="findEmpty" type="checkbox" <%=filterCriteria.findEmpty ? 'checked' : ''%> /> 空（未填写）
+			<input name="findEmpty" type="checkbox" <%=filterCriteria.findEmpty ? 'checked' : ''%> /> <%=i18n.empty%>
 		</label>
 	</div>
 	<div class="row">
 		<div class="col-xs-8">
-			<button type="submit" class="btn btn-primary btn-sm btn-confirm">确定</button> 
-			<button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">取消</button> 
+			<button type="submit" class="btn btn-primary btn-sm btn-confirm"><%=i18n.ok%></button> 
+			<button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel"><%=i18n.cancel%></button> 
 		</div>
 		<div class="col-xs-4 text-right">
 			<%if(filterMap[column.id]) {%>
-				<a class="btn btn-remove" href="javascript:void(0);">清除</a>
+				<a class="btn btn-remove" href="javascript:void(0);"><%=i18n.clear%></a>
 			<%}%>
 		</div>
 	</div>

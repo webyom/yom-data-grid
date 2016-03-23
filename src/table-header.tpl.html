@@ -12,7 +12,7 @@
 				<span title="<%==column.name%>"><%=column.name%></span>
 			<%} else {->columnHeader%>
 				<%if(filterMap[column.id]) {->columnHeader%>
-					<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="清除过滤条件">
+					<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="<%=i18n.clearFilterCriteria%>">
 						<i class="fa fa-filter icon-filter"></i>
 						<i class="fa fa-remove icon-remove"></i>
 					</a> 

@@ -2,6 +2,7 @@ var $ = window.jQuery || window.$;
 var mainTpl = require('./yom-data-grid.tpl.html');
 var filterPanelTpl = require('./filter-panel.tpl.html');
 var settingPanelTpl = require('./setting-panel.tpl.html');
+var i18n = require('./i18n');
 require('./yom-data-grid.less');
 
 var YomDataGrid = function(holder, columns, opt) {
@@ -9,6 +10,7 @@ var YomDataGrid = function(holder, columns, opt) {
 	opt = opt || {};
 	this._opt = opt;
 	this._name = opt.name || 'x';
+	this._i18n = i18n[opt.language] || i18n['en'];
 	this._width = opt.width;
 	this._holder = $(holder);
 	this._container = $('<div class="yom-data-grid-container' + (opt.height == '100%' ? ' yom-data-grid-container-height' : '') + (opt.sequence ? ' yom-data-grid-container-sequence' : '') + '"></div>').appendTo(holder);
@@ -93,6 +95,7 @@ $.extend(YomDataGrid.prototype, {
 	_showSettingPanel: function() {
 		this._settingPanel.html(settingPanelTpl.render({
 			MAX_LOCKED_COLUMNS: this._MAX_LOCKED_COLUMNS,
+			i18n: this._i18n,
 			lockColumnAmount: this._lockColumnAmount,
 			hiddenColumns: this._hiddenColumns,
 			columns: this._allColumns
@@ -122,7 +125,7 @@ $.extend(YomDataGrid.prototype, {
 			return item.value;
 		}).get();
 		if(hiddenColumns.length == this._allColumns.length) {
-			this._showSettingErrMsg('至少显示一列');
+			this._showSettingErrMsg(this._i18n.atLeastOneColumn);
 			return;
 		}
 		var columnSequence = $('.columns-container input', this._settingPanel).map(function(i, item) {
@@ -180,7 +183,7 @@ $.extend(YomDataGrid.prototype, {
 					return item.value;
 				}).get();
 				if(!set.length) {
-					this._showFilterErrMsg('请选择筛选条件');
+					this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
 					return;
 				}
 				filterCriteria.valueMap = valueMap;
@@ -189,12 +192,12 @@ $.extend(YomDataGrid.prototype, {
 				var compareType = $('[name="compareType"]', this._filterPanel).val();
 				valueEl = $('[name="value"]', this._filterPanel);
 				if((/[,;]/).test(valueEl.val())) {
-					this._showFilterErrMsg('不能输入“,”和“;”');
+					this._showFilterErrMsg(this._i18n.filterValueContainIllegalChar);
 					return;
 				}
 				value = parseFloat($.trim(valueEl.val()));
 				if(isNaN(value)) {
-					this._showFilterErrMsg('请输入比较值');
+					this._showFilterErrMsg(this._i18n.compareValueRequired);
 					return;
 				}
 				filterCriteria.compareType = compareType;
@@ -211,22 +214,22 @@ $.extend(YomDataGrid.prototype, {
 					filterCriteria.toDisplay = dateToDom.find('input').val();
 				}
 				if(!filterCriteria.fromValue && !filterCriteria.toValue) {
-					this._showFilterErrMsg('请至少指定一个日期');
+					this._showFilterErrMsg(this._i18n.atLeastOneDateRequired);
 					return;
 				}
 				if(filterCriteria.fromValue > filterCriteria.toValue) {
-					this._showFilterErrMsg('开始日期不能晚于结束日期');
+					this._showFilterErrMsg(this._i18n.startDateCanNotLaterThanEndDate);
 					return;
 				}
 			} else {
 				valueEl = $('[name="value"]', this._filterPanel);
 				if((/[,;]/).test(valueEl.val())) {
-					this._showFilterErrMsg('不能输入“,”和“;”');
+					this._showFilterErrMsg(this._i18n.filterValueContainIllegalChar);
 					return;
 				}
 				value = $.trim(valueEl.val());
 				if(!value) {
-					this._showFilterErrMsg('请输入筛选条件');
+					this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
 					return;
 				}
 				filterCriteria.value = value;
@@ -409,12 +412,13 @@ $.extend(YomDataGrid.prototype, {
 		var top = offset.top + height;
 		var type = column.filterOption && column.filterOption.type;
 		this._filterPanel.html(filterPanelTpl.render({
+			i18n: this._i18n,
 			column: column,
 			filterMap: this._filterMap
 		}));
 		if(type == 'date' || type == 'datetime') {
 			var pickerOpt = {
-				language: 'zh-CN',
+				language: this._opt.language,
 				bootcssVer: 3,
 				fontAwesome: true,
 				pickerPosition: 'bottom-left',
@@ -720,6 +724,7 @@ $.extend(YomDataGrid.prototype, {
 		}
 		this._container.html(mainTpl.render({
 			DEFAULT_COLUMN_WIDTH: this._DEFAULT_COLUMN_WIDTH,
+			i18n: this._i18n,
 			name: this._name,
 			width: width,
 			noScrollX: noScrollX,
