@@ -42,6 +42,9 @@ var YomDataGrid = function(holder, columns, opt) {
 		scroll: function(evt) {
 			self._onScroll(evt);
 		},
+		scrollLocked: function(evt) {
+			self._onScrollLocked(evt);
+		},
 		autoResize: function(evt) {
 			self.render();
 		},
@@ -72,6 +75,39 @@ $.extend(YomDataGrid.prototype, {
 		}
 		this._hideFilterPanel();
 		this._hideSettingPanel();
+	},
+	
+	_onScrollLocked: function(evt) {
+		var e = evt.originalEvent;
+		var step = -30;
+		var x = 0;
+		var y = 0;
+		var top, left;
+		var lockedBody = this._lockedBody;
+		var scrollBody = this._scrollBody[0];
+		if(!isNaN(e.wheelDeltaX)) {
+			x = e.wheelDeltaX / 120;
+		} else if(!isNaN(e.deltaX)) {
+			x = e.deltaX / 120 * -3;
+		}
+		if(!isNaN(e.wheelDeltaY)) {
+			y = e.wheelDeltaY / 120;
+		} else if(!isNaN(e.deltaY)) {
+			y = e.deltaY / 120 * -3;
+		} else if(!isNaN(e.wheelDelta)) {
+			y = e.wheelDelta / 120;
+		}
+		if(Math.abs(x) > Math.abs(y)) { // scroll x
+			left = scrollBody.scrollLeft + x * step;
+			scrollBody.scrollLeft = left;
+			if(this._scrollHeader) {
+				this._scrollHeader.scrollLeft = left;
+			}
+		} else if(Math.abs(y) > 0) { // scroll y
+			top = scrollBody.scrollTop + y * step;
+			lockedBody.scrollTop = top;
+			scrollBody.scrollTop = top;
+		}
 	},
 
 	_clientSort: function() {
@@ -704,8 +740,9 @@ $.extend(YomDataGrid.prototype, {
 		if(this._opt.onBeforeRender) {
 			this._opt.onBeforeRender();
 		}
-		if(this._scrollBody) {
-			this._scrollBody.off('scroll', this._bind.scroll);
+		$('.yom-data-grid-header, .yom-data-grid-locked-columns .yom-data-grid-body', this._container).off('mousewheel', this._bind.scrollLocked);
+		if(this._lockedBody) {
+			$(this._lockedBody).off('mousewheel', this._bind.scrollLocked);
 		}
 		this._lockedBody = null;
 		this._scrollHeader = null;
@@ -743,6 +780,7 @@ $.extend(YomDataGrid.prototype, {
 		this._scrollHeader = $('.yom-data-grid-columns .yom-data-grid-header', this._container)[0];
 		this._scrollBody = $('.yom-data-grid-columns .yom-data-grid-body', this._container);
 		this._scrollBody.on('scroll', this._bind.scroll);
+		$('.yom-data-grid-header, .yom-data-grid-locked-columns .yom-data-grid-body', this._container).on('mousewheel', this._bind.scrollLocked);
 		this._settingPanel = $('.yom-data-grid-setting-panel', this._container);
 	},
 
