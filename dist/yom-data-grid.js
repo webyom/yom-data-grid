@@ -99,14 +99,26 @@ $.extend(YomDataGrid.prototype, {
 		} else if(!isNaN(e.wheelDelta)) {
 			y = e.wheelDelta / 120;
 		}
+		x = x * step;
+		y = y * step;
+		if(x > 0 && x < 1) {
+			x = 1;
+		} else if(x < 0 && x > -1) {
+			x = -1;
+		}
+		if(y > 0 && y < 1) {
+			y = 1;
+		} else if(y < 0 && y > -1) {
+			y = -1;
+		}
 		if(Math.abs(x) > Math.abs(y)) { // scroll x
-			left = scrollBody.scrollLeft + x * step;
+			left = scrollBody.scrollLeft + x;
 			scrollBody.scrollLeft = left;
 			if(this._scrollHeader) {
 				this._scrollHeader.scrollLeft = left;
 			}
 		} else if(Math.abs(y) > 0) { // scroll y
-			top = scrollBody.scrollTop + y * step;
+			top = scrollBody.scrollTop + y;
 			lockedBody.scrollTop = top;
 			scrollBody.scrollTop = top;
 		}
