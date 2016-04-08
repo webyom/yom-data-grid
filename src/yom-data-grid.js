@@ -414,6 +414,12 @@ $.extend(YomDataGrid.prototype, {
 			if(self._opt.onSelect) {
 				self._opt.onSelect(rowIndex, checked, rowIndex >= 0 && self._data[rowIndex] || undefined);
 			}
+		}).delegate('[data-grid-row-click]', 'click', function(evt) {
+			var rowIndex = $(this).closest('[data-grid-row]').data('grid-row');
+			var item = self._data[rowIndex];
+			if(self._opt.onRowClick) {
+				self._opt.onRowClick(rowIndex, item, $(this).data('grid-row-click'));
+			}
 		});
 		this._filterPanel.delegate('[name="findEmpty"]', 'click', function(evt) {
 			if(evt.target.checked) {
