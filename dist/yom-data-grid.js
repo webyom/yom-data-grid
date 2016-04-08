@@ -418,8 +418,10 @@ $.extend(YomDataGrid.prototype, {
 		}).delegate('[data-grid-row-click]', 'click', function(evt) {
 			var rowIndex = $(this).closest('[data-grid-row]').data('grid-row');
 			var item = self._data[rowIndex];
+			var columnId = $(this).closest('[data-grid-column-id]').data('grid-column-id');
+			var column = self.getColumnById(columnId);
 			if(self._opt.onRowClick) {
-				self._opt.onRowClick(rowIndex, item, $(this).data('grid-row-click'));
+				self._opt.onRowClick(rowIndex, item, columnId, column);
 			}
 		});
 		this._filterPanel.delegate('[name="findEmpty"]', 'click', function(evt) {
@@ -959,14 +961,16 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                             _$out_.push('<tr data-grid-row="', i, '" class="', i == l - 1 ? "yom-data-grid-last-row" : "", " ", i % 2 === 0 ? "yom-data-grid-row-odd" : "", '">');
                             for (j = 0, l2 = columns.length; j < l2; j++) {
                                 column = columns[j];
-                                _$out_.push('<td id="yom-data-grid-', name, "-cell-", i, "-", j + columnOffset, '" class="', column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "", " ", j == l2 - 1 ? "yom-data-grid-last-cell" : "", " yom-data-grid-column-", column.id.replace(/\./g, "-"), '">');
+                                _$out_.push('<td data-grid-column-id="', column.id, '" id="yom-data-grid-', name, "-cell-", i, "-", j + columnOffset, '" class="', column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "", " ", j == l2 - 1 ? "yom-data-grid-last-cell" : "", " yom-data-grid-column-", column.id.replace(/\./g, "-"), '">');
                                 ids = column.id.split(".");
                                 columnValue = item[ids.shift()];
                                 while (ids.length && columnValue) {
                                     columnValue = columnValue[ids.shift()];
                                 }
                                 if (column.renderer) {
-                                    displayValue = column.renderer(columnValue, i, item, j + columnOffset, column);
+                                    displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column);
+                                } else if (column.clickable) {
+                                    displayValue = '<a href="javascript:void(0);" data-grid-row-click>' + $encodeHtml(columnValue || "") + "</a>";
                                 } else {
                                     displayValue = $encodeHtml(columnValue || "");
                                 }
@@ -1017,14 +1021,16 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                             _$out_.push('<tr data-grid-row="', i, '" class="', i == l - 1 ? "yom-data-grid-last-row" : "", " ", i % 2 === 0 ? "yom-data-grid-row-odd" : "", '">');
                             for (j = 0, l2 = columns.length; j < l2; j++) {
                                 column = columns[j];
-                                _$out_.push('<td id="yom-data-grid-', name, "-cell-", i, "-", j + columnOffset, '" class="', column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "", " ", j == l2 - 1 ? "yom-data-grid-last-cell" : "", " yom-data-grid-column-", column.id.replace(/\./g, "-"), '">');
+                                _$out_.push('<td data-grid-column-id="', column.id, '" id="yom-data-grid-', name, "-cell-", i, "-", j + columnOffset, '" class="', column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "", " ", j == l2 - 1 ? "yom-data-grid-last-cell" : "", " yom-data-grid-column-", column.id.replace(/\./g, "-"), '">');
                                 ids = column.id.split(".");
                                 columnValue = item[ids.shift()];
                                 while (ids.length && columnValue) {
                                     columnValue = columnValue[ids.shift()];
                                 }
                                 if (column.renderer) {
-                                    displayValue = column.renderer(columnValue, i, item, j + columnOffset, column);
+                                    displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column);
+                                } else if (column.clickable) {
+                                    displayValue = '<a href="javascript:void(0);" data-grid-row-click>' + $encodeHtml(columnValue || "") + "</a>";
                                 } else {
                                     displayValue = $encodeHtml(columnValue || "");
                                 }
