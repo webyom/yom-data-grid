@@ -657,7 +657,7 @@ $.extend(YomDataGrid.prototype, {
 		var self = this;
 		var res = {};
 		if(typeof filterMap == 'string') {
-			filterMap.split(';').forEach(function(item) {
+			decodeURIComponent(filterMap).split(';').forEach(function(item) {
 				var filterCriteria = {};
 				var parts  = item.split(',');
 				var column = self.getColumnById(parts.shift());
