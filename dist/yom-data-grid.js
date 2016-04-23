@@ -964,8 +964,11 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                                 _$out_.push('<td data-grid-column-id="', column.id, '" id="yom-data-grid-', name, "-cell-", i, "-", j + columnOffset, '" class="', column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "", " ", j == l2 - 1 ? "yom-data-grid-last-cell" : "", " yom-data-grid-column-", column.id.replace(/\./g, "-"), '">');
                                 ids = column.id.split(".");
                                 columnValue = item[ids.shift()];
-                                while (ids.length && columnValue) {
+                                while (ids.length && columnValue && typeof columnValue == "object") {
                                     columnValue = columnValue[ids.shift()];
+                                }
+                                if (columnValue != null && columnValue.toString) {
+                                    columnValue = columnValue.toString();
                                 }
                                 if (column.renderer) {
                                     displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column);
@@ -1024,8 +1027,11 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                                 _$out_.push('<td data-grid-column-id="', column.id, '" id="yom-data-grid-', name, "-cell-", i, "-", j + columnOffset, '" class="', column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "", " ", j == l2 - 1 ? "yom-data-grid-last-cell" : "", " yom-data-grid-column-", column.id.replace(/\./g, "-"), '">');
                                 ids = column.id.split(".");
                                 columnValue = item[ids.shift()];
-                                while (ids.length && columnValue) {
+                                while (ids.length && columnValue && typeof columnValue == "object") {
                                     columnValue = columnValue[ids.shift()];
+                                }
+                                if (columnValue != null && columnValue.toString) {
+                                    columnValue = columnValue.toString();
                                 }
                                 if (column.renderer) {
                                     displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column);

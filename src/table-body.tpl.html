@@ -9,8 +9,11 @@ for(i = 0, l = data.length; i < l; i++) {
 				<%
 				ids = column.id.split('.');
 				columnValue = item[ids.shift()];
-				while(ids.length && columnValue) {
+				while(ids.length && columnValue && typeof columnValue == 'object') {
 					columnValue = columnValue[ids.shift()];
+				}
+				if(columnValue != null && columnValue.toString) {
+					columnValue = columnValue.toString();
 				}
 				if(column.renderer) {
 					displayValue = column.renderer($encodeHtml(columnValue || ''), i, item, j + columnOffset, column);
