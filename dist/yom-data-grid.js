@@ -1099,10 +1099,30 @@ define('./filter-panel.tpl.html', [ "require", "exports", "module" ], function(r
             if (type == "set") {
                 var options = filterOption.options || [];
                 var valueMap = filterCriteria.valueMap || {};
+                if (!Array.isArray(options)) {
+                    var tmp = [];
+                    for (var p in options) {
+                        if (options.hasOwnProperty(p)) {
+                            tmp.push({
+                                value: p,
+                                name: options[p]
+                            });
+                        }
+                    }
+                    options = tmp;
+                }
                 _$out_.push('<div class="set-container">');
                 for (var i = 0, l = options.length; i < l; i++) {
                     var option = options[i];
-                    _$out_.push('<div class="checkbox"><label><input type="checkbox" value="', $encodeHtml(option.value), '" ', valueMap[option.value] ? "checked" : "", " /> ", $encodeHtml(option.name), "</label></div>");
+                    var value, name;
+                    if (typeof option == "string") {
+                        value = option;
+                        name = option;
+                    } else {
+                        value = option.id || option.key || option.val || option.value;
+                        name = option.label || option.name || option.value || option.val;
+                    }
+                    _$out_.push('<div class="checkbox"><label><input type="checkbox" value="', $encodeHtml(value), '" ', valueMap[value] ? "checked" : "", " /> ", $encodeHtml(name), "</label></div>");
                 }
                 _$out_.push("</div>");
             } else if (type == "number") {

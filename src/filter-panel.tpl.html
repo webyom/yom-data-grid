@@ -13,15 +13,32 @@ var type = filterOption.type;
 		if(type == 'set') {
 			var options = filterOption.options || [];
 			var valueMap = filterCriteria.valueMap || {};
+			if(!Array.isArray(options)) {
+				var tmp = [];
+				for(var p in options) {
+					if(options.hasOwnProperty(p)) {
+						tmp.push({value: p, name: options[p]});
+					}
+				}
+				options = tmp;
+			}
 		%>
 			<div class="set-container">
 				<%
 				for(var i = 0, l = options.length; i < l; i++) {
 					var option = options[i];
+					var value, name;
+					if(typeof option == 'string') {
+						value = option;
+						name = option;
+					} else {
+						value = option.id || option.key || option.val || option.value;
+						name = option.label || option.name || option.value || option.val;
+					}
 				%>
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" value="<%==option.value%>" <%=valueMap[option.value] ? 'checked': ''%> /> <%==option.name%>
+							<input type="checkbox" value="<%==value%>" <%=valueMap[value] ? 'checked': ''%> /> <%==name%>
 						</label>
 					</div>
 				<%}%>
