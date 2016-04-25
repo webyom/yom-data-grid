@@ -681,8 +681,8 @@ $.extend(YomDataGrid.prototype, {
 							filterCriteria.compareType = compareType;
 							filterCriteria.value = value;
 						} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
-							var fromValue = parseInt(parts.shift());
-							var toValue = parseInt(parts.shift());
+							var fromValue = (filterOption.parser || parseInt)(parts.shift());
+							var toValue = (filterOption.parser || parseInt)(parts.shift());
 							if(fromValue) {
 								filterCriteria.fromValue = fromValue;
 								filterCriteria.fromDisplay = filterOption.formatter(fromValue);
@@ -714,6 +714,9 @@ $.extend(YomDataGrid.prototype, {
 		for(var p in filterMap) {
 			if(Object.prototype.hasOwnProperty.call(filterMap, p)) {
 				var criteria = filterMap[p];
+				if(this._opt.getFilterMapItemForStringify) {
+					criteria = this._opt.getFilterMapItemForStringify(criteria);
+				}
 				if(criteria.findEmpty) {
 					filters.push(p + ',1');
 				} else {
