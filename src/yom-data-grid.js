@@ -3,6 +3,7 @@ var mainTpl = require('./yom-data-grid.tpl.html');
 var filterPanelTpl = require('./filter-panel.tpl.html');
 var settingPanelTpl = require('./setting-panel.tpl.html');
 var i18n = require('./i18n');
+var mergeSort = require('./merge-sort');
 require('./yom-data-grid.less');
 
 var YomDataGrid = function(holder, columns, opt) {
@@ -24,20 +25,20 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._lockedBody = null;
 	this._scrollHeader = null;
 	this._scrollBody = null;
-	
+
 	// sortting
 	this._sortColumnId = '';
 	this._sortOrder = '';
-	
+
 	// filter
 	this._filterMap = {};
 	this._activeFilterColumn = null;
-	
+
 	// column sortting & lock & hidden
 	this._lockColumnAmount = 0;
 	this._columnSequence = [];
 	this._hiddenColumns = [];
-	
+
 	this._bind = {
 		scroll: function(evt) {
 			self._onScroll(evt);
@@ -53,7 +54,7 @@ var YomDataGrid = function(holder, columns, opt) {
 			self._hideSettingPanel(evt);
 		}
 	};
-	
+
 	this.setColumns(columns, this.getSetting());
 	this._bindEvent();
 };
@@ -76,7 +77,7 @@ $.extend(YomDataGrid.prototype, {
 		this._hideFilterPanel();
 		this._hideSettingPanel();
 	},
-	
+
 	_onScrollLocked: function(evt) {
 		evt.preventDefault();
 		var e = evt.originalEvent;
@@ -127,7 +128,7 @@ $.extend(YomDataGrid.prototype, {
 		var sortOrder = this._sortOrder;
 		var columnId = this._sortColumnId;
 		var dataProperty = this._opt.dataProperty;
-		this._data.sort(function(a, b) {
+		this._data = mergeSort(this._data, function(a, b) {
 			if(dataProperty) {
 				a = a[dataProperty];
 				b = b[dataProperty];
@@ -140,7 +141,7 @@ $.extend(YomDataGrid.prototype, {
 		});
 		this.render(this._data);
 	},
-	
+
 	_showSettingPanel: function() {
 		this._settingPanel.html(settingPanelTpl.render({
 			MAX_LOCKED_COLUMNS: this._MAX_LOCKED_COLUMNS,
@@ -151,7 +152,7 @@ $.extend(YomDataGrid.prototype, {
 		}))
 		this._settingPanel.show();
 	},
-	
+
 	_hideSettingPanel: function(evt) {
 		if(evt) {
 			var target = $(evt.target);
@@ -164,11 +165,11 @@ $.extend(YomDataGrid.prototype, {
 		}
 		this._settingPanel && this._settingPanel.hide();
 	},
-	
+
 	_showSettingErrMsg: function(msg) {
 		$('.alert-danger', this._settingPanel).html(msg).removeClass('hidden');
 	},
-	
+
 	_submitSettingForm: function() {
 		var hiddenColumns = $('.columns-container input:not(:checked)', this._settingPanel).map(function(i, item) {
 			return item.value;
@@ -189,7 +190,7 @@ $.extend(YomDataGrid.prototype, {
 			this._opt.onSettingChange(this.getSetting());
 		}
 	},
-	
+
 	_hideFilterPanel: function(evt) {
 		if(evt) {
 			var target = $(evt.target);
@@ -207,11 +208,11 @@ $.extend(YomDataGrid.prototype, {
 		this._filterPanel && this._filterPanel.hide();
 		this._activeFilterColumn = null;
 	},
-	
+
 	_showFilterErrMsg: function(msg) {
 		$('.alert-danger', this._filterPanel).html(msg).removeClass('hidden');
 	},
-	
+
 	_submitFilterForm: function() {
 		var findEmpty = $('[name="findEmpty"]', this._filterPanel).prop('checked');
 		var column = this._activeFilterColumn;
@@ -292,7 +293,7 @@ $.extend(YomDataGrid.prototype, {
 			this._opt.onStateChange(this.getState());
 		}
 	},
-	
+
 	_removeFilter: function(columnId) {
 		this._hideFilterPanel();
 		delete this._filterMap[columnId];
@@ -300,7 +301,7 @@ $.extend(YomDataGrid.prototype, {
 			this._opt.onStateChange(this.getState());
 		}
 	},
-	
+
 	_setFilterMap: function(filterMap) {
 		filterMap = this.parseFilterMap(filterMap);
 		if(filterMap) {
@@ -312,7 +313,7 @@ $.extend(YomDataGrid.prototype, {
 			}
 		}
 	},
-	
+
 	_updateColumnSortBtnStatus: function() {
 		var selectedEl = $('.yom-data-grid-setting-column-item.selected', self._container);
 		var hasPrev = selectedEl.prev().length;
@@ -328,7 +329,7 @@ $.extend(YomDataGrid.prototype, {
 			$('.yom-data-grid-setting-btn-move-down', this._container).addClass('disabled').prop('disabled', true);
 		}
 	},
-	
+
 	_updateColumnSortScroll: function() {
 		var selectedEl = $('.yom-data-grid-setting-column-item.selected', self._container);
 		var container = $('.yom-data-grid-setting-columns-container-inner', self._container);
@@ -458,7 +459,7 @@ $.extend(YomDataGrid.prototype, {
 			$(window).off('resize', this._bind.autoResize);
 		}
 	},
-	
+
 	showFilterPanel: function(column, target, align) {
 		target = $(target);
 		this._activeFilterColumn = column;
@@ -542,7 +543,7 @@ $.extend(YomDataGrid.prototype, {
 				locked: true
 			});
 		}
-		this._allColumns.sort(function(a, b) {
+		this._allColumns = mergeSort(this._allColumns, function(a, b) {
 			var as = self._columnSequence.indexOf(a.id);
 			var bs = self._columnSequence.indexOf(b.id);
 			as = as >= 0 ? as : 9999;
@@ -573,7 +574,7 @@ $.extend(YomDataGrid.prototype, {
 			}
 		});
 	},
-	
+
 	getColumnById: function(id) {
 		var column = this._allColumns.filter(function(item) {
 			return item.id == id;
@@ -621,7 +622,7 @@ $.extend(YomDataGrid.prototype, {
 		}
 		return res;
 	},
-	
+
 	setAllSelection: function(checked) {
 		$('.yom-data-grid-check-box, .yom-data-grid-check-box-all', this._container).each(function(i, item) {
 			item.checked = !!checked;
@@ -635,7 +636,7 @@ $.extend(YomDataGrid.prototype, {
 	dehightLightRows: function(className) {
 		$('[yom-data-grid-row]', this._container).removeClass(className || 'yom-data-grid-row-error');
 	},
-	
+
 	getSetting: function() {
 		return {
 			lockColumnAmount: this._lockColumnAmount,
@@ -643,7 +644,7 @@ $.extend(YomDataGrid.prototype, {
 			hiddenColumns: this._hiddenColumns.concat()
 		};
 	},
-	
+
 	getState: function() {
 		return {
 			sortOrder: this._sortOrder,
@@ -651,7 +652,7 @@ $.extend(YomDataGrid.prototype, {
 			filterMap: $.extend({}, this._filterMap)
 		};
 	},
-	
+
 	parseFilterMap: function(filterMap) {
 		var self = this;
 		var res = {};
@@ -703,7 +704,7 @@ $.extend(YomDataGrid.prototype, {
 		}
 		return res;
 	},
-	
+
 	getFilterMapString: function(filterMap) {
 		filterMap = filterMap || this._filterMap;
 		if (typeof filterMap == 'string') {
@@ -733,7 +734,7 @@ $.extend(YomDataGrid.prototype, {
 		}
 		return filters.join(';');
 	},
-	
+
 	getQueryString: function() {
 		var all = [];
 		var filterMapString = this.getFilterMapString();
