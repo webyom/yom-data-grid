@@ -1,5 +1,5 @@
 <%
-var i, j, l, l2, column, columns, columnWidth, columnHeader, columnOffset;
+var i, j, l, l2, column, columns, columnWidth, columnHeader, columnOffset, renderData, isHeaderData;
 var scrollX = false;
 var lockedTableWidth = 0;
 var scrollTableWidth = 0;
@@ -74,7 +74,7 @@ if(!noScrollX && width > 0) {
 	<i class="fa fa-cog"></i>
 </a>
 <div class="yom-data-grid-setting-panel"></div>
-<div class="yom-data-grid <%=lockedDisplayColumns.length ? 'yom-data-grid-locked' : ''%> <%=bordered ? 'yom-data-grid-bordered' : ''%> <%=striped ? 'yom-data-grid-striped' : ''%>" style="overflow: hidden;">
+<div class="yom-data-grid <%=lockedDisplayColumns.length ? 'yom-data-grid-locked' : ''%> <%=bordered ? 'yom-data-grid-bordered' : ''%> <%=striped ? 'yom-data-grid-striped' : ''%> <%=headerData.length > 0 ? 'yom-data-grid-header-rows-' + headerData.length : ''%>" style="overflow: hidden;">
 	<table border="0" cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;">
 		<tr>
 			<%if(lockedDisplayColumns.length) {%>
@@ -87,6 +87,14 @@ if(!noScrollX && width > 0) {
 									<tr>
 										<%=lockedColumnHeader.join('')%>
 									</tr>
+									<%if(headerData.length) {
+										columnOffset = 0;
+										columns = lockedDisplayColumns;
+										renderData = headerData;
+										isHeaderData = true;
+									%>
+										<!-- include "./table-body.tpl.html" -->
+									<%}%>
 								</tbody>
 							</table>
 						</div>
@@ -97,6 +105,8 @@ if(!noScrollX && width > 0) {
 									<%
 									columnOffset = 0;
 									columns = lockedDisplayColumns;
+									renderData = data;
+									isHeaderData = false;
 									%>
 									<!-- include "./table-body.tpl.html" -->
 								</tbody>
@@ -116,6 +126,14 @@ if(!noScrollX && width > 0) {
 									<tr>
 										<%=scrollColumnHeader.join('')%>
 									</tr>
+									<%if(headerData.length) {
+										columnOffset = lockedDisplayColumns.length;
+										columns = scrollDisplayColumns;
+										renderData = headerData;
+										isHeaderData = true;
+									%>
+										<!-- include "./table-body.tpl.html" -->
+									<%}%>
 								</tbody>
 							</table>
 						</div>
@@ -126,6 +144,8 @@ if(!noScrollX && width > 0) {
 									<%
 									columnOffset = lockedDisplayColumns.length;
 									columns = scrollDisplayColumns;
+									renderData = data;
+									isHeaderData = false;
 									%>
 									<!-- include "./table-body.tpl.html" -->
 								</tbody>

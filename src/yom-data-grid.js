@@ -22,6 +22,7 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._lockedColumns = [];
 	this._scrollColumns = [];
 	this._data = [];
+	this._headerData = [];
 	this._lockedBody = null;
 	this._scrollHeader = null;
 	this._scrollBody = null;
@@ -416,12 +417,18 @@ $.extend(YomDataGrid.prototype, {
 				self._opt.onSelect(rowIndex, checked, rowIndex >= 0 && self._data[rowIndex] || undefined);
 			}
 		}).delegate('[data-grid-row-click]', 'click', function(evt) {
-			var rowIndex = $(this).closest('[data-grid-row]').data('grid-row');
-			var item = self._data[rowIndex];
 			var columnId = $(this).closest('[data-grid-column-id]').data('grid-column-id');
 			var column = self.getColumnById(columnId);
+			var rowIndex = $(this).closest('[data-grid-row]').data('grid-row');
+			var headerRowIndex, item;
+			if(rowIndex) {
+				item = self._data[rowIndex];
+			} else {
+				headerRowIndex = $(this).closest('[data-grid-header-row]').data('grid-header-row');
+				item = self._headerData[headerRowIndex];
+			}
 			if(self._opt.onRowClick) {
-				self._opt.onRowClick(rowIndex, item, columnId, column);
+				self._opt.onRowClick(rowIndex, item, columnId, column, !!headerRowIndex);
 			}
 		});
 		this._filterPanel.delegate('[name="findEmpty"]', 'click', function(evt) {
@@ -443,6 +450,12 @@ $.extend(YomDataGrid.prototype, {
 				$('[data-grid-row="' + $(this).data('grid-row') + '"]', self._container).addClass('yom-data-grid-row-hl');
 			}).delegate('[data-grid-row]', 'mouseleave', function(evt) {
 				$('[data-grid-row="' + $(this).data('grid-row') + '"]', self._container).removeClass('yom-data-grid-row-hl');
+			})
+			this._container.delegate('[data-grid-header-row]', 'mouseenter', function(evt) {
+				$('[data-grid-header-row]', self._container).removeClass('yom-data-grid-row-hl');
+				$('[data-grid-header-row="' + $(this).data('grid-header-row') + '"]', self._container).addClass('yom-data-grid-row-hl');
+			}).delegate('[data-grid-header-row]', 'mouseleave', function(evt) {
+				$('[data-grid-header-row="' + $(this).data('grid-header-row') + '"]', self._container).removeClass('yom-data-grid-row-hl');
 			})
 		}
 		$(document).on('click', this._bind.documentClick);
@@ -750,9 +763,12 @@ $.extend(YomDataGrid.prototype, {
 		return all.join('&');
 	},
 
-	render: function(data, state, setting) {
+	render: function(data, headerData, state, setting) {
 		if(data && data.length) {
 			this._data = data;
+		}
+		if(headerData && headerData.length) {
+			this._headerData = headerData;
 		}
 		if(state) {
 			this._sortColumnId = state.sortColumnId || this._sortColumnId;
@@ -799,6 +815,7 @@ $.extend(YomDataGrid.prototype, {
 			filterMap: this._filterMap,
 			checkbox: this._opt.checkbox,
 			data: this._data,
+			headerData: this._headerData,
 			dataProperty: this._opt.dataProperty
 		}));
 		this._lockedBody = $('.yom-data-grid-locked-columns .yom-data-grid-body', this._container)[0];

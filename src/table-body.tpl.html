@@ -1,11 +1,11 @@
 <%
 var item, columnValue, displayValue, title, ids;
-for(i = 0, l = data.length; i < l; i++) {
-	item = dataProperty ? data[i][dataProperty] : data[i];%>
-	<tr data-grid-row="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=i % 2 === 0 ? 'yom-data-grid-row-odd' : ''%>">
+for(i = 0, l = renderData.length; i < l; i++) {
+	item = dataProperty ? renderData[i][dataProperty] : renderData[i];%>
+	<tr data-grid-<%=isHeaderData ? 'header-row' : 'row'%>="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=(isHeaderData ? i : i + headerData.length) % 2 === 0 ? 'yom-data-grid-row-odd' : ''%>">
 		<%for(j = 0, l2 = columns.length; j < l2; j++) {
 			column = columns[j];%>
-			<td data-grid-column-id="<%=column.id%>" id="yom-data-grid-<%=name%>-cell-<%=i%>-<%=j + columnOffset%>" class="<%=column.type == 'sequence' ? 'yom-data-grid-sequence-cell' : column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : ''%> <%=j == l2 - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>">
+			<td data-grid-column-id="<%=column.id%>" id="yom-data-grid-<%=name%>-<%=isHeaderData ? 'header-cell' : 'cell'%>-<%=i%>-<%=j + columnOffset%>" class="<%=column.type == 'sequence' ? 'yom-data-grid-sequence-cell' : column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : ''%> <%=j == l2 - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>">
 				<%
 				ids = column.id.split('.');
 				columnValue = item[ids.shift()];
@@ -16,14 +16,14 @@ for(i = 0, l = data.length; i < l; i++) {
 					columnValue = columnValue.toString();
 				}
 				if(column.renderer) {
-					displayValue = column.renderer($encodeHtml(columnValue || ''), i, item, j + columnOffset, column);
+					displayValue = column.renderer($encodeHtml(columnValue || ''), i, item, j + columnOffset, column, isHeaderData);
 				} else if(column.clickable) {
 					displayValue = '<a href="javascript:void(0);" data-grid-row-click>' + $encodeHtml(columnValue || '') + '</a>';
 				} else {
 					displayValue = $encodeHtml(columnValue || '');
 				}
 				if(column.titleRenderer) {
-					title = column.titleRenderer(columnValue, i, item, j + columnOffset, column);
+					title = column.titleRenderer(columnValue, i, item, j + columnOffset, column, isHeaderData);
 				} else if(typeof column.title != 'undefined') {
 					if(column.title == '__content__') {
 						title = displayValue;
@@ -36,9 +36,11 @@ for(i = 0, l = data.length; i < l; i++) {
 				%>
 				<div class="yom-data-grid-cell-inner" title="<%==title%>" style="text-align: <%=column.textAlign || 'left'%>;">
 					<%if(column.type == 'sequence') {%>
-						<%=i + 1%>
+						<%=isHeaderData ? '&nbsp;' : i + 1%>
 					<%} else if(column.type == 'checkbox') {
-						if(checkbox && checkbox.checkable) {
+						if(isHeaderData) {%>
+							&nbsp;
+						<%} else if(checkbox && checkbox.checkable) {
 							if(checkbox.checkable(item, i)) {%>
 								<input class="yom-data-grid-check-box" data-row-index="<%=i%>" type="checkbox" />
 							<%} else {%>
