@@ -1,14 +1,31 @@
 <%
+var DEFAULT_COLUMN_WIDTH = $data.DEFAULT_COLUMN_WIDTH,
+	i18n = $data.i18n,
+	name = $data.name,
+	width = $data.width,
+	noScrollX = $data.noScrollX,
+	lockedColumns = $data.lockedColumns,
+	scrollColumns = $data.scrollColumns,
+	bordered = $data.bordered,
+	striped = $data.striped,
+	sortColumnId = $data.sortColumnId,
+	sortOrder = $data.sortOrder,
+	filterMap = $data.filterMap,
+	checkbox = $data.checkbox,
+	data = $data.data,
+	headerData = $data.headerData,
+	dataProperty = $data.dataProperty;
+
 var i, j, l, l2, column, columns, columnWidth, columnHeader, columnOffset, renderData, isHeaderData;
 var scrollX = false;
 var lockedTableWidth = 0;
 var scrollTableWidth = 0;
 var lockedDisplayColumns = [];
-var lockedColumnWidth = [];
-var lockedColumnHeader = [];
+var lockedColumnWidth = '';
+var lockedColumnHeader = '';
 var scrollDisplayColumns = [];
-var scrollColumnWidth = [];
-var scrollColumnHeader = [];
+var scrollColumnWidth = '';
+var scrollColumnHeader = '';
 var noWidthScrollColumns = [];
 %>
 <%for(i = 0, l = lockedColumns.length; i < l; i++) {
@@ -22,7 +39,10 @@ var noWidthScrollColumns = [];
 	columnHeader = lockedColumnHeader;
 	%>
 	<!-- include "./table-header.tpl.html" -->
-<%}%>
+<%
+	lockedColumnWidth = columnWidth;
+	lockedColumnHeader = columnHeader;
+}%>
 <%for(i = 0, l = scrollColumns.length; i < l; i++) {
 	column = scrollColumns[i];
 	if(column.hidden) {
@@ -38,7 +58,10 @@ var noWidthScrollColumns = [];
 	columnHeader = scrollColumnHeader;
 	%>
 	<!-- include "./table-header.tpl.html" -->
-<%}%>
+<%
+	scrollColumnWidth = columnWidth;
+	scrollColumnHeader = columnHeader;
+}%>
 <%
 if(!noScrollX && width > 0) {
 	if(noWidthScrollColumns.length) {
@@ -47,7 +70,7 @@ if(!noScrollX && width > 0) {
 				noWidthScrollColumns[i].width = DEFAULT_COLUMN_WIDTH;
 			}
 			scrollTableWidth += noWidthScrollColumns.length * DEFAULT_COLUMN_WIDTH;
-			scrollColumnWidth = [];
+			scrollColumnWidth = '';
 			for(i = 0, l = scrollDisplayColumns.length; i < l; i++) {
 				column = scrollDisplayColumns[i];%>
 				<%->scrollColumnWidth%>
@@ -82,10 +105,10 @@ if(!noScrollX && width > 0) {
 					<div class="yom-data-grid-locked-columns" style="width: <%=lockedTableWidth%>px; overflow: hidden;">
 						<div class="yom-data-grid-header">
 							<table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: <%=lockedTableWidth%>px;">
-								<%=lockedColumnWidth.join('')%>
+								<%=lockedColumnWidth%>
 								<tbody>
 									<tr>
-										<%=lockedColumnHeader.join('')%>
+										<%=lockedColumnHeader%>
 									</tr>
 									<%if(headerData.length) {
 										columnOffset = 0;
@@ -100,7 +123,7 @@ if(!noScrollX && width > 0) {
 						</div>
 						<div class="yom-data-grid-body" style="<%=scrollX ? 'overflow-x: scroll;' : '' %> width: <%=lockedTableWidth%>px;">
 							<table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: <%=lockedTableWidth%>px;">
-								<%=lockedColumnWidth.join('')%>
+								<%=lockedColumnWidth%>
 								<tbody>
 									<%
 									columnOffset = 0;
@@ -121,10 +144,10 @@ if(!noScrollX && width > 0) {
 					<div class="yom-data-grid-columns" style="left: <%=lockedTableWidth%>px;">
 						<div class="yom-data-grid-header" style="width: 100%;">
 							<table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: <%=width > lockedTableWidth ? (width - lockedTableWidth) + 'px' : '100%'%>;">
-								<%=scrollColumnWidth.join('')%>
+								<%=scrollColumnWidth%>
 								<tbody>
 									<tr>
-										<%=scrollColumnHeader.join('')%>
+										<%=scrollColumnHeader%>
 									</tr>
 									<%if(headerData.length) {
 										columnOffset = lockedDisplayColumns.length;
@@ -139,7 +162,7 @@ if(!noScrollX && width > 0) {
 						</div>
 						<div class="yom-data-grid-body" style="<%=scrollX ? 'overflow-x: scroll;' : ''%> width: 100%;">
 							<table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: <%=width > lockedTableWidth ? (width - lockedTableWidth) + 'px' : '100%'%>;">
-								<%=scrollColumnWidth.join('')%>
+								<%=scrollColumnWidth%>
 								<tbody>
 									<%
 									columnOffset = lockedDisplayColumns.length;

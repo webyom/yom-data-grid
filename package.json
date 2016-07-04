@@ -1,6 +1,6 @@
 {
   "name": "yom-data-grid",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A data grid.",
   "keywords": [
     "data grid"
@@ -25,10 +25,9 @@
     "node": ">= 0.8.0"
   },
   "scripts": {},
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "gulp": "^3.8.5",
-    "gulp-amd-bundler": "^0.2.1"
+    "gulp-amd-bundler": "^0.2.5"
   }
 }

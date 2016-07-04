@@ -1,3 +1,7 @@
+<%
+var name = $data.name;
+%>
+
 <%->columnWidth%>
 	<colgroup>
 		<col style="width: <%=column.locked ? column.width : noScrollX ? 0 : column.width%>px;">
@@ -15,7 +19,7 @@
 					<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="<%=i18n.clearFilterCriteria%>">
 						<i class="fa fa-filter icon-filter"></i>
 						<i class="fa fa-remove icon-remove"></i>
-					</a> 
+					</a>
 				<%}%>
 				<%if(column.headerRenderer) {->columnHeader%>
 					<%=column.headerRenderer(column.name, i, column, sortColumnId, sortOrder)%>

@@ -1,4 +1,9 @@
 <%
+var MAX_LOCKED_COLUMNS = $data.MAX_LOCKED_COLUMNS,
+	i18n = $data.i18n,
+	lockColumnAmount = $data.lockColumnAmount,
+	hiddenColumns = $data.hiddenColumns,
+	columns = $data.columns;
 %>
 
 <h3><i class="fa fa-cog"></i> <%=i18n.setting%></h3>
@@ -22,9 +27,9 @@
 <h4><%=i18n.locking%></h4>
 <div class="lock-options">
 	<%for(var i = 1; i <= MAX_LOCKED_COLUMNS; i++) {%>
-		<label class="radio-inline"><input type="radio" name="lock" value="<%=i%>" <%=lockColumnAmount == i ? 'checked' : ''%> /> <%=i%> <%=i18n.column%></label>  
+		<label class="radio-inline"><input type="radio" name="lock" value="<%=i%>" <%=lockColumnAmount == i ? 'checked' : ''%> /> <%=i%> <%=i18n.column%></label>
 	<%}%>
 	<label class="radio-inline"><input type="radio" name="lock" value="0" <%=lockColumnAmount == 0 ? 'checked' : ''%> /> <%=i18n.noLocking%></label>
 </div>
-<button type="submit" class="btn btn-primary btn-sm yom-data-grid-btn-confirm-setting"><%=i18n.ok%></button> 
-<button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-setting-panel"><%=i18n.cancel%></button> 
+<button type="submit" class="btn btn-primary btn-sm yom-data-grid-btn-confirm-setting"><%=i18n.ok%></button>
+<button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-setting-panel"><%=i18n.cancel%></button>
