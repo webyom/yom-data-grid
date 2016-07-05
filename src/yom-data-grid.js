@@ -416,19 +416,24 @@ $.extend(YomDataGrid.prototype, {
 			if(self._opt.onSelect) {
 				self._opt.onSelect(rowIndex, checked, rowIndex >= 0 && self._data[rowIndex] || undefined);
 			}
-		}).delegate('[data-grid-row-click]', 'click', function(evt) {
-			var columnId = $(this).closest('[data-grid-column-id]').attr('data-grid-column-id');
+		}).delegate('.yom-data-grid-row-clickable', 'click', function(evt) {
+			var target = evt.target;
+			var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell').length === 0;
+			if(!clickable) {
+				return;
+			}
+			var columnId = $(target).closest('[data-grid-column-id]').attr('data-grid-column-id');
 			var column = self.getColumnById(columnId);
-			var rowIndex = $(this).closest('[data-grid-row]').attr('data-grid-row');
+			var rowIndex = $(target).closest('[data-grid-row]').attr('data-grid-row');
 			var headerRowIndex, item;
 			if(rowIndex >= 0) {
 				item = self._data[rowIndex];
 			} else {
-				headerRowIndex = $(this).closest('[data-grid-header-row]').attr('data-grid-header-row');
+				headerRowIndex = $(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
 				item = self._headerData[headerRowIndex];
 			}
 			if(self._opt.onRowClick) {
-				self._opt.onRowClick(rowIndex, item, columnId, column, !!headerRowIndex);
+				self._opt.onRowClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
 			}
 		});
 		this._filterPanel.delegate('[name="findEmpty"]', 'click', function(evt) {
@@ -816,7 +821,8 @@ $.extend(YomDataGrid.prototype, {
 			checkbox: this._opt.checkbox,
 			data: this._data,
 			headerData: this._headerData,
-			dataProperty: this._opt.dataProperty
+			dataProperty: this._opt.dataProperty,
+			opt: this._opt
 		}));
 		this._lockedBody = $('.yom-data-grid-locked-columns .yom-data-grid-body', this._container)[0];
 		this._scrollHeader = $('.yom-data-grid-columns .yom-data-grid-header', this._container)[0];

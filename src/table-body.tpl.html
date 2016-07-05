@@ -1,12 +1,12 @@
 <%
-var name = $data.name;
+var opt = $data.opt;
 var item, columnValue, displayValue, title, ids;
 for(i = 0, l = renderData.length; i < l; i++) {
 	item = dataProperty ? renderData[i][dataProperty] : renderData[i];%>
-	<tr data-grid-<%=isHeaderData ? 'header-row' : 'row'%>="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=(isHeaderData ? i : i + headerData.length) % 2 === 0 ? 'yom-data-grid-row-odd' : ''%>">
+	<tr data-grid-<%=isHeaderData ? 'header-row' : 'row'%>="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=(isHeaderData ? i : i + headerData.length) % 2 === 0 ? 'yom-data-grid-row-odd' : ''%> <%=opt.onRowClick ? 'yom-data-grid-row-clickable' : ''%> <%=opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : ''%>">
 		<%for(j = 0, l2 = columns.length; j < l2; j++) {
 			column = columns[j];%>
-			<td data-grid-column-id="<%=column.id%>" id="yom-data-grid-<%=name%>-<%=isHeaderData ? 'header-cell' : 'cell'%>-<%=i%>-<%=j + columnOffset%>" class="<%=column.type == 'sequence' ? 'yom-data-grid-sequence-cell' : column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : ''%> <%=j == l2 - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>">
+			<td data-grid-column-id="<%=column.id%>" id="yom-data-grid-<%=name%>-<%=isHeaderData ? 'header-cell' : 'cell'%>-<%=i%>-<%=j + columnOffset%>" class="<%=column.type == 'sequence' ? 'yom-data-grid-sequence-cell' : column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : 'yom-data-grid-content-cell'%> <%=j == l2 - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>">
 				<%
 				ids = column.id.split('.');
 				columnValue = item[ids.shift()];
@@ -19,7 +19,7 @@ for(i = 0, l = renderData.length; i < l; i++) {
 				if(column.renderer) {
 					displayValue = column.renderer($encodeHtml(columnValue || ''), i, item, j + columnOffset, column, isHeaderData);
 				} else if(column.clickable) {
-					displayValue = '<a href="javascript:void(0);" data-grid-row-click>' + $encodeHtml(columnValue || '') + '</a>';
+					displayValue = '<a href="javascript:void(0);">' + $encodeHtml(columnValue || '') + '</a>';
 				} else {
 					displayValue = $encodeHtml(columnValue || '');
 				}
