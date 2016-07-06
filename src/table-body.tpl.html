@@ -3,7 +3,7 @@ var opt = $data.opt;
 var item, columnValue, displayValue, title, ids;
 for(i = 0, l = renderData.length; i < l; i++) {
 	item = dataProperty ? renderData[i][dataProperty] : renderData[i];%>
-	<tr data-grid-<%=isHeaderData ? 'header-row' : 'row'%>="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=(isHeaderData ? i : i + headerData.length) % 2 === 0 ? 'yom-data-grid-row-odd' : ''%> <%=opt.onRowClick ? 'yom-data-grid-row-clickable' : ''%> <%=opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : ''%>">
+	<tr data-grid-<%=isHeaderData ? 'header-row' : 'row'%>="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=(isHeaderData ? i : i + headerData.length) % 2 === 0 ? 'yom-data-grid-row-odd' : ''%> <%=opt.onRowClick ? 'yom-data-grid-row-clickable' : ''%> <%=opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : ''%> <%=selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? 'yom-data-grid-row-checked' : ''%>">
 		<%for(j = 0, l2 = columns.length; j < l2; j++) {
 			column = columns[j];%>
 			<td data-grid-column-id="<%=column.id%>" id="yom-data-grid-<%=name%>-<%=isHeaderData ? 'header-cell' : 'cell'%>-<%=i%>-<%=j + columnOffset%>" class="<%=column.type == 'sequence' ? 'yom-data-grid-sequence-cell' : column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : 'yom-data-grid-content-cell'%> <%=j == l2 - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>">
@@ -41,10 +41,8 @@ for(i = 0, l = renderData.length; i < l; i++) {
 					<%} else if(column.type == 'checkbox') {
 						if(isHeaderData) {%>
 							&nbsp;
-						<%} else if(checkbox && checkbox.checkable) {%>
-							<input class="yom-data-grid-check-box" data-row-index="<%=i%>" type="checkbox" <%=checkbox.checkable(item, i) ? '' : 'disabled'%> />
 						<%} else {%>
-							<input class="yom-data-grid-check-box" data-row-index="<%=i%>" type="checkbox" />
+							<input class="yom-data-grid-check-box" data-row-index="<%=i%>" type="checkbox" <%=selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? 'checked' : ''%> <%=!checkbox || !checkbox.checkable || checkbox.checkable(item, i) ? '' : 'disabled'%> />
 						<%}
 					} else {%>
 						<%=displayValue || '&nbsp;'%>

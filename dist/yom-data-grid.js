@@ -49,7 +49,10 @@ var YomDataGrid = function(holder, columns, opt) {
 			self._onScrollLocked(evt);
 		},
 		autoResize: function(evt) {
-			self.render();
+			self.render(null, null, null, null, {
+				isAllChecked: self.isAllChecked(),
+				selectedIndex: self.getSelectedIndex()
+			});
 		},
 		documentClick: function(evt) {
 			self._hideFilterPanel(evt);
@@ -626,7 +629,7 @@ $.extend(YomDataGrid.prototype, {
 		var res = [];
 		$('.yom-data-grid-check-box', this._container).each(function(i, item) {
 			var index = parseInt($(this).attr('data-row-index'));
-			if(index >= 0) {
+			if(this.checked && index >= 0) {
 				res.push(index);
 			}
 		});
@@ -834,7 +837,8 @@ $.extend(YomDataGrid.prototype, {
 		return all.join('&');
 	},
 
-	render: function(data, headerData, state, setting) {
+	render: function(data, headerData, state, setting, opt) {
+		opt = opt || {};
 		if(data && data.length) {
 			this._data = data;
 		}
@@ -888,6 +892,8 @@ $.extend(YomDataGrid.prototype, {
 			data: this._data,
 			headerData: this._headerData,
 			dataProperty: this._opt.dataProperty,
+			isAllChecked: opt.isAllChecked,
+			selectedIndex: opt.selectedIndex || [],
 			opt: this._opt
 		}));
 		this._lockedBody = $('.yom-data-grid-locked-columns .yom-data-grid-body', this._container)[0];
@@ -896,6 +902,9 @@ $.extend(YomDataGrid.prototype, {
 		this._scrollBody.on('scroll', this._bind.scroll);
 		$('.yom-data-grid-header, .yom-data-grid-body', this._container).on('mousewheel', this._bind.scrollLocked);
 		this._settingPanel = $('.yom-data-grid-setting-panel', this._container);
+		if(this._opt.onRender) {
+			this._opt.onRender();
+		}
 	},
 
 	destroy: function() {
@@ -926,7 +935,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
         var $print = function(str) {
             _$out_ += str;
         };
-        var DEFAULT_COLUMN_WIDTH = $data.DEFAULT_COLUMN_WIDTH, i18n = $data.i18n, name = $data.name, width = $data.width, noScrollX = $data.noScrollX, lockedColumns = $data.lockedColumns, scrollColumns = $data.scrollColumns, bordered = $data.bordered, striped = $data.striped, sortColumnId = $data.sortColumnId, sortOrder = $data.sortOrder, filterMap = $data.filterMap, checkbox = $data.checkbox, data = $data.data, headerData = $data.headerData, dataProperty = $data.dataProperty, opt = $data.opt;
+        var DEFAULT_COLUMN_WIDTH = $data.DEFAULT_COLUMN_WIDTH, i18n = $data.i18n, name = $data.name, width = $data.width, noScrollX = $data.noScrollX, lockedColumns = $data.lockedColumns, scrollColumns = $data.scrollColumns, bordered = $data.bordered, striped = $data.striped, sortColumnId = $data.sortColumnId, sortOrder = $data.sortOrder, filterMap = $data.filterMap, checkbox = $data.checkbox, data = $data.data, headerData = $data.headerData, dataProperty = $data.dataProperty, isAllChecked = $data.isAllChecked, selectedIndex = $data.selectedIndex, opt = $data.opt;
         var i, j, l, l2, column, columns, columnWidth, columnHeader, columnOffset, renderData, isHeaderData;
         var scrollX = false;
         var lockedTableWidth = 0;
@@ -952,7 +961,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                 columnWidth += '<colgroup><col style="width: ' + (column.locked ? column.width : noScrollX ? 0 : column.width) + 'px;"></colgroup>';
                 columnHeader += '<th class="' + (column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "") + " " + (i == l - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div data-column-id="' + column.id + '" class="yom-data-grid-cell-inner yom-data-grid-header-cell-inner" style="text-align: ' + (column.textAlign || "left") + ';">';
                 if (column.type == "checkbox") {
-                    columnHeader += '<input class="yom-data-grid-check-box-all" type="checkbox" />';
+                    columnHeader += '<input class="yom-data-grid-check-box-all" type="checkbox" ' + (isAllChecked ? "checked" : "") + " />";
                 } else if (column.type == "sequence") {
                     columnHeader += '<span title="' + $encodeHtml(column.name) + '">' + column.name + "</span>";
                 } else {
@@ -994,7 +1003,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                 columnWidth += '<colgroup><col style="width: ' + (column.locked ? column.width : noScrollX ? 0 : column.width) + 'px;"></colgroup>';
                 columnHeader += '<th class="' + (column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "") + " " + (i == l - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div data-column-id="' + column.id + '" class="yom-data-grid-cell-inner yom-data-grid-header-cell-inner" style="text-align: ' + (column.textAlign || "left") + ';">';
                 if (column.type == "checkbox") {
-                    columnHeader += '<input class="yom-data-grid-check-box-all" type="checkbox" />';
+                    columnHeader += '<input class="yom-data-grid-check-box-all" type="checkbox" ' + (isAllChecked ? "checked" : "") + " />";
                 } else if (column.type == "sequence") {
                     columnHeader += '<span title="' + $encodeHtml(column.name) + '">' + column.name + "</span>";
                 } else {
@@ -1055,7 +1064,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                     var item, columnValue, displayValue, title, ids;
                     for (i = 0, l = renderData.length; i < l; i++) {
                         item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                        _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + '">';
+                        _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                         for (j = 0, l2 = columns.length; j < l2; j++) {
                             column = columns[j];
                             _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '">';
@@ -1091,10 +1100,8 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                             } else if (column.type == "checkbox") {
                                 if (isHeaderData) {
                                     _$out_ += "&nbsp;";
-                                } else if (checkbox && checkbox.checkable) {
-                                    _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (checkbox.checkable(item, i) ? "" : "disabled") + " />";
                                 } else {
-                                    _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" />';
+                                    _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "checked" : "") + " " + (!checkbox || !checkbox.checkable || checkbox.checkable(item, i) ? "" : "disabled") + " />";
                                 }
                             } else {
                                 _$out_ += "" + (displayValue || "&nbsp;") + "";
@@ -1115,7 +1122,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                 var item, columnValue, displayValue, title, ids;
                 for (i = 0, l = renderData.length; i < l; i++) {
                     item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + '">';
+                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                     for (j = 0, l2 = columns.length; j < l2; j++) {
                         column = columns[j];
                         _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '">';
@@ -1151,10 +1158,8 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                         } else if (column.type == "checkbox") {
                             if (isHeaderData) {
                                 _$out_ += "&nbsp;";
-                            } else if (checkbox && checkbox.checkable) {
-                                _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (checkbox.checkable(item, i) ? "" : "disabled") + " />";
                             } else {
-                                _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" />';
+                                _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "checked" : "") + " " + (!checkbox || !checkbox.checkable || checkbox.checkable(item, i) ? "" : "disabled") + " />";
                             }
                         } else {
                             _$out_ += "" + (displayValue || "&nbsp;") + "";
@@ -1178,7 +1183,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                     var item, columnValue, displayValue, title, ids;
                     for (i = 0, l = renderData.length; i < l; i++) {
                         item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                        _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + '">';
+                        _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                         for (j = 0, l2 = columns.length; j < l2; j++) {
                             column = columns[j];
                             _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '">';
@@ -1214,10 +1219,8 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                             } else if (column.type == "checkbox") {
                                 if (isHeaderData) {
                                     _$out_ += "&nbsp;";
-                                } else if (checkbox && checkbox.checkable) {
-                                    _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (checkbox.checkable(item, i) ? "" : "disabled") + " />";
                                 } else {
-                                    _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" />';
+                                    _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "checked" : "") + " " + (!checkbox || !checkbox.checkable || checkbox.checkable(item, i) ? "" : "disabled") + " />";
                                 }
                             } else {
                                 _$out_ += "" + (displayValue || "&nbsp;") + "";
@@ -1238,7 +1241,7 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                 var item, columnValue, displayValue, title, ids;
                 for (i = 0, l = renderData.length; i < l; i++) {
                     item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + '">';
+                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                     for (j = 0, l2 = columns.length; j < l2; j++) {
                         column = columns[j];
                         _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '">';
@@ -1274,10 +1277,8 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                         } else if (column.type == "checkbox") {
                             if (isHeaderData) {
                                 _$out_ += "&nbsp;";
-                            } else if (checkbox && checkbox.checkable) {
-                                _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (checkbox.checkable(item, i) ? "" : "disabled") + " />";
                             } else {
-                                _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" />';
+                                _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "checked" : "") + " " + (!checkbox || !checkbox.checkable || checkbox.checkable(item, i) ? "" : "disabled") + " />";
                             }
                         } else {
                             _$out_ += "" + (displayValue || "&nbsp;") + "";

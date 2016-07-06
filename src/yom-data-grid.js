@@ -48,7 +48,10 @@ var YomDataGrid = function(holder, columns, opt) {
 			self._onScrollLocked(evt);
 		},
 		autoResize: function(evt) {
-			self.render();
+			self.render(null, null, null, null, {
+				isAllChecked: self.isAllChecked(),
+				selectedIndex: self.getSelectedIndex()
+			});
 		},
 		documentClick: function(evt) {
 			self._hideFilterPanel(evt);
@@ -625,7 +628,7 @@ $.extend(YomDataGrid.prototype, {
 		var res = [];
 		$('.yom-data-grid-check-box', this._container).each(function(i, item) {
 			var index = parseInt($(this).attr('data-row-index'));
-			if(index >= 0) {
+			if(this.checked && index >= 0) {
 				res.push(index);
 			}
 		});
@@ -833,7 +836,8 @@ $.extend(YomDataGrid.prototype, {
 		return all.join('&');
 	},
 
-	render: function(data, headerData, state, setting) {
+	render: function(data, headerData, state, setting, opt) {
+		opt = opt || {};
 		if(data && data.length) {
 			this._data = data;
 		}
@@ -887,6 +891,8 @@ $.extend(YomDataGrid.prototype, {
 			data: this._data,
 			headerData: this._headerData,
 			dataProperty: this._opt.dataProperty,
+			isAllChecked: opt.isAllChecked,
+			selectedIndex: opt.selectedIndex || [],
 			opt: this._opt
 		}));
 		this._lockedBody = $('.yom-data-grid-locked-columns .yom-data-grid-body', this._container)[0];
@@ -895,6 +901,9 @@ $.extend(YomDataGrid.prototype, {
 		this._scrollBody.on('scroll', this._bind.scroll);
 		$('.yom-data-grid-header, .yom-data-grid-body', this._container).on('mousewheel', this._bind.scrollLocked);
 		this._settingPanel = $('.yom-data-grid-setting-panel', this._container);
+		if(this._opt.onRender) {
+			this._opt.onRender();
+		}
 	},
 
 	destroy: function() {
