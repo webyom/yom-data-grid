@@ -41,13 +41,9 @@ for(i = 0, l = renderData.length; i < l; i++) {
 					<%} else if(column.type == 'checkbox') {
 						if(isHeaderData) {%>
 							&nbsp;
-						<%} else if(checkbox && checkbox.checkable) {
-							if(checkbox.checkable(item, i)) {%>
-								<input class="yom-data-grid-check-box" data-row-index="<%=i%>" type="checkbox" />
-							<%} else {%>
-								<input type="checkbox" disabled />
-							<%}
-						} else {%>
+						<%} else if(checkbox && checkbox.checkable) {%>
+							<input class="yom-data-grid-check-box" data-row-index="<%=i%>" type="checkbox" <%=checkbox.checkable(item, i) ? '' : 'disabled'%> />
+						<%} else {%>
 							<input class="yom-data-grid-check-box" data-row-index="<%=i%>" type="checkbox" />
 						<%}
 					} else {%>

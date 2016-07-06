@@ -396,25 +396,22 @@ $.extend(YomDataGrid.prototype, {
 			var checked = this.checked;
 			if(!(rowIndex >= 0)) {//all
 				self.setAllSelection(checked);
+				allChecked = checked;
 			} else {
 				if(checked) {
-					$('.yom-data-grid-check-box[data-row-index]', self._container).each(function(i, item) {
-						if(!item.checked) {
-							allChecked = false;
-							return false;
-						}
-					});
+					allChecked = self.isAllChecked();
 					if(allChecked) {
 						$('.yom-data-grid-check-box-all', self._container)[0].checked = true;
-						$('.yom-data-grid-check-box-all', self._container).closest('.mockup-checkbox').addClass('on');
 					}
+					$('[data-grid-row="' + rowIndex + '"]').addClass('yom-data-grid-row-checked');
 				} else {
+					allChecked = false;
 					$('.yom-data-grid-check-box-all', self._container)[0].checked = false;
-					$('.yom-data-grid-check-box-all', self._container).closest('.mockup-checkbox').removeClass('on');
+					$('[data-grid-row="' + rowIndex + '"]').removeClass('yom-data-grid-row-checked');
 				}
 			}
 			if(self._opt.onSelect) {
-				self._opt.onSelect(rowIndex, checked, rowIndex >= 0 && self._data[rowIndex] || undefined);
+				self._opt.onSelect(rowIndex, checked, rowIndex >= 0 && self._data[rowIndex] || undefined, allChecked);
 			}
 		}).delegate('.yom-data-grid-row-clickable', 'click', function(evt) {
 			var target = evt.target;
@@ -476,6 +473,17 @@ $.extend(YomDataGrid.prototype, {
 		if(this._width == 'auto') {
 			$(window).off('resize', this._bind.autoResize);
 		}
+	},
+
+	isAllChecked: function() {
+		var allChecked = true;
+		$('.yom-data-grid-check-box[data-row-index]', this._container).each(function(i, item) {
+			if(!item.checked && !item.disabled) {
+				allChecked = false;
+				return false;
+			}
+		});
+		return allChecked;
 	},
 
 	showFilterPanel: function(column, target, align) {
@@ -612,17 +620,25 @@ $.extend(YomDataGrid.prototype, {
 		return this._scrollColumns.concat();
 	},
 
+	getSelectedIndex: function() {
+		var self = this;
+		var res = [];
+		$('.yom-data-grid-check-box', this._container).each(function(i, item) {
+			var index = parseInt($(this).attr('data-row-index'));
+			if(index >= 0) {
+				res.push(index);
+			}
+		});
+		return res;
+	},
+
 	getSelectedData: function(dataProperty, columnId) {
 		var self = this;
 		var res = [];
 		$('.yom-data-grid-check-box', this._container).each(function(i, item) {
 			var index = $(this).attr('data-row-index');
 			if(item.checked) {
-				if(dataProperty) {
-					res.push(columnId ? self._data[index][dataProperty][columnId] : self._data[index][dataProperty]);
-				} else {
-					res.push(columnId ? self._data[index][columnId] : self._data[index]);
-				}
+				res.push(self.getDataByRowIndex(index, dataProperty, columnId));
 			}
 		});
 		return res;
@@ -641,9 +657,58 @@ $.extend(YomDataGrid.prototype, {
 		return res;
 	},
 
+	getSelection: function(rowIndex) {
+		var checkbox = $('[data-grid-row="' + rowIndex + '"] .yom-data-grid-check-box')[0];
+		if(!checkbox || checkbox.disabled) {
+			return false;
+		}
+		return checkbox.checked;
+	},
+
+	setSelection: function(rowIndex, checked) {
+		checked = !!checked;
+		var checkbox = $('[data-grid-row="' + rowIndex + '"] .yom-data-grid-check-box')[0];
+		if(!checkbox || checkbox.disabled || checkbox.checked == checked) {
+			return false;
+		}
+		var allChecked = true;
+		checkbox.checked = checked;
+		if(checked) {
+			allChecked = this.isAllChecked();
+			if(allChecked) {
+				$('.yom-data-grid-check-box-all', this._container)[0].checked = true;
+			}
+			$('[data-grid-row="' + rowIndex + '"]').addClass('yom-data-grid-row-checked');
+		} else {
+			allChecked = false;
+			$('.yom-data-grid-check-box-all', this._container)[0].checked = false;
+			$('[data-grid-row="' + rowIndex + '"]').removeClass('yom-data-grid-row-checked');
+		}
+		if(this._opt.onSelect) {
+			this._opt.onSelect(rowIndex, checked, this._data[rowIndex], allChecked);
+		}
+		return true;
+	},
+
+	toggleSelection: function(rowIndex) {
+		var checked = this.getSelection(rowIndex);
+		var res = this.setSelection(rowIndex, !checked);
+		return res ? (checked ? -1 : 1) : 0;
+	},
+
 	setAllSelection: function(checked) {
 		$('.yom-data-grid-check-box, .yom-data-grid-check-box-all', this._container).each(function(i, item) {
-			item.checked = !!checked;
+			if(!item.disabled) {
+				var rowIndex = $(item).closest('[data-grid-row]').attr('data-grid-row');
+				item.checked = !!checked;
+				if(rowIndex >= 0) {
+					if(checked) {
+						$('[data-grid-row="' + rowIndex + '"]').addClass('yom-data-grid-row-checked');
+					} else {
+						$('[data-grid-row="' + rowIndex + '"]').removeClass('yom-data-grid-row-checked');
+					}
+				}
+			}
 		});
 	},
 
