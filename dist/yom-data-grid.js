@@ -488,7 +488,7 @@ $.extend(YomDataGrid.prototype, {
 		}
 	},
 
-	_setCheckboxAllStatus(checked) {
+	_setCheckboxAllStatus: function(checked) {
 		var checkbox = $('.yom-data-grid-check-box-all', self._container)[0];
 		if(checkbox) {
 			checkbox.checked = checked;
