@@ -87,7 +87,6 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	_onScrollLocked: function(evt) {
-		evt.preventDefault();
 		var e = evt.originalEvent;
 		var step = -30;
 		var x = 0;
@@ -95,6 +94,10 @@ $.extend(YomDataGrid.prototype, {
 		var top, left;
 		var lockedBody = this._lockedBody;
 		var scrollBody = this._scrollBody[0];
+		if(!scrollBody) {
+			return;
+		}
+		evt.preventDefault();
 		if(!isNaN(e.wheelDeltaX)) {
 			x = e.wheelDeltaX / 120;
 		} else if(!isNaN(e.deltaX)) {
@@ -774,6 +777,7 @@ $.extend(YomDataGrid.prototype, {
 					var filterOption = column.filterOption || {};
 					filterCriteria.type = filterOption.type;
 					filterCriteria.findEmpty = parts.shift() == '1';
+					parts.shift(); // data type indicator
 					if(!filterCriteria.findEmpty) {
 						var value;
 						if(filterOption.type == 'set') {
@@ -830,13 +834,15 @@ $.extend(YomDataGrid.prototype, {
 					filters.push(p + ',1');
 				} else {
 					if(criteria.type == 'set') {
-						filters.push(p + ',0,' + criteria.value.join(','));
+						filters.push(p + ',0,set,' + criteria.value.join(','));
 					} else if(criteria.type == 'number') {
-						filters.push(p + ',0,' + criteria.compareType + ',' +  criteria.value);
-					} else if(criteria.type == 'date' || criteria.type == 'datetime') {
-						filters.push(p + ',0,' + (criteria.fromValue || '') + ',' +  (criteria.toValue || ''));
+						filters.push(p + ',0,number,' + criteria.compareType + ',' +  criteria.value);
+					} else if(criteria.type == 'date') {
+						filters.push(p + ',0,date,' + (criteria.fromValue || '') + ',' +  (criteria.toValue || ''));
+					} else if(criteria.type == 'datetime') {
+						filters.push(p + ',0,datetime,' + (criteria.fromValue || '') + ',' +  (criteria.toValue || ''));
 					} else {
-						filters.push(p + ',0,' + criteria.value);
+						filters.push(p + ',0,,' + criteria.value);
 					}
 				}
 			}
