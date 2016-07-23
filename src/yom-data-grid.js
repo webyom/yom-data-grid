@@ -81,7 +81,7 @@ $.extend(YomDataGrid.prototype, {
 			this._lockedBody.scrollTop = target.scrollTop;
 		}
 		if(this._scrollHeader) {
-			this._scrollHeader.scrollLeft = target.scrollLeft;
+			this._scrollLeft = this._scrollHeader.scrollLeft = target.scrollLeft;
 		}
 		this._hideFilterPanel();
 		this._hideSettingPanel();
