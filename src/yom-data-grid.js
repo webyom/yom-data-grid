@@ -500,11 +500,13 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	isAllChecked: function() {
-		var allChecked = true;
+		var allChecked = false;
 		$('.yom-data-grid-check-box[data-row-index]', this._container).each(function(i, item) {
 			if(!item.checked && !item.disabled) {
 				allChecked = false;
 				return false;
+			} else {
+				allChecked = true;
 			}
 		});
 		return allChecked;
