@@ -41,6 +41,8 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._columnSequence = [];
 	this._hiddenColumns = [];
 
+	this._rowClickToRef = null;
+
 	this._bind = {
 		scroll: function(evt) {
 			self._onScroll(evt);
@@ -433,9 +435,31 @@ $.extend(YomDataGrid.prototype, {
 		}).delegate('.yom-data-grid-row-clickable', 'click', function(evt) {
 			var target = evt.target;
 			var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell').length === 0;
-			if(!clickable) {
+			if(!clickable || !self._opt.onRowClick || self._rowClickToRef != null) {
 				return;
 			}
+			self._rowClickToRef = setTimeout(function() {
+				self._rowClickToRef = null;
+				var columnId = $(target).closest('[data-grid-column-id]').attr('data-grid-column-id');
+				var column = self.getColumnById(columnId);
+				var rowIndex = $(target).closest('[data-grid-row]').attr('data-grid-row');
+				var headerRowIndex, item;
+				if(rowIndex >= 0) {
+					item = self._data[rowIndex];
+				} else {
+					headerRowIndex = $(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
+					item = self._headerData[headerRowIndex];
+				}
+				self._opt.onRowClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
+			}, self._opt.onRowDblclick ? 300 : 0);
+		}).delegate('.yom-data-grid-row-clickable', 'dblclick', function(evt) {
+			var target = evt.target;
+			var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell').length === 0;
+			if(!clickable || !self._opt.onRowDblclick) {
+				return;
+			}
+			clearTimeout(self._rowClickToRef);
+			self._rowClickToRef = null;
 			var columnId = $(target).closest('[data-grid-column-id]').attr('data-grid-column-id');
 			var column = self.getColumnById(columnId);
 			var rowIndex = $(target).closest('[data-grid-row]').attr('data-grid-row');
@@ -446,9 +470,7 @@ $.extend(YomDataGrid.prototype, {
 				headerRowIndex = $(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
 				item = self._headerData[headerRowIndex];
 			}
-			if(self._opt.onRowClick) {
-				self._opt.onRowClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
-			}
+			self._opt.onRowDblclick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
 		});
 		this._filterPanel.delegate('[name="findEmpty"]', 'click', function(evt) {
 			if(evt.target.checked) {
