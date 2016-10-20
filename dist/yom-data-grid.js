@@ -28,6 +28,7 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._scrollHeader = null;
 	this._scrollBody = null;
 	this._scrollLeft = opt.scrollLeft || 0;
+	this._scrollTop = opt.scrollTop || 0;
 
 	// sortting
 	this._sortColumnId = '';
@@ -81,7 +82,7 @@ $.extend(YomDataGrid.prototype, {
 	_onScroll: function(evt) {
 		var target = evt.target;
 		if(this._lockedBody) {
-			this._lockedBody.scrollTop = target.scrollTop;
+			this._scrollTop = this._lockedBody.scrollTop = target.scrollTop;
 		}
 		if(this._scrollHeader) {
 			this._scrollLeft = this._scrollHeader.scrollLeft = target.scrollLeft;
@@ -137,6 +138,7 @@ $.extend(YomDataGrid.prototype, {
 			top = scrollBody.scrollTop + y;
 			lockedBody.scrollTop = top;
 			scrollBody.scrollTop = top;
+			this._scrollTop = top;
 		}
 	},
 
@@ -654,6 +656,10 @@ $.extend(YomDataGrid.prototype, {
 		return this._scrollLeft;
 	},
 
+	getScrollTop: function() {
+		return this._scrollTop;
+	},
+
 	getColumnById: function(id) {
 		var column = this._allColumns.filter(function(item) {
 			return item.id == id;
@@ -967,8 +973,13 @@ $.extend(YomDataGrid.prototype, {
 		$('.yom-data-grid-header, .yom-data-grid-body', this._container).on('mousewheel', this._bind.scrollLocked);
 		this._settingPanel = $('.yom-data-grid-setting-panel', this._container);
 		var scrollBody = this._scrollBody[0];
-		if(scrollBody && this._scrollLeft) {
-			scrollBody.scrollLeft = this._scrollLeft;
+		if(scrollBody) {
+			if(this._scrollLeft) {
+				scrollBody.scrollLeft = this._scrollLeft;
+			}
+			if(this._scrollTop) {
+				scrollBody.scrollTop = this._scrollTop;
+			}
 		}
 		if(this._opt.onRender) {
 			this._opt.onRender();
