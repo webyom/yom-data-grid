@@ -29,6 +29,8 @@ for(i = 0, l = renderData.length; i < l; i++) {
 				} else {
 					title = column.title;
 				}
+			} else if(column.renderer) {
+				title = displayValue;
 			} else {
 				title = columnValue || '';
 			}

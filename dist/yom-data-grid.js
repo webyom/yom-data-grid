@@ -1168,6 +1168,8 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                                 } else {
                                     title = column.title;
                                 }
+                            } else if (column.renderer) {
+                                title = displayValue;
                             } else {
                                 title = columnValue || "";
                             }
@@ -1228,6 +1230,8 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                             } else {
                                 title = column.title;
                             }
+                        } else if (column.renderer) {
+                            title = displayValue;
                         } else {
                             title = columnValue || "";
                         }
@@ -1291,6 +1295,8 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                                 } else {
                                     title = column.title;
                                 }
+                            } else if (column.renderer) {
+                                title = displayValue;
                             } else {
                                 title = columnValue || "";
                             }
@@ -1351,6 +1357,8 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                             } else {
                                 title = column.title;
                             }
+                        } else if (column.renderer) {
+                            title = displayValue;
                         } else {
                             title = columnValue || "";
                         }
