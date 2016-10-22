@@ -101,6 +101,9 @@ $.extend(YomDataGrid.prototype, {
 		if(!scrollBody) {
 			return;
 		}
+		if($.contains(scrollBody, evt.target) && scrollBody.scrollLeft > 0 && scrollBody.scrollLeft + $(scrollBody).width() < scrollBody.scrollWidth) {
+			return;
+		}
 		evt.preventDefault();
 		if(!isNaN(e.wheelDeltaX)) {
 			x = e.wheelDeltaX / 120;
