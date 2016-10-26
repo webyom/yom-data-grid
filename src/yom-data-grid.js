@@ -101,10 +101,6 @@ $.extend(YomDataGrid.prototype, {
 		if(!scrollBody) {
 			return;
 		}
-		if($.contains(scrollBody, evt.target) && scrollBody.scrollLeft > 0 && scrollBody.scrollLeft + $(scrollBody).width() < scrollBody.scrollWidth) {
-			return;
-		}
-		evt.preventDefault();
 		if(!isNaN(e.wheelDeltaX)) {
 			x = e.wheelDeltaX / 120;
 		} else if(!isNaN(e.deltaX)) {
@@ -129,6 +125,10 @@ $.extend(YomDataGrid.prototype, {
 		} else if(y < 0 && y > -1) {
 			y = -1;
 		}
+		if($.contains(scrollBody, evt.target) && (scrollBody.scrollLeft > 0 && scrollBody.scrollLeft + $(scrollBody).width() < scrollBody.scrollWidth || scrollBody.scrollLeft === 0 && x > 0 || scrollBody.scrollLeft + $(scrollBody).width() == scrollBody.scrollWidth && x < 0)) {
+			return;
+		}
+		evt.preventDefault();
 		if(Math.abs(x) > Math.abs(y)) { // scroll x
 			left = scrollBody.scrollLeft + x;
 			scrollBody.scrollLeft = left;
