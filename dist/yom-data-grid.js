@@ -139,7 +139,9 @@ $.extend(YomDataGrid.prototype, {
 			this._scrollLeft = left;
 		} else if(Math.abs(y) > 0) { // scroll y
 			top = scrollBody.scrollTop + y;
-			lockedBody.scrollTop = top;
+			if (lockedBody) {
+				lockedBody.scrollTop = top;
+			}
 			scrollBody.scrollTop = top;
 			this._scrollTop = top;
 		}
@@ -525,6 +527,14 @@ $.extend(YomDataGrid.prototype, {
 		if(checkbox) {
 			checkbox.checked = checked;
 		}
+	},
+
+	_firstRender: function() {
+		var that = this;
+		this._firstRender = function() {};
+		setTimeout(function() {
+			that._bind.autoResize();
+		}, 0);
 	},
 
 	isAllChecked: function() {
@@ -984,6 +994,7 @@ $.extend(YomDataGrid.prototype, {
 				scrollBody.scrollTop = this._scrollTop;
 			}
 		}
+		this._firstRender();
 		if(this._opt.onRender) {
 			this._opt.onRender();
 		}
@@ -1143,7 +1154,10 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                 }
             }
         }
-        _$out_ += '<a class="yom-data-grid-setting-icon" href="javascript:void(0);"><i class="fa fa-cog"></i></a><div class="yom-data-grid-setting-panel"></div><div class="yom-data-grid ' + (lockedDisplayColumns.length ? "yom-data-grid-locked" : "") + " " + (bordered ? "yom-data-grid-bordered" : "") + " " + (striped ? "yom-data-grid-striped" : "") + " " + (headerData.length > 0 ? "yom-data-grid-header-rows-" + headerData.length : "") + '" style="overflow: hidden;"><table border="0" cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;"><tr>';
+        if (!opt.disableSetting) {
+            _$out_ += '<a class="yom-data-grid-setting-icon" href="javascript:void(0);"><i class="fa fa-cog"></i></a>';
+        }
+        _$out_ += '<div class="yom-data-grid-setting-panel"></div><div class="yom-data-grid ' + (lockedDisplayColumns.length ? "yom-data-grid-locked" : "") + " " + (bordered ? "yom-data-grid-bordered" : "") + " " + (striped ? "yom-data-grid-striped" : "") + " " + (headerData.length > 0 ? "yom-data-grid-header-rows-" + headerData.length : "") + '" style="overflow: hidden;"><table border="0" cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;"><tr>';
         if (lockedDisplayColumns.length) {
             _$out_ += '<td class="yom-data-grid-columns-container" style="width: ' + lockedTableWidth + 'px;"><div class="yom-data-grid-locked-columns" style="width: ' + lockedTableWidth + 'px; overflow: hidden;"><div class="yom-data-grid-header"><table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: ' + lockedTableWidth + 'px;">' + lockedColumnWidth + "<tbody><tr>" + lockedColumnHeader + "</tr>";
             if (headerData.length) {
