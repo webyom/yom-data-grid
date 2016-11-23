@@ -976,6 +976,7 @@ $.extend(YomDataGrid.prototype, {
 			isAllChecked: opt.isAllChecked,
 			selectedIndex: opt.selectedIndex || [],
 			maxSelection: this._opt.maxSelection,
+			disableSetting: this._opt.disableSetting,
 			opt: this._opt
 		}));
 		this._lockedBody = $('.yom-data-grid-locked-columns .yom-data-grid-body', this._container)[0];
