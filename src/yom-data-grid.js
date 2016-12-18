@@ -128,7 +128,6 @@ $.extend(YomDataGrid.prototype, {
 		if($.contains(scrollBody, evt.target) && (scrollBody.scrollLeft > 0 && scrollBody.scrollLeft + $(scrollBody).width() < scrollBody.scrollWidth || scrollBody.scrollLeft === 0 && x > 0 || scrollBody.scrollLeft + $(scrollBody).width() == scrollBody.scrollWidth && x < 0)) {
 			return;
 		}
-		evt.preventDefault();
 		if(Math.abs(x) > Math.abs(y)) { // scroll x
 			left = scrollBody.scrollLeft + x;
 			scrollBody.scrollLeft = left;
@@ -136,6 +135,7 @@ $.extend(YomDataGrid.prototype, {
 				this._scrollHeader.scrollLeft = left;
 			}
 			this._scrollLeft = left;
+			(scrollBody.scrollLeft == left) && evt.preventDefault();
 		} else if(Math.abs(y) > 0) { // scroll y
 			top = scrollBody.scrollTop + y;
 			if (lockedBody) {
@@ -143,6 +143,7 @@ $.extend(YomDataGrid.prototype, {
 			}
 			scrollBody.scrollTop = top;
 			this._scrollTop = top;
+			(scrollBody.scrollTop == top) && evt.preventDefault();
 		}
 	},
 
