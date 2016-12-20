@@ -1071,12 +1071,12 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                     }
                     if (column.headerRenderer) {
                         columnHeader += "" + column.headerRenderer(column.name, i, column, sortColumnId, sortOrder) + "";
-                    } else if (column.sortable) {
+                    } else if (column.sortable && opt.sortable !== false) {
                         columnHeader += '<a class="yom-data-grid-sortable" href="javascript:void(0);" onclick="return false" title="' + $encodeHtml(column.name) + '">' + column.name + "" + (sortColumnId == column.id ? sortOrder == "desc" ? '<span class="yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow-up"></span>' : "") + "</a>";
                     } else {
                         columnHeader += '<span title="' + $encodeHtml(column.name) + '">' + column.name + "</span>";
                     }
-                    if (column.filterable) {
+                    if (column.filterable && opt.filterable !== false) {
                         columnHeader += '<a href="javascript:void(0);" class="yom-data-grid-filter-icon ' + (column.textAlign == "right" ? "yom-data-grid-filter-icon-left" : "") + '"><i class="fa fa-filter"></i></a>';
                     }
                 }
@@ -1118,12 +1118,12 @@ define('./yom-data-grid.tpl.html', [ "require", "exports", "module" ], function(
                     }
                     if (column.headerRenderer) {
                         columnHeader += "" + column.headerRenderer(column.name, i, column, sortColumnId, sortOrder) + "";
-                    } else if (column.sortable) {
+                    } else if (column.sortable && opt.sortable !== false) {
                         columnHeader += '<a class="yom-data-grid-sortable" href="javascript:void(0);" onclick="return false" title="' + $encodeHtml(column.name) + '">' + column.name + "" + (sortColumnId == column.id ? sortOrder == "desc" ? '<span class="yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow-up"></span>' : "") + "</a>";
                     } else {
                         columnHeader += '<span title="' + $encodeHtml(column.name) + '">' + column.name + "</span>";
                     }
-                    if (column.filterable) {
+                    if (column.filterable && opt.filterable !== false) {
                         columnHeader += '<a href="javascript:void(0);" class="yom-data-grid-filter-icon ' + (column.textAlign == "right" ? "yom-data-grid-filter-icon-left" : "") + '"><i class="fa fa-filter"></i></a>';
                     }
                 }
