@@ -917,6 +917,9 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	render: function(data, headerData, state, setting, opt) {
+		if(!this._holder) {
+			return;
+		}
 		opt = opt || {};
 		var selectedIndex = opt.selectedIndex || [];
 		if(this._opt.maxSelection > 0) {
@@ -1013,6 +1016,7 @@ $.extend(YomDataGrid.prototype, {
 		this._lockedBody = null;
 		this._scrollHeader = null;
 		this._scrollBody = null;
+		this._holder = null;
 	}
 });
 
