@@ -1,10 +1,13 @@
 {
   "name": "yom-data-grid",
-  "version": "0.4.14",
+  "version": "0.4.15",
   "description": "A data grid.",
   "keywords": [
     "data grid"
   ],
+  "scripts": {
+    "build": "./node_modules/.bin/webpack"
+  },
   "homepage": "https://github.com/webyom/yom-data-grid",
   "author": {
     "name": "Gary Wang",
@@ -24,10 +27,9 @@
   "engines": {
     "node": ">= 0.8.0"
   },
-  "scripts": {},
   "dependencies": {},
   "devDependencies": {
-    "gulp": "^3.8.5",
-    "gulp-amd-bundler": "^0.2.5"
+    "mt2amd-loader": "^1.0.0",
+    "webpack": "^2.3.3"
   }
 }
