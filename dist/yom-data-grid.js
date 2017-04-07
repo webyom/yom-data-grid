@@ -1,12 +1,12 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("jquery"));
+		module.exports = factory(require(undefined));
 	else if(typeof define === 'function' && define.amd)
 		define(["jquery"], factory);
 	else if(typeof exports === 'object')
 		exports["YomDataGrid"] = factory(require("jquery"));
 	else
-		root["YomDataGrid"] = factory(root["jquery"]);
+		root["YomDataGrid"] = factory(root["$"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_6__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -771,7 +771,7 @@ module.exports = function(module) {
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $ = __webpack_require__(6) || window.jQuery || window.$;
+var $ = __webpack_require__(6);
 var mainTpl = __webpack_require__(3);
 var filterPanelTpl = __webpack_require__(0);
 var settingPanelTpl = __webpack_require__(1);

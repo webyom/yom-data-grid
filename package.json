@@ -1,6 +1,6 @@
 {
   "name": "yom-data-grid",
-  "version": "0.4.16",
+  "version": "0.4.17",
   "description": "A data grid.",
   "keywords": [
     "data grid"
@@ -27,7 +27,9 @@
   "engines": {
     "node": ">= 0.8.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "jquery": "^3.2.1"
+  },
   "devDependencies": {
     "mt2amd-loader": "^1.0.1",
     "webpack": "^2.3.3"
