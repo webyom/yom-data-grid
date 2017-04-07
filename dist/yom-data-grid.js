@@ -1,6 +1,6 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require(undefined));
+		module.exports = factory(require("jquery"));
 	else if(typeof define === 'function' && define.amd)
 		define(["jquery"], factory);
 	else if(typeof exports === 'object')
