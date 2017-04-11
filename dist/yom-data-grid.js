@@ -357,10 +357,18 @@ function render($data, $opt) {
             isHeaderData = true;
             (function() {
                 var opt = $data.opt;
-                var item, columnValue, displayValue, title, ids, checkable;
+                var i, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
+                var nextSeq = 1;
+                var isPrevOdd = false;
                 for (i = 0, l = renderData.length; i < l; i++) {
                     item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick || opt.onRowDblclick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+                    if (opt.isOddRow) {
+                        isOdd = opt.isOddRow(item, isPrevOdd);
+                    } else {
+                        isOdd = (isHeaderData ? i : i + headerData.length) % 2 === 0;
+                    }
+                    isPrevOdd = isOdd;
+                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick || opt.onRowDblclick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                     for (j = 0, l2 = columns.length; j < l2; j++) {
                         column = columns[j];
                         ids = column.id.split(".");
@@ -393,7 +401,15 @@ function render($data, $opt) {
                         }
                         _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : opt.getDblclickable && opt.getDblclickable(columnValue, i, item, j + columnOffset, column, isHeaderData) ? "yom-data-grid-content-cell yom-data-grid-dblclickable-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
                         if (column.type == "sequence") {
-                            _$out_ += "" + (isHeaderData ? "&nbsp;" : i + 1) + "";
+                            if (isHeaderData) {
+                                seq = 0;
+                            } else if (opt.getSequence) {
+                                seq = opt.getSequence(item, nextSeq);
+                                nextSeq = seq > 0 ? seq + 1 : nextSeq;
+                            } else {
+                                seq = i + 1;
+                            }
+                            _$out_ += "" + (seq > 0 ? seq : "&nbsp;") + "";
                         } else if (column.type == "checkbox") {
                             checkable = !checkbox || !checkbox.checkable || checkbox.checkable(item, i);
                             if (isHeaderData) {
@@ -419,10 +435,18 @@ function render($data, $opt) {
         isHeaderData = false;
         (function() {
             var opt = $data.opt;
-            var item, columnValue, displayValue, title, ids, checkable;
+            var i, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
+            var nextSeq = 1;
+            var isPrevOdd = false;
             for (i = 0, l = renderData.length; i < l; i++) {
                 item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick || opt.onRowDblclick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+                if (opt.isOddRow) {
+                    isOdd = opt.isOddRow(item, isPrevOdd);
+                } else {
+                    isOdd = (isHeaderData ? i : i + headerData.length) % 2 === 0;
+                }
+                isPrevOdd = isOdd;
+                _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick || opt.onRowDblclick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                 for (j = 0, l2 = columns.length; j < l2; j++) {
                     column = columns[j];
                     ids = column.id.split(".");
@@ -455,7 +479,15 @@ function render($data, $opt) {
                     }
                     _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : opt.getDblclickable && opt.getDblclickable(columnValue, i, item, j + columnOffset, column, isHeaderData) ? "yom-data-grid-content-cell yom-data-grid-dblclickable-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
                     if (column.type == "sequence") {
-                        _$out_ += "" + (isHeaderData ? "&nbsp;" : i + 1) + "";
+                        if (isHeaderData) {
+                            seq = 0;
+                        } else if (opt.getSequence) {
+                            seq = opt.getSequence(item, nextSeq);
+                            nextSeq = seq > 0 ? seq + 1 : nextSeq;
+                        } else {
+                            seq = i + 1;
+                        }
+                        _$out_ += "" + (seq > 0 ? seq : "&nbsp;") + "";
                     } else if (column.type == "checkbox") {
                         checkable = !checkbox || !checkbox.checkable || checkbox.checkable(item, i);
                         if (isHeaderData) {
@@ -484,10 +516,18 @@ function render($data, $opt) {
             isHeaderData = true;
             (function() {
                 var opt = $data.opt;
-                var item, columnValue, displayValue, title, ids, checkable;
+                var i, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
+                var nextSeq = 1;
+                var isPrevOdd = false;
                 for (i = 0, l = renderData.length; i < l; i++) {
                     item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick || opt.onRowDblclick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+                    if (opt.isOddRow) {
+                        isOdd = opt.isOddRow(item, isPrevOdd);
+                    } else {
+                        isOdd = (isHeaderData ? i : i + headerData.length) % 2 === 0;
+                    }
+                    isPrevOdd = isOdd;
+                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick || opt.onRowDblclick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                     for (j = 0, l2 = columns.length; j < l2; j++) {
                         column = columns[j];
                         ids = column.id.split(".");
@@ -520,7 +560,15 @@ function render($data, $opt) {
                         }
                         _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : opt.getDblclickable && opt.getDblclickable(columnValue, i, item, j + columnOffset, column, isHeaderData) ? "yom-data-grid-content-cell yom-data-grid-dblclickable-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
                         if (column.type == "sequence") {
-                            _$out_ += "" + (isHeaderData ? "&nbsp;" : i + 1) + "";
+                            if (isHeaderData) {
+                                seq = 0;
+                            } else if (opt.getSequence) {
+                                seq = opt.getSequence(item, nextSeq);
+                                nextSeq = seq > 0 ? seq + 1 : nextSeq;
+                            } else {
+                                seq = i + 1;
+                            }
+                            _$out_ += "" + (seq > 0 ? seq : "&nbsp;") + "";
                         } else if (column.type == "checkbox") {
                             checkable = !checkbox || !checkbox.checkable || checkbox.checkable(item, i);
                             if (isHeaderData) {
@@ -546,10 +594,18 @@ function render($data, $opt) {
         isHeaderData = false;
         (function() {
             var opt = $data.opt;
-            var item, columnValue, displayValue, title, ids, checkable;
+            var i, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
+            var nextSeq = 1;
+            var isPrevOdd = false;
             for (i = 0, l = renderData.length; i < l; i++) {
                 item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + ((isHeaderData ? i : i + headerData.length) % 2 === 0 ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick || opt.onRowDblclick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+                if (opt.isOddRow) {
+                    isOdd = opt.isOddRow(item, isPrevOdd);
+                } else {
+                    isOdd = (isHeaderData ? i : i + headerData.length) % 2 === 0;
+                }
+                isPrevOdd = isOdd;
+                _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (opt.onRowClick || opt.onRowDblclick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                 for (j = 0, l2 = columns.length; j < l2; j++) {
                     column = columns[j];
                     ids = column.id.split(".");
@@ -582,7 +638,15 @@ function render($data, $opt) {
                     }
                     _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : opt.getDblclickable && opt.getDblclickable(columnValue, i, item, j + columnOffset, column, isHeaderData) ? "yom-data-grid-content-cell yom-data-grid-dblclickable-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
                     if (column.type == "sequence") {
-                        _$out_ += "" + (isHeaderData ? "&nbsp;" : i + 1) + "";
+                        if (isHeaderData) {
+                            seq = 0;
+                        } else if (opt.getSequence) {
+                            seq = opt.getSequence(item, nextSeq);
+                            nextSeq = seq > 0 ? seq + 1 : nextSeq;
+                        } else {
+                            seq = i + 1;
+                        }
+                        _$out_ += "" + (seq > 0 ? seq : "&nbsp;") + "";
                     } else if (column.type == "checkbox") {
                         checkable = !checkbox || !checkbox.checkable || checkbox.checkable(item, i);
                         if (isHeaderData) {
