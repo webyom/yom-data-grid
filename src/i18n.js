@@ -20,6 +20,7 @@ module.exports = {
 		compareValueRequired: 'Please input compare value',
 		atLeastOneDateRequired: 'Please at least choose one date',
 		startDateCanNotLaterThanEndDate: 'Start date can not be later than end date',
+		noResultMsg: 'No result',
 		
 		setting: 'Setting',
 		displayAndSorting: 'Display and Sorting',
@@ -49,6 +50,7 @@ module.exports = {
 		compareValueRequired: '请输入比较值',
 		atLeastOneDateRequired: '请至少指定一个日期',
 		startDateCanNotLaterThanEndDate: '开始日期不能晚于结束日期',
+		noResultMsg: '找不到结果',
 		
 		setting: '设置',
 		displayAndSorting: '显示和排序',

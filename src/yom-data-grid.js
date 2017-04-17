@@ -4,6 +4,7 @@ var filterPanelTpl = require('./filter-panel.tpl.html');
 var settingPanelTpl = require('./setting-panel.tpl.html');
 var i18n = require('./i18n');
 var mergeSort = require('./merge-sort');
+var YomAutoComplete = require('yom-auto-complete');
 require('./yom-data-grid.less');
 
 var YomDataGrid = function(holder, columns, opt) {
@@ -215,6 +216,9 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	_hideFilterPanel: function(evt) {
+		if(!this._filterPanel || this._filterPanel.is(':hidden')) {
+			return;
+		}
 		if(evt) {
 			var target = $(evt.target);
 			if(target.hasClass('yom-data-grid-filter-icon') || target.closest('.yom-data-grid-filter-icon').length) {
@@ -224,11 +228,20 @@ $.extend(YomDataGrid.prototype, {
 				return;
 			}
 		}
+
 		var dateFromDom = $('.date-from', this._filterPanel);
 		var dateToDom = $('.date-to', this._filterPanel);
 		dateFromDom.length && dateFromDom.datetimepicker('remove');
 		dateToDom.length && dateToDom.datetimepicker('remove');
-		this._filterPanel && this._filterPanel.hide();
+
+		var box = $('.auto-complete-box', this._filterPanel);
+		if(box.length) {
+			var autoComplete = box.data('autoComplete');
+			autoComplete && autoComplete.destroy();
+			box.data('autoComplete', null);
+		}
+		
+		this._filterPanel.hide();
 		this._activeFilterColumn = null;
 	},
 
@@ -246,18 +259,31 @@ $.extend(YomDataGrid.prototype, {
 			if(filterOption.type == 'set') {
 				value = [];
 				var valueMap = {};
-				var set = $('.filter-option input', this._filterPanel).filter(function(i, item) {
-					return item.checked;
-				}).map(function(i, item) {
-					if(!valueMap[item.value]) {
-						value.push(item.value);
+				if(filterOption.autoComplete) {
+					var box = $('.auto-complete-box', this._filterPanel);
+					var autoComplete = box.data('autoComplete');
+					value = autoComplete.getSelectedPropList('id');
+					if(!value.length) {
+						this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
+						return;
 					}
-					valueMap[item.value] = 1;
-					return item.value;
-				}).get();
-				if(!set.length) {
-					this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
-					return;
+					value.forEach(function(id) {
+						valueMap[id] = 1;
+					});
+				} else {
+					var set = $('.filter-option input', this._filterPanel).filter(function(i, item) {
+						return item.checked;
+					}).map(function(i, item) {
+						if(!valueMap[item.value]) {
+							value.push(item.value);
+						}
+						valueMap[item.value] = 1;
+						return item.value;
+					}).get();
+					if(!set.length) {
+						this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
+						return;
+					}
 				}
 				filterCriteria.valueMap = valueMap;
 				filterCriteria.value = value;
@@ -553,18 +579,32 @@ $.extend(YomDataGrid.prototype, {
 	showFilterPanel: function(column, target, align) {
 		target = $(target);
 		this._activeFilterColumn = column;
+		var filterOption = column.filterOption;
+		var type = filterOption && filterOption.type;
 		var offset = target.offset();
 		var width = target.outerWidth();
 		var height = target.outerHeight();
 		var left = offset.left;
 		var top = offset.top + height;
-		var type = column.filterOption && column.filterOption.type;
 		this._filterPanel.html(filterPanelTpl.render({
 			i18n: this._i18n,
 			column: column,
 			filterMap: this._filterMap
 		}));
-		if(type == 'date' || type == 'datetime') {
+		if(type == 'set' && filterOption.autoComplete) {
+			var filterCriteria = this._filterMap[column.id] || {};
+			var valueMap = filterCriteria.valueMap || {};
+			var box = $('.auto-complete-box', this._filterPanel);
+			this._filterPanel.show();
+			var autoComplete = new YomAutoComplete(box, $.extend({
+				mustSelectInDataSource: true,
+				dataSource: filterOption.options,
+				initData: Object.keys(valueMap),
+				richSelectionResult: true,
+				noResultMsg: this._i18n.noResultMsg
+			}, filterOption.autoComplete));
+			box.data('autoComplete', autoComplete);
+		} else if(type == 'date' || type == 'datetime') {
 			var pickerOpt = {
 				language: this._opt.language,
 				bootcssVer: 3,
@@ -599,6 +639,9 @@ $.extend(YomDataGrid.prototype, {
 			left: left + 'px',
 			top: top + 'px'
 		});
+		try {
+			$('input, select', this._filterPanel)[0].focus();
+		} catch(e) {}
 	},
 
 	setColumns: function(columns, setting) {

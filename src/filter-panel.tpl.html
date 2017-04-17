@@ -26,28 +26,42 @@ var type = filterOption.type;
 				}
 				options = tmp;
 			}
+			if(filterOption.autoComplete) {
 		%>
-			<div class="set-container">
-				<%
-				for(var i = 0, l = options.length; i < l; i++) {
-					var option = options[i];
-					var value, name;
-					if(typeof option == 'string') {
-						value = option;
-						name = option;
-					} else {
-						value = option.id || option.key || option.val || option.value;
-						name = option.label || option.name || option.value || option.val;
-					}
-				%>
-					<div class="checkbox">
-						<label>
-							<input type="checkbox" value="<%==value%>" <%=valueMap[value] ? 'checked': ''%> /> <%==name%>
-						</label>
-					</div>
-				<%}%>
+				<div class="form-group">
+					<input type="text" value="" class="form-control auto-complete-box" />
+				</div>
+		<%
+			} else {
+		%>
+				<div class="set-container">
+					<%
+					for(var i = 0, l = options.length; i < l; i++) {
+						var option = options[i];
+						var value, name;
+						if(typeof option == 'string') {
+							value = option;
+							name = option;
+						} else {
+							value = option.id || option.key || option.val || option.value;
+							name = option.label || option.name || option.value || option.val;
+						}
+					%>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" value="<%==value%>" <%=valueMap[value] ? 'checked': ''%> /> <%==name%>
+							</label>
+						</div>
+					<%}%>
+				</div>
+		<%
+			}
+		} else if(type == 'number') {
+		%>
+			<div class="form-group">
+				<label><%=i18n.compareValue%></label>
+				<input name="value" type="text" maxlength="10" value="<%==filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : ''%>" class="form-control" />
 			</div>
-		<%} else if(type == 'number') {%>
 			<div class="form-group">
 				<label><%=i18n.compareMethod%></label>
 				<select name="compareType" class="form-control">
@@ -55,10 +69,6 @@ var type = filterOption.type;
 					<option value="lt" <%=filterCriteria.compareType == 'lt' ? 'selected' : ''%>><%=i18n.lessThan%></option>
 					<option value="gt" <%=filterCriteria.compareType == 'gt' ? 'selected' : ''%>><%=i18n.greaterThan%></option>
 				</select>
-			</div>
-			<div class="form-group">
-				<label><%=i18n.compareValue%></label>
-				<input name="value" type="text" maxlength="10" value="<%==filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : ''%>" class="form-control" />
 			</div>
 		<%} else if(type == 'date' || type == 'datetime') {%>
 			<div class="form-group">

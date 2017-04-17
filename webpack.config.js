@@ -22,6 +22,12 @@ module.exports = {
       commonjs: 'jquery',
       amd: 'jquery',
       root: '$'
+    },
+    'yom-auto-complete': {
+      commonjs2: 'yom-auto-complete',
+      commonjs: 'yom-auto-complete',
+      amd: 'yom-auto-complete',
+      root: 'YomAutoComplete'
     }
   }
 };

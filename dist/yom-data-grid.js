@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("jquery"));
+		module.exports = factory(require("jquery"), require("yom-auto-complete"));
 	else if(typeof define === 'function' && define.amd)
-		define(["jquery"], factory);
+		define(["jquery", "yom-auto-complete"], factory);
 	else if(typeof exports === 'object')
-		exports["YomDataGrid"] = factory(require("jquery"));
+		exports["YomDataGrid"] = factory(require("jquery"), require("yom-auto-complete"));
 	else
-		root["YomDataGrid"] = factory(root["$"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_6__) {
+		root["YomDataGrid"] = factory(root["$"], root["YomAutoComplete"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_7__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -110,22 +110,26 @@ function render($data, $opt) {
             }
             options = tmp;
         }
-        _$out_ += '<div class="set-container">';
-        for (var i = 0, l = options.length; i < l; i++) {
-            var option = options[i];
-            var value, name;
-            if (typeof option == "string") {
-                value = option;
-                name = option;
-            } else {
-                value = option.id || option.key || option.val || option.value;
-                name = option.label || option.name || option.value || option.val;
+        if (filterOption.autoComplete) {
+            _$out_ += '<div class="form-group"><input type="text" value="" class="form-control auto-complete-box" /></div>';
+        } else {
+            _$out_ += '<div class="set-container">';
+            for (var i = 0, l = options.length; i < l; i++) {
+                var option = options[i];
+                var value, name;
+                if (typeof option == "string") {
+                    value = option;
+                    name = option;
+                } else {
+                    value = option.id || option.key || option.val || option.value;
+                    name = option.label || option.name || option.value || option.val;
+                }
+                _$out_ += '<div class="checkbox"><label><input type="checkbox" value="' + $encodeHtml(value) + '" ' + (valueMap[value] ? "checked" : "") + " /> " + $encodeHtml(name) + "</label></div>";
             }
-            _$out_ += '<div class="checkbox"><label><input type="checkbox" value="' + $encodeHtml(value) + '" ' + (valueMap[value] ? "checked" : "") + " /> " + $encodeHtml(name) + "</label></div>";
+            _$out_ += "</div>";
         }
-        _$out_ += "</div>";
     } else if (type == "number") {
-        _$out_ += '<div class="form-group"><label>' + i18n.compareMethod + '</label><select name="compareType" class="form-control"><option value="eq" ' + (filterCriteria.compareType == "eq" ? "selected" : "") + ">" + i18n.equal + '</option><option value="lt" ' + (filterCriteria.compareType == "lt" ? "selected" : "") + ">" + i18n.lessThan + '</option><option value="gt" ' + (filterCriteria.compareType == "gt" ? "selected" : "") + ">" + i18n.greaterThan + '</option></select></div><div class="form-group"><label>' + i18n.compareValue + '</label><input name="value" type="text" maxlength="10" value="' + $encodeHtml(filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "") + '" class="form-control" /></div>';
+        _$out_ += '<div class="form-group"><label>' + i18n.compareValue + '</label><input name="value" type="text" maxlength="10" value="' + $encodeHtml(filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "") + '" class="form-control" /></div><div class="form-group"><label>' + i18n.compareMethod + '</label><select name="compareType" class="form-control"><option value="eq" ' + (filterCriteria.compareType == "eq" ? "selected" : "") + ">" + i18n.equal + '</option><option value="lt" ' + (filterCriteria.compareType == "lt" ? "selected" : "") + ">" + i18n.lessThan + '</option><option value="gt" ' + (filterCriteria.compareType == "gt" ? "selected" : "") + ">" + i18n.greaterThan + "</option></select></div>";
     } else if (type == "date" || type == "datetime") {
         _$out_ += '<div class="form-group"><label>' + i18n.start + '</label><div class="datetimepicker-component input-group date date-from" data-date="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.fromValue || "") + '"><input class="form-control" type="text" name="fromDate" value="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div><div class="form-group"><label>' + i18n.end + '</label><div class="datetimepicker-component input-group date date-to" data-date="' + $encodeHtml(filterCriteria.toDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.toValue || "") + '"><input class="form-control" type="text" name="toDate" value="' + $encodeHtml(filterCriteria.toDisplay || "") + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div>';
     } else {
@@ -202,7 +206,7 @@ if (!moduleUri) {
 }
 
 module.exports = cssContent;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ }),
 /* 3 */
@@ -698,6 +702,7 @@ module.exports = {
 		compareValueRequired: 'Please input compare value',
 		atLeastOneDateRequired: 'Please at least choose one date',
 		startDateCanNotLaterThanEndDate: 'Start date can not be later than end date',
+		noResultMsg: 'No result',
 		
 		setting: 'Setting',
 		displayAndSorting: 'Display and Sorting',
@@ -727,6 +732,7 @@ module.exports = {
 		compareValueRequired: '请输入比较值',
 		atLeastOneDateRequired: '请至少指定一个日期',
 		startDateCanNotLaterThanEndDate: '开始日期不能晚于结束日期',
+		noResultMsg: '找不到结果',
 		
 		setting: '设置',
 		displayAndSorting: '显示和排序',
@@ -807,6 +813,12 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
 /* 7 */
 /***/ (function(module, exports) {
 
+module.exports = __WEBPACK_EXTERNAL_MODULE_7__;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
 module.exports = function(module) {
 	if(!module.webpackPolyfill) {
 		module.deprecate = function() {};
@@ -832,7 +844,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(6);
@@ -841,6 +853,7 @@ var filterPanelTpl = __webpack_require__(0);
 var settingPanelTpl = __webpack_require__(1);
 var i18n = __webpack_require__(4);
 var mergeSort = __webpack_require__(5);
+var YomAutoComplete = __webpack_require__(7);
 __webpack_require__(2);
 
 var YomDataGrid = function(holder, columns, opt) {
@@ -1052,6 +1065,9 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	_hideFilterPanel: function(evt) {
+		if(!this._filterPanel || this._filterPanel.is(':hidden')) {
+			return;
+		}
 		if(evt) {
 			var target = $(evt.target);
 			if(target.hasClass('yom-data-grid-filter-icon') || target.closest('.yom-data-grid-filter-icon').length) {
@@ -1061,11 +1077,20 @@ $.extend(YomDataGrid.prototype, {
 				return;
 			}
 		}
+
 		var dateFromDom = $('.date-from', this._filterPanel);
 		var dateToDom = $('.date-to', this._filterPanel);
 		dateFromDom.length && dateFromDom.datetimepicker('remove');
 		dateToDom.length && dateToDom.datetimepicker('remove');
-		this._filterPanel && this._filterPanel.hide();
+
+		var box = $('.auto-complete-box', this._filterPanel);
+		if(box.length) {
+			var autoComplete = box.data('autoComplete');
+			autoComplete && autoComplete.destroy();
+			box.data('autoComplete', null);
+		}
+		
+		this._filterPanel.hide();
 		this._activeFilterColumn = null;
 	},
 
@@ -1083,18 +1108,31 @@ $.extend(YomDataGrid.prototype, {
 			if(filterOption.type == 'set') {
 				value = [];
 				var valueMap = {};
-				var set = $('.filter-option input', this._filterPanel).filter(function(i, item) {
-					return item.checked;
-				}).map(function(i, item) {
-					if(!valueMap[item.value]) {
-						value.push(item.value);
+				if(filterOption.autoComplete) {
+					var box = $('.auto-complete-box', this._filterPanel);
+					var autoComplete = box.data('autoComplete');
+					value = autoComplete.getSelectedPropList('id');
+					if(!value.length) {
+						this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
+						return;
 					}
-					valueMap[item.value] = 1;
-					return item.value;
-				}).get();
-				if(!set.length) {
-					this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
-					return;
+					value.forEach(function(id) {
+						valueMap[id] = 1;
+					});
+				} else {
+					var set = $('.filter-option input', this._filterPanel).filter(function(i, item) {
+						return item.checked;
+					}).map(function(i, item) {
+						if(!valueMap[item.value]) {
+							value.push(item.value);
+						}
+						valueMap[item.value] = 1;
+						return item.value;
+					}).get();
+					if(!set.length) {
+						this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
+						return;
+					}
 				}
 				filterCriteria.valueMap = valueMap;
 				filterCriteria.value = value;
@@ -1390,18 +1428,32 @@ $.extend(YomDataGrid.prototype, {
 	showFilterPanel: function(column, target, align) {
 		target = $(target);
 		this._activeFilterColumn = column;
+		var filterOption = column.filterOption;
+		var type = filterOption && filterOption.type;
 		var offset = target.offset();
 		var width = target.outerWidth();
 		var height = target.outerHeight();
 		var left = offset.left;
 		var top = offset.top + height;
-		var type = column.filterOption && column.filterOption.type;
 		this._filterPanel.html(filterPanelTpl.render({
 			i18n: this._i18n,
 			column: column,
 			filterMap: this._filterMap
 		}));
-		if(type == 'date' || type == 'datetime') {
+		if(type == 'set' && filterOption.autoComplete) {
+			var filterCriteria = this._filterMap[column.id] || {};
+			var valueMap = filterCriteria.valueMap || {};
+			var box = $('.auto-complete-box', this._filterPanel);
+			this._filterPanel.show();
+			var autoComplete = new YomAutoComplete(box, $.extend({
+				mustSelectInDataSource: true,
+				dataSource: filterOption.options,
+				initData: Object.keys(valueMap),
+				richSelectionResult: true,
+				noResultMsg: this._i18n.noResultMsg
+			}, filterOption.autoComplete));
+			box.data('autoComplete', autoComplete);
+		} else if(type == 'date' || type == 'datetime') {
 			var pickerOpt = {
 				language: this._opt.language,
 				bootcssVer: 3,
@@ -1436,6 +1488,9 @@ $.extend(YomDataGrid.prototype, {
 			left: left + 'px',
 			top: top + 'px'
 		});
+		try {
+			$('input, select', this._filterPanel)[0].focus();
+		} catch(e) {}
 	},
 
 	setColumns: function(columns, setting) {
