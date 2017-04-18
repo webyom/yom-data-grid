@@ -602,10 +602,10 @@ $.extend(YomDataGrid.prototype, {
 				initData: Object.keys(valueMap),
 				richSelectionResult: true,
 				noResultMsg: this._i18n.noResultMsg,
-				listMaxHeight: 160,
+				listMaxHeight: 170,
 				listStyle: {
 					width: '100%',
-					position: 'static'
+					position: 'relative'
 				}
 			}, filterOption.autoComplete));
 			box.data('autoComplete', autoComplete);
