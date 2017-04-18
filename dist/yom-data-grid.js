@@ -1099,6 +1099,7 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	_submitFilterForm: function() {
+		var self = this;
 		var findEmpty = $('[name="findEmpty"]', this._filterPanel).prop('checked');
 		var column = this._activeFilterColumn;
 		var filterOption = column.filterOption || {};
@@ -1117,7 +1118,7 @@ $.extend(YomDataGrid.prototype, {
 						return;
 					}
 					value.forEach(function(id) {
-						valueMap[id] = 1;
+						valueMap[id] = self._opt.getOptionNameById && self._opt.getOptionNameById(id) || 1;
 					});
 				} else {
 					var set = $('.filter-option input', this._filterPanel).filter(function(i, item) {
@@ -1448,7 +1449,12 @@ $.extend(YomDataGrid.prototype, {
 			var autoComplete = new YomAutoComplete(box, $.extend({
 				mustSelectInDataSource: true,
 				dataSource: filterOption.options,
-				initData: Object.keys(valueMap),
+				initData: Object.keys(valueMap).map(function(id) {
+					return {
+						id: id,
+						name: typeof valueMap[id] == 'string' ? valueMap[id] : id
+					};
+				}),
 				richSelectionResult: true,
 				noResultMsg: this._i18n.noResultMsg,
 				listMaxHeight: 170,
@@ -1733,7 +1739,7 @@ $.extend(YomDataGrid.prototype, {
 							value = parts;
 							var valueMap = {};
 							value.forEach(function(id) {
-								valueMap[id] = 1;
+								valueMap[id] = self._opt.getOptionNameById && self._opt.getOptionNameById(id) || 1;
 							});
 							filterCriteria.valueMap = valueMap;
 							filterCriteria.value = value;
