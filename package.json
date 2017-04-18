@@ -1,6 +1,6 @@
 {
   "name": "yom-data-grid",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "A data grid.",
   "keywords": [
     "data grid"
@@ -30,7 +30,7 @@
   "dependencies": {
     "bootstrap-datetime-picker": "^2.4.4",
     "jquery": "^3.2.1",
-    "yom-auto-complete": "^0.3.6"
+    "yom-auto-complete": "^0.3.7"
   },
   "devDependencies": {
     "mt2amd-loader": "^1.0.1",

@@ -1450,7 +1450,12 @@ $.extend(YomDataGrid.prototype, {
 				dataSource: filterOption.options,
 				initData: Object.keys(valueMap),
 				richSelectionResult: true,
-				noResultMsg: this._i18n.noResultMsg
+				noResultMsg: this._i18n.noResultMsg,
+				listMaxHeight: 160,
+				listStyle: {
+					width: '100%',
+					position: 'static'
+				}
 			}, filterOption.autoComplete));
 			box.data('autoComplete', autoComplete);
 		} else if(type == 'date' || type == 'datetime') {
@@ -1489,7 +1494,9 @@ $.extend(YomDataGrid.prototype, {
 			top: top + 'px'
 		});
 		try {
-			$('input, select', this._filterPanel)[0].focus();
+			var el = $('input, select', this._filterPanel)[0];
+			el.focus();
+			el.readOnly || el.select();
 		} catch(e) {}
 	},
 
