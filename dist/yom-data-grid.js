@@ -1480,12 +1480,22 @@ $.extend(YomDataGrid.prototype, {
 			dateFromDom.datetimepicker($.extend({
 				container: dateFromDom[0]
 			}, pickerOpt)).on('changeDate', function(evt) {
-				dateFromDom.attr('data-value', evt.date.getTime());
+				var date = new Date(evt.date);
+				date.setHours(0);
+				date.setMinutes(0);
+				date.setSeconds(0);
+				date.setMilliseconds(0);
+				dateFromDom.attr('data-value', date.getTime());
 			});
 			dateToDom.datetimepicker($.extend({
 				container: dateToDom[0]
 			}, pickerOpt)).on('changeDate', function(evt) {
-				dateToDom.attr('data-value', evt.date.getTime());
+				var date = new Date(evt.date);
+				date.setHours(23);
+				date.setMinutes(59);
+				date.setSeconds(59);
+				date.setMilliseconds(999);
+				dateToDom.attr('data-value', date.getTime());
 			});
 		}
 		this._filterPanel.show();
