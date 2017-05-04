@@ -223,7 +223,7 @@ function render($data, $opt) {
         _$out_ += str;
     };
     var DEFAULT_COLUMN_WIDTH = $data.DEFAULT_COLUMN_WIDTH, i18n = $data.i18n, name = $data.name, width = $data.width, noScrollX = $data.noScrollX, lockedColumns = $data.lockedColumns, scrollColumns = $data.scrollColumns, bordered = $data.bordered, striped = $data.striped, sortColumnId = $data.sortColumnId, sortOrder = $data.sortOrder, filterMap = $data.filterMap, checkbox = $data.checkbox, data = $data.data, headerData = $data.headerData, dataProperty = $data.dataProperty, isAllChecked = $data.isAllChecked, selectedIndex = $data.selectedIndex, maxSelection = $data.maxSelection, disableSetting = $data.disableSetting, opt = $data.opt;
-    var i, j, l, l2, column, columns, columnWidth, columnHeader, columnOffset, renderData, isHeaderData;
+    var i, l, column, columns, columnWidth, columnHeader, columnOffset, renderData, isHeaderData;
     var scrollX = false;
     var lockedTableWidth = 0;
     var scrollTableWidth = 0;
@@ -361,7 +361,7 @@ function render($data, $opt) {
             isHeaderData = true;
             (function() {
                 var opt = $data.opt;
-                var i, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
+                var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
                 var nextSeq = 1;
                 var isPrevOdd = false;
                 for (i = 0, l = renderData.length; i < l; i++) {
@@ -439,7 +439,7 @@ function render($data, $opt) {
         isHeaderData = false;
         (function() {
             var opt = $data.opt;
-            var i, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
+            var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
             var nextSeq = 1;
             var isPrevOdd = false;
             for (i = 0, l = renderData.length; i < l; i++) {
@@ -520,7 +520,7 @@ function render($data, $opt) {
             isHeaderData = true;
             (function() {
                 var opt = $data.opt;
-                var i, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
+                var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
                 var nextSeq = 1;
                 var isPrevOdd = false;
                 for (i = 0, l = renderData.length; i < l; i++) {
@@ -598,7 +598,7 @@ function render($data, $opt) {
         isHeaderData = false;
         (function() {
             var opt = $data.opt;
-            var i, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
+            var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
             var nextSeq = 1;
             var isPrevOdd = false;
             for (i = 0, l = renderData.length; i < l; i++) {
