@@ -25,8 +25,8 @@ for(i = 0, l = renderData.length; i < l; i++) {
 			}
 			if(column.renderer) {
 				displayValue = column.renderer($encodeHtml(columnValue || ''), i, item, j + columnOffset, column, isHeaderData);
-			} else if(column.clickable) {
-				displayValue = '<a href="javascript:void(0);">' + $encodeHtml(columnValue || '') + '</a>';
+			} else if(column.clickable || column.onClick) {
+				displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || '') + '</a>';
 			} else {
 				displayValue = $encodeHtml(columnValue || '');
 			}

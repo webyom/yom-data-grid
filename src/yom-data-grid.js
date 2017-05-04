@@ -139,7 +139,7 @@ $.extend(YomDataGrid.prototype, {
 			(scrollBody.scrollWidth == scrollBody.clientWidth) || evt.preventDefault();
 		} else if(Math.abs(y) > 0) { // scroll y
 			top = scrollBody.scrollTop + y;
-			if (lockedBody) {
+			if(lockedBody) {
 				lockedBody.scrollTop = top;
 			}
 			scrollBody.scrollTop = top;
@@ -467,11 +467,18 @@ $.extend(YomDataGrid.prototype, {
 			if(self._opt.onSelect) {
 				self._opt.onSelect(rowIndex, checked, rowIndex >= 0 && self._data[rowIndex] || undefined, allChecked);
 			}
-		}).delegate('.yom-data-grid-row-clickable', 'click', function(evt) {
+		}).delegate('.yom-data-grid-row-clickable, .yom-data-grid-cell-clickable', 'click', function(evt) {
+			var cellClickable = $(evt.currentTarget).hasClass('yom-data-grid-cell-clickable');
 			var target = evt.target;
-			var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell').length === 0;
-			if(!clickable || !self._opt.onRowClick || self._rowClickToRef != null) {
-				return;
+			if(cellClickable) {
+				if(self._rowClickToRef != null) {
+					return;
+				}
+			} else {
+				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell').length === 0;
+				if(!clickable || !self._opt.onRowClick || self._rowClickToRef != null) {
+					return;
+				}
 			}
 			self._rowClickToRef = setTimeout(function() {
 				self._rowClickToRef = null;
@@ -485,7 +492,15 @@ $.extend(YomDataGrid.prototype, {
 					headerRowIndex = $(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
 					item = self._headerData[headerRowIndex];
 				}
-				self._opt.onRowClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
+				if(cellClickable) {
+					if(column.onClick) {
+						column.onClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
+					} else if(self._opt.onCellClick) {
+						self._opt.onCellClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
+					}
+				} else {
+					self._opt.onRowClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
+				}
 			}, self._opt.onRowDblclick ? 300 : 0);
 		}).delegate('.yom-data-grid-row-clickable', 'dblclick', function(evt) {
 			var target = evt.target;
@@ -651,7 +666,7 @@ $.extend(YomDataGrid.prototype, {
 		}
 		this._filterPanel.show();
 		var filterPanelWidth = this._filterPanel.outerWidth();
-		if (align == 'right') {
+		if(align == 'right') {
 			if(left > filterPanelWidth) {
 				left = left - filterPanelWidth + width;
 			}
@@ -936,7 +951,7 @@ $.extend(YomDataGrid.prototype, {
 
 	getFilterMapString: function(filterMap) {
 		filterMap = filterMap || this._filterMap;
-		if (typeof filterMap == 'string') {
+		if(typeof filterMap == 'string') {
 			return filterMap;
 		}
 		var filters = [];
