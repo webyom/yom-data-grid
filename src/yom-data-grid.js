@@ -72,6 +72,30 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._bindEvent();
 };
 
+YomDataGrid.getVisibleColumns = function(columns, setting) {
+	columns = columns || [];
+	setting = setting || {};
+	if(Array.isArray(setting.columnSequence)) {
+		columns = mergeSort(columns, function(a, b) {
+			var as = setting.columnSequence.indexOf(a.id);
+			var bs = setting.columnSequence.indexOf(b.id);
+			as = as >= 0 ? as : 9999;
+			bs = bs >= 0 ? bs : 9999;
+			return as - bs;
+		});
+	}
+	if(Array.isArray(setting.hiddenColumns)) {
+		columns = columns.filter(function(c) {
+			if(setting.hiddenColumns.indexOf(c.id) >= 0) {
+				return false;
+			} else {
+				return true;
+			}
+		});
+	}
+	return columns;
+};
+
 $.extend(YomDataGrid.prototype, {
 	_MAX_LOCKED_COLUMNS: 3,
 	_MIN_COLUMN_WIDTH: 38,
