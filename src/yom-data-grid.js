@@ -497,6 +497,8 @@ $.extend(YomDataGrid.prototype, {
 						column.onClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
 					} else if(self._opt.onCellClick) {
 						self._opt.onCellClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
+					} else if(self._opt.onRowClick) {
+						self._opt.onRowClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
 					}
 				} else {
 					self._opt.onRowClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
