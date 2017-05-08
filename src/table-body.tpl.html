@@ -1,6 +1,6 @@
 <%
 var opt = $data.opt;
-var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable;
+var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
 var nextSeq = 1;
 var isPrevOdd = false;
 for(i = 0, l = renderData.length; i < l; i++) {
@@ -11,8 +11,9 @@ for(i = 0, l = renderData.length; i < l; i++) {
 		isOdd = (isHeaderData ? i : i + headerData.length) % 2 === 0;
 	}
 	isPrevOdd = isOdd;
+	rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
 %>
-	<tr data-grid-<%=isHeaderData ? 'header-row' : 'row'%>="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=isOdd ? 'yom-data-grid-row-odd' : ''%> <%=!isHeaderData && (opt.onRowClick || opt.onRowDblclick) ? 'yom-data-grid-row-clickable' : ''%> <%=opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : ''%> <%=selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? 'yom-data-grid-row-checked' : ''%>">
+	<tr data-grid-<%=isHeaderData ? 'header-row' : 'row'%>="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=isOdd ? 'yom-data-grid-row-odd' : ''%> <%=rowClickable && (opt.onRowClick || opt.onRowDblclick) ? 'yom-data-grid-row-clickable' : ''%> <%=opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : ''%> <%=selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? 'yom-data-grid-row-checked' : ''%>">
 		<%for(j = 0, l2 = columns.length; j < l2; j++) {
 			column = columns[j];
 			ids = column.id.split('.');
@@ -25,10 +26,13 @@ for(i = 0, l = renderData.length; i < l; i++) {
 			}
 			if(column.renderer) {
 				displayValue = column.renderer($encodeHtml(columnValue || ''), i, item, j + columnOffset, column, isHeaderData);
-			} else if(!isHeaderData && (column.clickable || column.onClick)) {
-				displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || '') + '</a>';
 			} else {
-				displayValue = $encodeHtml(columnValue || '');
+				cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
+				if(cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+					displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || '') + '</a>';
+				} else {
+					displayValue = $encodeHtml(columnValue || '');
+				}
 			}
 			if(column.titleRenderer) {
 				title = column.titleRenderer(columnValue, i, item, j + columnOffset, column, isHeaderData);
@@ -44,7 +48,7 @@ for(i = 0, l = renderData.length; i < l; i++) {
 				title = columnValue || '';
 			}
 		%>
-			<td data-grid-column-id="<%=column.id%>" id="yom-data-grid-<%=name%>-<%=isHeaderData ? 'header-cell' : 'cell'%>-<%=i%>-<%=j + columnOffset%>" class="<%=column.type == 'sequence' ? 'yom-data-grid-sequence-cell' : column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : opt.getDblclickable && opt.getDblclickable(columnValue, i, item, j + columnOffset, column, isHeaderData) ? 'yom-data-grid-content-cell yom-data-grid-dblclickable-cell' : 'yom-data-grid-content-cell'%> <%=j == l2 - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>">
+			<td data-grid-column-id="<%=column.id%>" id="yom-data-grid-<%=name%>-<%=isHeaderData ? 'header-cell' : 'cell'%>-<%=i%>-<%=j + columnOffset%>" class="<%=column.type == 'sequence' ? 'yom-data-grid-sequence-cell' : column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : 'yom-data-grid-content-cell'%> <%=j == l2 - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>">
 				<div class="yom-data-grid-cell-inner" title="<%==title%>" style="text-align: <%=column.textAlign || 'left'%>;">
 					<%if(column.type == 'sequence') {
 						if(isHeaderData) {
