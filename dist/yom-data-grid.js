@@ -386,6 +386,9 @@ function render($data, $opt) {
                         }
                         if (column.renderer) {
                             displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                            if (displayValue == null) {
+                                displayValue = "";
+                            }
                         } else {
                             cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                             if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -468,6 +471,9 @@ function render($data, $opt) {
                     }
                     if (column.renderer) {
                         displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                        if (displayValue == null) {
+                            displayValue = "";
+                        }
                     } else {
                         cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                         if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -553,6 +559,9 @@ function render($data, $opt) {
                         }
                         if (column.renderer) {
                             displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                            if (displayValue == null) {
+                                displayValue = "";
+                            }
                         } else {
                             cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                             if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -635,6 +644,9 @@ function render($data, $opt) {
                     }
                     if (column.renderer) {
                         displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                        if (displayValue == null) {
+                            displayValue = "";
+                        }
                     } else {
                         cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                         if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
