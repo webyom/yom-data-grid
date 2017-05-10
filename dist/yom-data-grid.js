@@ -1563,20 +1563,24 @@ $.extend(YomDataGrid.prototype, {
 				container: dateFromDom[0]
 			}, pickerOpt)).on('changeDate', function(evt) {
 				var date = new Date(evt.date);
-				date.setHours(0);
-				date.setMinutes(0);
-				date.setSeconds(0);
-				date.setMilliseconds(0);
+				if(type == 'date') {
+					date.setHours(0);
+					date.setMinutes(0);
+					date.setSeconds(0);
+					date.setMilliseconds(0);
+				}
 				dateFromDom.attr('data-value', date.getTime());
 			});
 			dateToDom.datetimepicker($.extend({
 				container: dateToDom[0]
 			}, pickerOpt)).on('changeDate', function(evt) {
 				var date = new Date(evt.date);
-				date.setHours(23);
-				date.setMinutes(59);
-				date.setSeconds(59);
-				date.setMilliseconds(999);
+				if(type == 'date') {
+					date.setHours(23);
+					date.setMinutes(59);
+					date.setSeconds(59);
+					date.setMilliseconds(999);
+				}
 				dateToDom.attr('data-value', date.getTime());
 			});
 		}
