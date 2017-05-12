@@ -224,6 +224,8 @@ function render($data, $opt) {
     };
     var DEFAULT_COLUMN_WIDTH = $data.DEFAULT_COLUMN_WIDTH, i18n = $data.i18n, name = $data.name, width = $data.width, noScrollX = $data.noScrollX, lockedColumns = $data.lockedColumns, scrollColumns = $data.scrollColumns, bordered = $data.bordered, striped = $data.striped, sortColumnId = $data.sortColumnId, sortOrder = $data.sortOrder, filterMap = $data.filterMap, checkbox = $data.checkbox, data = $data.data, headerData = $data.headerData, dataProperty = $data.dataProperty, isAllChecked = $data.isAllChecked, selectedIndex = $data.selectedIndex, maxSelection = $data.maxSelection, disableSetting = $data.disableSetting, opt = $data.opt;
     var i, l, column, columns, columnWidth, columnHeader, columnOffset, renderData, isHeaderData;
+    var nextSeq = 1;
+    var isPrevOdd = false;
     var scrollX = false;
     var lockedTableWidth = 0;
     var scrollTableWidth = 0;
@@ -362,14 +364,14 @@ function render($data, $opt) {
             (function() {
                 var opt = $data.opt;
                 var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
-                var nextSeq = 1;
-                var isPrevOdd = false;
                 for (i = 0, l = renderData.length; i < l; i++) {
                     item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                    if (opt.isOddRow) {
+                    if (isHeaderData) {
+                        isOdd = i % 2 === 0;
+                    } else if (opt.isOddRow) {
                         isOdd = opt.isOddRow(item, isPrevOdd);
                     } else {
-                        isOdd = (isHeaderData ? i : i + headerData.length) % 2 === 0;
+                        isOdd = (i + headerData.length) % 2 === 0;
                     }
                     isPrevOdd = isOdd;
                     rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
@@ -447,14 +449,14 @@ function render($data, $opt) {
         (function() {
             var opt = $data.opt;
             var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
-            var nextSeq = 1;
-            var isPrevOdd = false;
             for (i = 0, l = renderData.length; i < l; i++) {
                 item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                if (opt.isOddRow) {
+                if (isHeaderData) {
+                    isOdd = i % 2 === 0;
+                } else if (opt.isOddRow) {
                     isOdd = opt.isOddRow(item, isPrevOdd);
                 } else {
-                    isOdd = (isHeaderData ? i : i + headerData.length) % 2 === 0;
+                    isOdd = (i + headerData.length) % 2 === 0;
                 }
                 isPrevOdd = isOdd;
                 rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
@@ -535,14 +537,14 @@ function render($data, $opt) {
             (function() {
                 var opt = $data.opt;
                 var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
-                var nextSeq = 1;
-                var isPrevOdd = false;
                 for (i = 0, l = renderData.length; i < l; i++) {
                     item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                    if (opt.isOddRow) {
+                    if (isHeaderData) {
+                        isOdd = i % 2 === 0;
+                    } else if (opt.isOddRow) {
                         isOdd = opt.isOddRow(item, isPrevOdd);
                     } else {
-                        isOdd = (isHeaderData ? i : i + headerData.length) % 2 === 0;
+                        isOdd = (i + headerData.length) % 2 === 0;
                     }
                     isPrevOdd = isOdd;
                     rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
@@ -620,14 +622,14 @@ function render($data, $opt) {
         (function() {
             var opt = $data.opt;
             var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
-            var nextSeq = 1;
-            var isPrevOdd = false;
             for (i = 0, l = renderData.length; i < l; i++) {
                 item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                if (opt.isOddRow) {
+                if (isHeaderData) {
+                    isOdd = i % 2 === 0;
+                } else if (opt.isOddRow) {
                     isOdd = opt.isOddRow(item, isPrevOdd);
                 } else {
-                    isOdd = (isHeaderData ? i : i + headerData.length) % 2 === 0;
+                    isOdd = (i + headerData.length) % 2 === 0;
                 }
                 isPrevOdd = isOdd;
                 rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;

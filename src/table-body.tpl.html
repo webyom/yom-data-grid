@@ -1,14 +1,14 @@
 <%
 var opt = $data.opt;
 var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
-var nextSeq = 1;
-var isPrevOdd = false;
 for(i = 0, l = renderData.length; i < l; i++) {
 	item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-	if(opt.isOddRow) {
+	if(isHeaderData) {
+		isOdd = i % 2 === 0;
+	} else if(opt.isOddRow) {
 		isOdd = opt.isOddRow(item, isPrevOdd);
 	} else {
-		isOdd = (isHeaderData ? i : i + headerData.length) % 2 === 0;
+		isOdd = (i + headerData.length) % 2 === 0;
 	}
 	isPrevOdd = isOdd;
 	rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
