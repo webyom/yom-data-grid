@@ -386,14 +386,16 @@ function render($data, $opt) {
                         if (columnValue != null && columnValue.toString) {
                             columnValue = columnValue.toString();
                         }
+                        cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                         if (column.renderer) {
                             displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
                             if (displayValue == null) {
                                 displayValue = "";
+                            } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + displayValue + "</a>";
                             }
                         } else {
-                            cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
-                            if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                            if (columnValue && cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
                                 displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || "") + "</a>";
                             } else {
                                 displayValue = $encodeHtml(columnValue || "");
@@ -408,7 +410,14 @@ function render($data, $opt) {
                                 title = column.title;
                             }
                         } else if (column.renderer) {
-                            title = displayValue;
+                            if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                                if (title == null) {
+                                    title = "";
+                                }
+                            } else {
+                                title = displayValue;
+                            }
                         } else {
                             title = columnValue || "";
                         }
@@ -471,14 +480,16 @@ function render($data, $opt) {
                     if (columnValue != null && columnValue.toString) {
                         columnValue = columnValue.toString();
                     }
+                    cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                     if (column.renderer) {
                         displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
                         if (displayValue == null) {
                             displayValue = "";
+                        } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                            displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + displayValue + "</a>";
                         }
                     } else {
-                        cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
-                        if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                        if (columnValue && cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
                             displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || "") + "</a>";
                         } else {
                             displayValue = $encodeHtml(columnValue || "");
@@ -493,7 +504,14 @@ function render($data, $opt) {
                             title = column.title;
                         }
                     } else if (column.renderer) {
-                        title = displayValue;
+                        if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                            title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                            if (title == null) {
+                                title = "";
+                            }
+                        } else {
+                            title = displayValue;
+                        }
                     } else {
                         title = columnValue || "";
                     }
@@ -559,14 +577,16 @@ function render($data, $opt) {
                         if (columnValue != null && columnValue.toString) {
                             columnValue = columnValue.toString();
                         }
+                        cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                         if (column.renderer) {
                             displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
                             if (displayValue == null) {
                                 displayValue = "";
+                            } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + displayValue + "</a>";
                             }
                         } else {
-                            cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
-                            if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                            if (columnValue && cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
                                 displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || "") + "</a>";
                             } else {
                                 displayValue = $encodeHtml(columnValue || "");
@@ -581,7 +601,14 @@ function render($data, $opt) {
                                 title = column.title;
                             }
                         } else if (column.renderer) {
-                            title = displayValue;
+                            if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                                if (title == null) {
+                                    title = "";
+                                }
+                            } else {
+                                title = displayValue;
+                            }
                         } else {
                             title = columnValue || "";
                         }
@@ -644,14 +671,16 @@ function render($data, $opt) {
                     if (columnValue != null && columnValue.toString) {
                         columnValue = columnValue.toString();
                     }
+                    cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                     if (column.renderer) {
                         displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
                         if (displayValue == null) {
                             displayValue = "";
+                        } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                            displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + displayValue + "</a>";
                         }
                     } else {
-                        cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
-                        if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                        if (columnValue && cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
                             displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || "") + "</a>";
                         } else {
                             displayValue = $encodeHtml(columnValue || "");
@@ -666,7 +695,14 @@ function render($data, $opt) {
                             title = column.title;
                         }
                     } else if (column.renderer) {
-                        title = displayValue;
+                        if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                            title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                            if (title == null) {
+                                title = "";
+                            }
+                        } else {
+                            title = displayValue;
+                        }
                     } else {
                         title = columnValue || "";
                     }
