@@ -1624,10 +1624,10 @@ $.extend(YomDataGrid.prototype, {
 		}
 		this._filterPanel.show();
 		var filterPanelWidth = this._filterPanel.outerWidth();
-		if(align == 'right') {
-			if((left - this._container.offset().left) > filterPanelWidth) {
-				left = left - filterPanelWidth + width;
-			}
+		var containerWidth = this._container.outerWidth();
+		var containerOffset = this._container.offset();
+		if(align == 'right' && (left - containerOffset.left) > filterPanelWidth || left + filterPanelWidth > containerOffset.left + containerWidth) {
+			left = left - filterPanelWidth + width;
 		}
 		this._filterPanel.css({
 			left: left + 'px',
