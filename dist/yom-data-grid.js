@@ -1625,7 +1625,7 @@ $.extend(YomDataGrid.prototype, {
 		this._filterPanel.show();
 		var filterPanelWidth = this._filterPanel.outerWidth();
 		if(align == 'right') {
-			if(left > filterPanelWidth) {
+			if((left - this._container.offset().left) > filterPanelWidth) {
 				left = left - filterPanelWidth + width;
 			}
 		}
