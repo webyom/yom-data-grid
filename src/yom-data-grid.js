@@ -1039,6 +1039,67 @@ $.extend(YomDataGrid.prototype, {
 		return all.join('&');
 	},
 
+	isExportSupported: function() {
+		return 'Blob' in window;
+	},
+
+	getExportUrl: function(data) {
+		if(!this.isExportSupported) {
+			throw new Error('Export is not supported!');
+		}
+		data = data || this._data;
+		var blobData = [];
+		var i;
+		for(i = -1; i < data.length; i++) {
+			var columnOffset = 0;
+			var rowData = [];
+			this._lockedColumns.forEach(function(column, j) {
+				if(i === -1) {
+					rowData.push(encodeCellValue(column.name));
+				} else {
+					rowData.push(getCellValue(data[i], column, i, j, columnOffset));
+				}
+			});
+			columnOffset = this._lockedColumns.length;
+			this._scrollColumns.forEach(function(column, j) {
+				if(i === -1) {
+					rowData.push(encodeCellValue(column.name));
+				} else {
+					rowData.push(getCellValue(data[i], column, i, j, columnOffset));
+				}
+			});
+			blobData.push(rowData.join(','));
+		}
+		function encodeCellValue(value) {
+			if((/,|"/).test(value)) {
+				value = '"' + value.replace(/"/g, '""') + '"';
+			}
+			return value;
+		}
+		function getCellValue(data, column, i, j, columnOffset) {
+			var ids = column.id.split('.');
+			var value = data[ids.shift()];
+			while(ids.length && value && typeof value == 'object') {
+				value = value[ids.shift()];
+			}
+			if(value != null && value.toString) {
+				value = value.toString();
+			}
+			var renderer = column.exportRenderer || column.renderer;
+			if(renderer) {
+				value = renderer(encodeHtml(value || ''), i, data, j + columnOffset, column, false);
+				if(value == null) {
+					value = '';
+				}
+			}
+			return encodeCellValue(value);
+		}
+		function encodeHtml(str) {
+			return (str + "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/`/g, "&#96;").replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+		}
+		return URL.createObjectURL(new Blob(['\ufeff' + blobData.join('\n')], {type: 'text/csv'}));
+	},
+
 	render: function(data, headerData, state, setting, opt) {
 		if(!this._holder) {
 			return;
