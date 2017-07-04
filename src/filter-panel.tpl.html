@@ -10,6 +10,10 @@ var type = filterOption.type;
 
 <h3><i class="fa fa-filter"></i> <%==column.name || i18n.filter%></h3>
 
+<%if(filterOption.remark) {%>
+	<p class="remark"><%=filterOption.remark%></p>
+<%}%>
+
 <div data-column-id="<%==column.id%>">
 	<div class="alert alert-danger hidden"></div>
 	<div class="filter-option <%=filterCriteria.findEmpty ? 'hidden': ''%>">
