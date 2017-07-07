@@ -1962,11 +1962,12 @@ $.extend(YomDataGrid.prototype, {
 		return 'Blob' in window;
 	},
 
-	getExportUrl: function(data) {
+	export: function(data, fileName) {
 		if(!this.isExportSupported) {
 			throw new Error('Export is not supported!');
 		}
 		data = data || this._data;
+		fileName = (fileName || new Date().getTime()) + '.csv';
 		var blobData = [];
 		var i;
 		for(i = -1; i < data.length; i++) {
@@ -2016,7 +2017,16 @@ $.extend(YomDataGrid.prototype, {
 		function encodeHtml(str) {
 			return (str + "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/`/g, "&#96;").replace(/'/g, "&#39;").replace(/"/g, "&quot;");
 		}
-		return URL.createObjectURL(new Blob(['\ufeff' + blobData.join('\n')], {type: 'text/csv'}));
+		var blob = new Blob(['\ufeff' + blobData.join('\n')], {type: 'text/csv'});
+		if(window.navigator.msSaveOrOpenBlob) {
+			navigator.msSaveBlob(blob, fileName);
+		} else {
+			var link = document.createElement('a');
+			link.href = window.URL.createObjectURL(blob);
+			link.download = fileName;
+			link.click();
+			window.URL.revokeObjectURL(link.href);
+		}
 	},
 
 	render: function(data, headerData, state, setting, opt) {
