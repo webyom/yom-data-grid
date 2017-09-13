@@ -275,7 +275,7 @@ $.extend(YomDataGrid.prototype, {
 
 	_submitFilterForm: function() {
 		var self = this;
-		var findEmpty = $('[name="findEmpty"]', this._filterPanel).prop('checked');
+		var findEmpty = !!$('[name="findEmpty"]', this._filterPanel).prop('checked');
 		var column = this._activeFilterColumn;
 		var filterOption = column.filterOption || {};
 		var filterCriteria = {};

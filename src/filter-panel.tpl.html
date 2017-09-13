@@ -95,11 +95,13 @@ var type = filterOption.type;
 			</div>
 		<%}%>
 	</div>
-	<div class="checkbox">
-		<label>
-			<input name="findEmpty" type="checkbox" <%=filterCriteria.findEmpty ? 'checked' : ''%> /> <%=i18n.empty%>
-		</label>
-	</div>
+	<%if(filterOption.enableEmpty) {%>
+		<div class="checkbox">
+			<label>
+				<input name="findEmpty" type="checkbox" <%=filterCriteria.findEmpty ? 'checked' : ''%> /> <%=i18n.empty%>
+			</label>
+		</div>
+	<%}%>
 	<div class="row">
 		<div class="col-xs-8">
 			<button type="button" class="btn btn-primary btn-sm btn-confirm"><%=i18n.ok%></button>

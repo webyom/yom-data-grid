@@ -139,7 +139,11 @@ function render($data, $opt) {
     } else {
         _$out_ += '<div class="form-group"><input name="value" type="text" value="' + $encodeHtml(filterCriteria.value || "") + '" class="form-control" /></div>';
     }
-    _$out_ += '</div><div class="checkbox"><label><input name="findEmpty" type="checkbox" ' + (filterCriteria.findEmpty ? "checked" : "") + " /> " + i18n.empty + '</label></div><div class="row"><div class="col-xs-8"><button type="button" class="btn btn-primary btn-sm btn-confirm">' + i18n.ok + '</button><button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">' + i18n.cancel + '</button></div><div class="col-xs-4 text-right">';
+    _$out_ += "</div>";
+    if (filterOption.enableEmpty) {
+        _$out_ += '<div class="checkbox"><label><input name="findEmpty" type="checkbox" ' + (filterCriteria.findEmpty ? "checked" : "") + " /> " + i18n.empty + "</label></div>";
+    }
+    _$out_ += '<div class="row"><div class="col-xs-8"><button type="button" class="btn btn-primary btn-sm btn-confirm">' + i18n.ok + '</button><button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">' + i18n.cancel + '</button></div><div class="col-xs-4 text-right">';
     if (filterMap[column.id]) {
         _$out_ += '<a class="btn btn-remove" href="javascript:void(0);">' + i18n.clear + "</a>";
     }
@@ -1219,7 +1223,7 @@ $.extend(YomDataGrid.prototype, {
 
 	_submitFilterForm: function() {
 		var self = this;
-		var findEmpty = $('[name="findEmpty"]', this._filterPanel).prop('checked');
+		var findEmpty = !!$('[name="findEmpty"]', this._filterPanel).prop('checked');
 		var column = this._activeFilterColumn;
 		var filterOption = column.filterOption || {};
 		var filterCriteria = {};
