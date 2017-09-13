@@ -1601,6 +1601,7 @@ $.extend(YomDataGrid.prototype, {
 	showFilterPanel: function(column, target, align) {
 		target = $(target);
 		this._activeFilterColumn = column;
+		var self = this;
 		var filterOption = column.filterOption;
 		var type = filterOption && filterOption.type;
 		var offset = target.offset();
@@ -1685,11 +1686,13 @@ $.extend(YomDataGrid.prototype, {
 			left: left + 'px',
 			top: top + 'px'
 		});
-		try {
-			var el = $('input, select', this._filterPanel)[0];
-			el.focus();
-			el.readOnly || el.select();
-		} catch(e) {}
+		setTimeout(function() {
+			try {
+				var el = $('input, select', self._filterPanel)[0];
+				el.focus();
+				el.readOnly || el.select();
+			} catch(e) {}
+		}, 0);
 	},
 
 	setColumns: function(columns, setting) {
