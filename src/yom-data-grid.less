@@ -2,8 +2,7 @@
 @yom-data-grid-border-color: #ccc;
 @gray-dark: #555;
 @font-size-base: 14px;
-@line-height-base: 1.571; // 22/14
-@line-height-computed: floor(@font-size-base * @line-height-base); // ~20px
+@line-height-base: 20px;
 @header-row-height: 39px;
 
 // Clearfix
@@ -97,7 +96,7 @@
 .yom-data-grid-locked table {
 	table-layout: fixed;
 	th, td {
-		line-height: @line-height-computed;
+		line-height: @line-height-base;
 	}
 	td i[class^="icon"] {
 		font-size: @font-size-base * 1.25;
