@@ -1885,6 +1885,7 @@ $.extend(YomDataGrid.prototype, {
 				}
 			}
 		});
+		this._setCheckboxAllStatus(checked);
 	},
 
 	hightLightRow: function(index, className) {
