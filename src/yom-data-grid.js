@@ -480,7 +480,7 @@ $.extend(YomDataGrid.prototype, {
 					}
 					allChecked = self.isAllChecked();
 					self._setCheckboxAllStatus(true);
-					$('[data-grid-row="' + rowIndex + '"]').addClass('yom-data-grid-row-checked');
+					$('[data-grid-row="' + rowIndex + '"]', self._container).addClass('yom-data-grid-row-checked');
 				} else {
 					allChecked = false;
 					if(self.isAnyChecked()) {
@@ -488,7 +488,7 @@ $.extend(YomDataGrid.prototype, {
 					} else {
 						self._setCheckboxAllStatus(false);
 					}
-					$('[data-grid-row="' + rowIndex + '"]').removeClass('yom-data-grid-row-checked');
+					$('[data-grid-row="' + rowIndex + '"]', self._container).removeClass('yom-data-grid-row-checked');
 				}
 			}
 			if(self._opt.onSelect) {
@@ -901,7 +901,7 @@ $.extend(YomDataGrid.prototype, {
 		if(checked) {
 			allChecked = this.isAllChecked();
 			this._setCheckboxAllStatus(true);
-			$('[data-grid-row="' + rowIndex + '"]').addClass('yom-data-grid-row-checked');
+			$('[data-grid-row="' + rowIndex + '"]', this._container).addClass('yom-data-grid-row-checked');
 		} else {
 			allChecked = false;
 			if(this.isAnyChecked()) {
@@ -909,7 +909,7 @@ $.extend(YomDataGrid.prototype, {
 			} else {
 				this._setCheckboxAllStatus(false);
 			}
-			$('[data-grid-row="' + rowIndex + '"]').removeClass('yom-data-grid-row-checked');
+			$('[data-grid-row="' + rowIndex + '"]', this._container).removeClass('yom-data-grid-row-checked');
 		}
 		if(this._opt.onSelect) {
 			this._opt.onSelect(rowIndex, checked, this._data[rowIndex], allChecked);
@@ -924,15 +924,16 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	setAllSelection: function(checked) {
+		var self = this;
 		$('.yom-data-grid-check-box, .yom-data-grid-check-box-all', this._container).each(function(i, item) {
 			if(!item.disabled) {
 				var rowIndex = $(item).closest('[data-grid-row]').attr('data-grid-row');
 				item.checked = !!checked;
 				if(rowIndex >= 0) {
 					if(checked) {
-						$('[data-grid-row="' + rowIndex + '"]').addClass('yom-data-grid-row-checked');
+						$('[data-grid-row="' + rowIndex + '"]', self._container).addClass('yom-data-grid-row-checked');
 					} else {
-						$('[data-grid-row="' + rowIndex + '"]').removeClass('yom-data-grid-row-checked');
+						$('[data-grid-row="' + rowIndex + '"]', self._container).removeClass('yom-data-grid-row-checked');
 					}
 				}
 			}
