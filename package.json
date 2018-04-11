@@ -1,6 +1,6 @@
 {
   "name": "yom-data-grid",
-  "version": "0.8.10",
+  "version": "0.8.11",
   "description": "A data grid.",
   "keywords": [
     "data grid"
@@ -22,7 +22,7 @@
     "url": "https://github.com/webyom/yom-data-grid/issues"
   },
   "license": "MIT",
-  "main": "lib/index.js",
+  "main": "dist/yom-data-grid.js",
   "typings": "src/yom-data-grid.d.ts",
   "engines": {
     "node": ">= 0.8.0"
