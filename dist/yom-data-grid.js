@@ -2113,7 +2113,9 @@ $.extend(YomDataGrid.prototype, {
 			throw new Error('Export is not supported!');
 		}
 		data = data || this._data;
-		var columns = this._lockedColumns.concat(this._scrollColumns);
+		var columns = this._lockedColumns.concat(this._scrollColumns).filter(function (column) {
+			return !column.hidden;
+		});
 		if (format == 'csv') {
 			return exportMod.exportCsv(data, columns, fileName);
 		} else {
