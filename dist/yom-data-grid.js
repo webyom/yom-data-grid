@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("jquery"), require("yom-auto-complete"));
+		module.exports = factory(require("jquery"));
 	else if(typeof define === 'function' && define.amd)
-		define(["jquery", "yom-auto-complete"], factory);
+		define(["jquery"], factory);
 	else if(typeof exports === 'object')
-		exports["YomDataGrid"] = factory(require("jquery"), require("yom-auto-complete"));
+		exports["YomDataGrid"] = factory(require("jquery"));
 	else
-		root["YomDataGrid"] = factory(root["$"], root["YomAutoComplete"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_7__) {
+		root["YomDataGrid"] = factory(root["$"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -78,6 +78,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
 function $encodeHtml(str) {
@@ -154,7 +160,7 @@ function render($data, $opt) {
 exports.render = render;
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports) {
 
 function $encodeHtml(str) {
@@ -184,7 +190,7 @@ function render($data, $opt) {
 exports.render = render;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {function yomCssModuleHelper(className, cssContent, moduleUri) {
@@ -242,7 +248,7 @@ module.exports = expo;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 function $encodeHtml(str) {
@@ -776,7 +782,99 @@ function render($data, $opt) {
 exports.render = render;
 
 /***/ }),
-/* 4 */
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+function encodeHtml(str) {
+	return (str + "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/`/g, "&#96;").replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+}
+
+function encodeCsvCellValue(value) {
+	if((/,|"/).test(value)) {
+		value = '"' + value.replace(/"/g, '""') + '"';
+	}
+	return value;
+}
+
+function getCellValue(data, column, i, j) {
+	var ids = column.id.split('.');
+	var value = data[ids.shift()];
+	while(ids.length && value && typeof value == 'object') {
+		value = value[ids.shift()];
+	}
+	if(value != null && value.toString) {
+		value = value.toString();
+	}
+	var renderer = column.exportRenderer || column.renderer;
+	if(renderer) {
+		value = renderer(encodeHtml(value || ''), i, data, j, column, false);
+		if(value == null) {
+			value = '';
+		}
+	}
+	return value;
+}
+
+function exportCsv(data, columns, fileName) {
+	fileName = (fileName || new Date().getTime()) + '.csv';
+	var blobData = [];
+	var i;
+	for(i = -1; i < data.length; i++) {
+		var rowData = [];
+		columns.forEach(function(column, j) {
+			if(i === -1) {
+				rowData.push(encodeCsvCellValue(column.name));
+			} else {
+				rowData.push(encodeCsvCellValue(getCellValue(data[i], column, i, j)));
+			}
+		});
+		blobData.push(rowData.join(','));
+	}
+	var blob = new Blob(['\ufeff' + blobData.join('\n')], {type: 'text/csv'});
+	if(window.navigator.msSaveOrOpenBlob) {
+		navigator.msSaveBlob(blob, fileName);
+	} else {
+		var link = document.createElement('a');
+		link.href = window.URL.createObjectURL(blob);
+		link.download = fileName;
+		link.click();
+		window.URL.revokeObjectURL(link.href);
+	}
+}
+
+function exportXlsx(data, columns, fileName) {
+	fileName = (fileName || new Date().getTime()) + '.xlsx';
+	window.require(['yom-data-grid-xlsx'], function (XLSX) {
+		var blobData = [];
+		var i;
+		for(i = -1; i < data.length; i++) {
+			var rowData = [];
+			columns.forEach(function(column, j) {
+				if(i === -1) {
+					rowData.push(column.name);
+				} else {
+					rowData.push(getCellValue(data[i], column, i, j));
+				}
+			});
+			blobData.push(rowData);
+		}
+		var wb = XLSX.utils.book_new();
+		var ws = XLSX.utils.aoa_to_sheet(blobData);
+		XLSX.utils.book_append_sheet(wb, ws, fileName);
+		XLSX.writeFile(wb, fileName);
+	});
+}
+
+module.exports = {
+	exportCsv: exportCsv,
+	exportXlsx: exportXlsx
+};
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -797,7 +895,7 @@ module.exports = {
 		clearFilterCriteria: 'Clear filter criteria',
 		atLeastOneColumn: 'Need to display at least one column',
 		filterCriteriaRequired: 'Please input filter criteria',
-		filterValueContainIllegalChar: 'Can not input “,” and “;”',
+		filterValueContainIllegalChar: 'Can not input “;”',
 		compareValueRequired: 'Please input compare value',
 		atLeastOneDateRequired: 'Please at least choose one date',
 		startDateCanNotLaterThanEndDate: 'Start date can not be later than end date',
@@ -827,7 +925,7 @@ module.exports = {
 		clearFilterCriteria: '清除过滤条件',
 		atLeastOneColumn: '至少显示一列',
 		filterCriteriaRequired: '请输入筛选条件',
-		filterValueContainIllegalChar: '不能输入“,”和“;”',
+		filterValueContainIllegalChar: '不能输入“;”',
 		compareValueRequired: '请输入比较值',
 		atLeastOneDateRequired: '请至少指定一个日期',
 		startDateCanNotLaterThanEndDate: '开始日期不能晚于结束日期',
@@ -842,7 +940,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports) {
 
 /**
@@ -853,66 +951,54 @@ module.exports = {
  * Merge sort (http://en.wikipedia.org/wiki/Merge_sort)
  */
 function mergeSort(arr, compareFn) {
-    if (arr == null) {
-        return [];
-    } else if (arr.length < 2) {
-        return arr;
-    }
+	if (arr == null) {
+		return [];
+	} else if (arr.length < 2) {
+		return arr;
+	}
 
-    if (compareFn == null) {
-        compareFn = defaultCompare;
-    }
+	if (compareFn == null) {
+		compareFn = defaultCompare;
+	}
 
-    var mid, left, right;
+	var mid, left, right;
 
-    mid   = ~~(arr.length / 2);
-    left  = mergeSort( arr.slice(0, mid), compareFn );
-    right = mergeSort( arr.slice(mid, arr.length), compareFn );
+	mid = ~~(arr.length / 2);
+	left = mergeSort( arr.slice(0, mid), compareFn );
+	right = mergeSort( arr.slice(mid, arr.length), compareFn );
 
-    return merge(left, right, compareFn);
+	return merge(left, right, compareFn);
 }
 
 function defaultCompare(a, b) {
-    return a < b ? -1 : (a > b? 1 : 0);
+	return a < b ? -1 : (a > b? 1 : 0);
 }
 
 function merge(left, right, compareFn) {
-    var result = [];
+	var result = [];
 
-    while (left.length && right.length) {
-        if (compareFn(left[0], right[0]) <= 0) {
-            // if 0 it should preserve same order (stable)
-            result.push(left.shift());
-        } else {
-            result.push(right.shift());
-        }
-    }
+	while (left.length && right.length) {
+		if (compareFn(left[0], right[0]) <= 0) {
+			// if 0 it should preserve same order (stable)
+			result.push(left.shift());
+		} else {
+			result.push(right.shift());
+		}
+	}
 
-    if (left.length) {
-        result.push.apply(result, left);
-    }
+	if (left.length) {
+		result.push.apply(result, left);
+	}
 
-    if (right.length) {
-        result.push.apply(result, right);
-    }
+	if (right.length) {
+		result.push.apply(result, right);
+	}
 
-    return result;
+	return result;
 }
 
 module.exports = mergeSort;
 
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_7__;
 
 /***/ }),
 /* 8 */
@@ -946,14 +1032,14 @@ module.exports = function(module) {
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $ = __webpack_require__(6);
-var mainTpl = __webpack_require__(3);
-var filterPanelTpl = __webpack_require__(0);
-var settingPanelTpl = __webpack_require__(1);
-var i18n = __webpack_require__(4);
-var mergeSort = __webpack_require__(5);
-var YomAutoComplete = __webpack_require__(7);
-__webpack_require__(2);
+var $ = __webpack_require__(0);
+var mainTpl = __webpack_require__(4);
+var filterPanelTpl = __webpack_require__(1);
+var settingPanelTpl = __webpack_require__(2);
+var i18n = __webpack_require__(6);
+var mergeSort = __webpack_require__(7);
+var exportMod = __webpack_require__(5);
+__webpack_require__(3);
 
 var YomDataGrid = function(holder, columns, opt) {
 	var self = this;
@@ -1212,7 +1298,7 @@ $.extend(YomDataGrid.prototype, {
 			autoComplete && autoComplete.destroy();
 			box.data('autoComplete', null);
 		}
-		
+
 		this._filterPanel.hide();
 		this._activeFilterColumn = null;
 	},
@@ -1263,7 +1349,7 @@ $.extend(YomDataGrid.prototype, {
 			} else if(filterOption.type == 'number') {
 				var compareType = $('[name="compareType"]', this._filterPanel).val();
 				valueEl = $('[name="value"]', this._filterPanel);
-				if((/[,;]/).test(valueEl.val())) {
+				if((/;/).test(valueEl.val())) {
 					this._showFilterErrMsg(this._i18n.filterValueContainIllegalChar);
 					return;
 				}
@@ -1295,11 +1381,11 @@ $.extend(YomDataGrid.prototype, {
 				}
 			} else {
 				valueEl = $('[name="value"]', this._filterPanel);
-				if((/[,;]/).test(valueEl.val())) {
+				if((/;/).test(valueEl.val())) {
 					this._showFilterErrMsg(this._i18n.filterValueContainIllegalChar);
 					return;
 				}
-				value = $.trim(valueEl.val());
+				value = $.trim(valueEl.val().replace(/\s*,\s*/g, ','));
 				if(!value) {
 					this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
 					return;
@@ -1586,7 +1672,7 @@ $.extend(YomDataGrid.prototype, {
 		});
 		return allChecked;
 	},
-	
+
 	isAnyChecked: function() {
 		var allChecked = false;
 		$('.yom-data-grid-check-box[data-row-index]', this._container).each(function(i, item) {
@@ -1599,100 +1685,102 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	showFilterPanel: function(column, target, align) {
-		target = $(target);
-		this._activeFilterColumn = column;
 		var self = this;
-		var filterOption = column.filterOption;
-		var type = filterOption && filterOption.type;
-		var offset = target.offset();
-		var width = target.outerWidth();
-		var height = target.outerHeight();
-		var left = offset.left;
-		var top = offset.top + height;
-		this._filterPanel.html(filterPanelTpl.render({
-			i18n: this._i18n,
-			column: column,
-			filterMap: this._filterMap
-		}));
-		if(type == 'set' && filterOption.autoComplete) {
-			var filterCriteria = this._filterMap[column.id] || {};
-			var valueMap = filterCriteria.valueMap || {};
-			var box = $('.auto-complete-box', this._filterPanel);
-			this._filterPanel.show();
-			var autoComplete = new YomAutoComplete(box, $.extend({
-				mustSelectInDataSource: true,
-				dataSource: filterOption.options,
-				initData: Object.keys(valueMap).map(function(id) {
-					return {
-						id: id,
-						name: typeof valueMap[id] == 'string' ? valueMap[id] : id
-					};
-				}),
-				richSelectionResult: true,
-				noResultMsg: this._i18n.noResultMsg,
-				listMaxHeight: 170,
-				listStyle: {
-					width: '100%',
-					position: 'relative'
-				}
-			}, filterOption.autoComplete));
-			box.data('autoComplete', autoComplete);
-		} else if(type == 'date' || type == 'datetime') {
-			var pickerOpt = {
-				language: this._opt.language,
-				bootcssVer: 3,
-				fontAwesome: true,
-				pickerPosition: 'bottom-left',
-				autoclose: true,
-				todayBtn: true,
-				todayHighlight: true,
-				minView: type == 'datetime' ? 0 : 2
-			};
-			var dateFromDom = $('.date-from', this._filterPanel);
-			var dateToDom = $('.date-to', this._filterPanel);
-			dateFromDom.datetimepicker($.extend({
-				container: dateFromDom[0]
-			}, pickerOpt)).on('changeDate', function(evt) {
-				var date = new Date(evt.date);
-				if(type == 'date') {
-					date.setHours(0);
-					date.setMinutes(0);
-					date.setSeconds(0);
-					date.setMilliseconds(0);
-				}
-				dateFromDom.attr('data-value', date.getTime());
+		window.require(['yom-auto-complete'], function (YomAutoComplete) {
+			target = $(target);
+			self._activeFilterColumn = column;
+			var filterOption = column.filterOption;
+			var type = filterOption && filterOption.type;
+			var offset = target.offset();
+			var width = target.outerWidth();
+			var height = target.outerHeight();
+			var left = offset.left;
+			var top = offset.top + height;
+			self._filterPanel.html(filterPanelTpl.render({
+				i18n: self._i18n,
+				column: column,
+				filterMap: self._filterMap
+			}));
+			if(type == 'set' && filterOption.autoComplete) {
+				var filterCriteria = self._filterMap[column.id] || {};
+				var valueMap = filterCriteria.valueMap || {};
+				var box = $('.auto-complete-box', self._filterPanel);
+				self._filterPanel.show();
+				var autoComplete = new YomAutoComplete(box, $.extend({
+					mustSelectInDataSource: true,
+					dataSource: filterOption.options,
+					initData: Object.keys(valueMap).map(function(id) {
+						return {
+							id: id,
+							name: typeof valueMap[id] == 'string' ? valueMap[id] : id
+						};
+					}),
+					richSelectionResult: true,
+					noResultMsg: self._i18n.noResultMsg,
+					listMaxHeight: 170,
+					listStyle: {
+						width: '100%',
+						position: 'relative'
+					}
+				}, filterOption.autoComplete));
+				box.data('autoComplete', autoComplete);
+			} else if(type == 'date' || type == 'datetime') {
+				var pickerOpt = {
+					language: self._opt.language,
+					bootcssVer: 3,
+					fontAwesome: true,
+					pickerPosition: 'bottom-left',
+					autoclose: true,
+					todayBtn: true,
+					todayHighlight: true,
+					minView: type == 'datetime' ? 0 : 2
+				};
+				var dateFromDom = $('.date-from', self._filterPanel);
+				var dateToDom = $('.date-to', self._filterPanel);
+				dateFromDom.datetimepicker($.extend({
+					container: dateFromDom[0]
+				}, pickerOpt)).on('changeDate', function(evt) {
+					var date = new Date(evt.date);
+					if(type == 'date') {
+						date.setHours(0);
+						date.setMinutes(0);
+						date.setSeconds(0);
+						date.setMilliseconds(0);
+					}
+					dateFromDom.attr('data-value', date.getTime());
+				});
+				dateToDom.datetimepicker($.extend({
+					container: dateToDom[0]
+				}, pickerOpt)).on('changeDate', function(evt) {
+					var date = new Date(evt.date);
+					if(type == 'date') {
+						date.setHours(23);
+						date.setMinutes(59);
+						date.setSeconds(59);
+						date.setMilliseconds(999);
+					}
+					dateToDom.attr('data-value', date.getTime());
+				});
+			}
+			self._filterPanel.show();
+			var filterPanelWidth = self._filterPanel.outerWidth();
+			var containerWidth = self._container.outerWidth();
+			var containerOffset = self._container.offset();
+			if(align == 'right' && (left - containerOffset.left) > filterPanelWidth || left + filterPanelWidth > containerOffset.left + containerWidth) {
+				left = left - filterPanelWidth + width;
+			}
+			self._filterPanel.css({
+				left: left + 'px',
+				top: top + 'px'
 			});
-			dateToDom.datetimepicker($.extend({
-				container: dateToDom[0]
-			}, pickerOpt)).on('changeDate', function(evt) {
-				var date = new Date(evt.date);
-				if(type == 'date') {
-					date.setHours(23);
-					date.setMinutes(59);
-					date.setSeconds(59);
-					date.setMilliseconds(999);
-				}
-				dateToDom.attr('data-value', date.getTime());
-			});
-		}
-		this._filterPanel.show();
-		var filterPanelWidth = this._filterPanel.outerWidth();
-		var containerWidth = this._container.outerWidth();
-		var containerOffset = this._container.offset();
-		if(align == 'right' && (left - containerOffset.left) > filterPanelWidth || left + filterPanelWidth > containerOffset.left + containerWidth) {
-			left = left - filterPanelWidth + width;
-		}
-		this._filterPanel.css({
-			left: left + 'px',
-			top: top + 'px'
+			setTimeout(function() {
+				try {
+					var el = $('input, select', self._filterPanel)[0];
+					el.focus();
+					el.readOnly || el.select();
+				} catch(e) {}
+			}, 0);
 		});
-		setTimeout(function() {
-			try {
-				var el = $('input, select', self._filterPanel)[0];
-				el.focus();
-				el.readOnly || el.select();
-			} catch(e) {}
-		}, 0);
 	},
 
 	setColumns: function(columns, setting) {
@@ -1956,7 +2044,7 @@ $.extend(YomDataGrid.prototype, {
 								filterCriteria.toDisplay = filterOption.formatter(toValue);
 							}
 						} else {
-							value = parts.shift();
+							value = parts.join(',');
 							filterCriteria.value = value;
 						}
 					}
@@ -2020,70 +2108,16 @@ $.extend(YomDataGrid.prototype, {
 		return 'Blob' in window;
 	},
 
-	export: function(data, fileName) {
+	export: function(data, fileName, format) {
 		if(!this.isExportSupported) {
 			throw new Error('Export is not supported!');
 		}
 		data = data || this._data;
-		fileName = (fileName || new Date().getTime()) + '.csv';
-		var blobData = [];
-		var i;
-		for(i = -1; i < data.length; i++) {
-			var columnOffset = 0;
-			var rowData = [];
-			this._lockedColumns.forEach(function(column, j) {
-				if(i === -1) {
-					rowData.push(encodeCellValue(column.name));
-				} else {
-					rowData.push(getCellValue(data[i], column, i, j, columnOffset));
-				}
-			});
-			columnOffset = this._lockedColumns.length;
-			this._scrollColumns.forEach(function(column, j) {
-				if(i === -1) {
-					rowData.push(encodeCellValue(column.name));
-				} else {
-					rowData.push(getCellValue(data[i], column, i, j, columnOffset));
-				}
-			});
-			blobData.push(rowData.join(','));
-		}
-		function encodeCellValue(value) {
-			if((/,|"/).test(value)) {
-				value = '"' + value.replace(/"/g, '""') + '"';
-			}
-			return value;
-		}
-		function getCellValue(data, column, i, j, columnOffset) {
-			var ids = column.id.split('.');
-			var value = data[ids.shift()];
-			while(ids.length && value && typeof value == 'object') {
-				value = value[ids.shift()];
-			}
-			if(value != null && value.toString) {
-				value = value.toString();
-			}
-			var renderer = column.exportRenderer || column.renderer;
-			if(renderer) {
-				value = renderer(encodeHtml(value || ''), i, data, j + columnOffset, column, false);
-				if(value == null) {
-					value = '';
-				}
-			}
-			return encodeCellValue(value);
-		}
-		function encodeHtml(str) {
-			return (str + "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/`/g, "&#96;").replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-		}
-		var blob = new Blob(['\ufeff' + blobData.join('\n')], {type: 'text/csv'});
-		if(window.navigator.msSaveOrOpenBlob) {
-			navigator.msSaveBlob(blob, fileName);
+		var columns = this._lockedColumns.concat(this._scrollColumns);
+		if (format == 'csv') {
+			return exportMod.exportCsv(data, columns, fileName);
 		} else {
-			var link = document.createElement('a');
-			link.href = window.URL.createObjectURL(blob);
-			link.download = fileName;
-			link.click();
-			window.URL.revokeObjectURL(link.href);
+			return exportMod.exportXlsx(data, columns, fileName);
 		}
 	},
 

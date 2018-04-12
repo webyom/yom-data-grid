@@ -4,7 +4,7 @@ var filterPanelTpl = require('./filter-panel.tpl.html');
 var settingPanelTpl = require('./setting-panel.tpl.html');
 var i18n = require('./i18n');
 var mergeSort = require('./merge-sort');
-var YomAutoComplete = require('yom-auto-complete');
+var exportMod = require('./export');
 require('./yom-data-grid.less');
 
 var YomDataGrid = function(holder, columns, opt) {
@@ -264,7 +264,7 @@ $.extend(YomDataGrid.prototype, {
 			autoComplete && autoComplete.destroy();
 			box.data('autoComplete', null);
 		}
-		
+
 		this._filterPanel.hide();
 		this._activeFilterColumn = null;
 	},
@@ -315,7 +315,7 @@ $.extend(YomDataGrid.prototype, {
 			} else if(filterOption.type == 'number') {
 				var compareType = $('[name="compareType"]', this._filterPanel).val();
 				valueEl = $('[name="value"]', this._filterPanel);
-				if((/[,;]/).test(valueEl.val())) {
+				if((/;/).test(valueEl.val())) {
 					this._showFilterErrMsg(this._i18n.filterValueContainIllegalChar);
 					return;
 				}
@@ -347,11 +347,11 @@ $.extend(YomDataGrid.prototype, {
 				}
 			} else {
 				valueEl = $('[name="value"]', this._filterPanel);
-				if((/[,;]/).test(valueEl.val())) {
+				if((/;/).test(valueEl.val())) {
 					this._showFilterErrMsg(this._i18n.filterValueContainIllegalChar);
 					return;
 				}
-				value = $.trim(valueEl.val());
+				value = $.trim(valueEl.val().replace(/\s*,\s*/g, ','));
 				if(!value) {
 					this._showFilterErrMsg(this._i18n.filterCriteriaRequired);
 					return;
@@ -638,7 +638,7 @@ $.extend(YomDataGrid.prototype, {
 		});
 		return allChecked;
 	},
-	
+
 	isAnyChecked: function() {
 		var allChecked = false;
 		$('.yom-data-grid-check-box[data-row-index]', this._container).each(function(i, item) {
@@ -651,100 +651,102 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	showFilterPanel: function(column, target, align) {
-		target = $(target);
-		this._activeFilterColumn = column;
 		var self = this;
-		var filterOption = column.filterOption;
-		var type = filterOption && filterOption.type;
-		var offset = target.offset();
-		var width = target.outerWidth();
-		var height = target.outerHeight();
-		var left = offset.left;
-		var top = offset.top + height;
-		this._filterPanel.html(filterPanelTpl.render({
-			i18n: this._i18n,
-			column: column,
-			filterMap: this._filterMap
-		}));
-		if(type == 'set' && filterOption.autoComplete) {
-			var filterCriteria = this._filterMap[column.id] || {};
-			var valueMap = filterCriteria.valueMap || {};
-			var box = $('.auto-complete-box', this._filterPanel);
-			this._filterPanel.show();
-			var autoComplete = new YomAutoComplete(box, $.extend({
-				mustSelectInDataSource: true,
-				dataSource: filterOption.options,
-				initData: Object.keys(valueMap).map(function(id) {
-					return {
-						id: id,
-						name: typeof valueMap[id] == 'string' ? valueMap[id] : id
-					};
-				}),
-				richSelectionResult: true,
-				noResultMsg: this._i18n.noResultMsg,
-				listMaxHeight: 170,
-				listStyle: {
-					width: '100%',
-					position: 'relative'
-				}
-			}, filterOption.autoComplete));
-			box.data('autoComplete', autoComplete);
-		} else if(type == 'date' || type == 'datetime') {
-			var pickerOpt = {
-				language: this._opt.language,
-				bootcssVer: 3,
-				fontAwesome: true,
-				pickerPosition: 'bottom-left',
-				autoclose: true,
-				todayBtn: true,
-				todayHighlight: true,
-				minView: type == 'datetime' ? 0 : 2
-			};
-			var dateFromDom = $('.date-from', this._filterPanel);
-			var dateToDom = $('.date-to', this._filterPanel);
-			dateFromDom.datetimepicker($.extend({
-				container: dateFromDom[0]
-			}, pickerOpt)).on('changeDate', function(evt) {
-				var date = new Date(evt.date);
-				if(type == 'date') {
-					date.setHours(0);
-					date.setMinutes(0);
-					date.setSeconds(0);
-					date.setMilliseconds(0);
-				}
-				dateFromDom.attr('data-value', date.getTime());
+		window.require(['yom-auto-complete'], function (YomAutoComplete) {
+			target = $(target);
+			self._activeFilterColumn = column;
+			var filterOption = column.filterOption;
+			var type = filterOption && filterOption.type;
+			var offset = target.offset();
+			var width = target.outerWidth();
+			var height = target.outerHeight();
+			var left = offset.left;
+			var top = offset.top + height;
+			self._filterPanel.html(filterPanelTpl.render({
+				i18n: self._i18n,
+				column: column,
+				filterMap: self._filterMap
+			}));
+			if(type == 'set' && filterOption.autoComplete) {
+				var filterCriteria = self._filterMap[column.id] || {};
+				var valueMap = filterCriteria.valueMap || {};
+				var box = $('.auto-complete-box', self._filterPanel);
+				self._filterPanel.show();
+				var autoComplete = new YomAutoComplete(box, $.extend({
+					mustSelectInDataSource: true,
+					dataSource: filterOption.options,
+					initData: Object.keys(valueMap).map(function(id) {
+						return {
+							id: id,
+							name: typeof valueMap[id] == 'string' ? valueMap[id] : id
+						};
+					}),
+					richSelectionResult: true,
+					noResultMsg: self._i18n.noResultMsg,
+					listMaxHeight: 170,
+					listStyle: {
+						width: '100%',
+						position: 'relative'
+					}
+				}, filterOption.autoComplete));
+				box.data('autoComplete', autoComplete);
+			} else if(type == 'date' || type == 'datetime') {
+				var pickerOpt = {
+					language: self._opt.language,
+					bootcssVer: 3,
+					fontAwesome: true,
+					pickerPosition: 'bottom-left',
+					autoclose: true,
+					todayBtn: true,
+					todayHighlight: true,
+					minView: type == 'datetime' ? 0 : 2
+				};
+				var dateFromDom = $('.date-from', self._filterPanel);
+				var dateToDom = $('.date-to', self._filterPanel);
+				dateFromDom.datetimepicker($.extend({
+					container: dateFromDom[0]
+				}, pickerOpt)).on('changeDate', function(evt) {
+					var date = new Date(evt.date);
+					if(type == 'date') {
+						date.setHours(0);
+						date.setMinutes(0);
+						date.setSeconds(0);
+						date.setMilliseconds(0);
+					}
+					dateFromDom.attr('data-value', date.getTime());
+				});
+				dateToDom.datetimepicker($.extend({
+					container: dateToDom[0]
+				}, pickerOpt)).on('changeDate', function(evt) {
+					var date = new Date(evt.date);
+					if(type == 'date') {
+						date.setHours(23);
+						date.setMinutes(59);
+						date.setSeconds(59);
+						date.setMilliseconds(999);
+					}
+					dateToDom.attr('data-value', date.getTime());
+				});
+			}
+			self._filterPanel.show();
+			var filterPanelWidth = self._filterPanel.outerWidth();
+			var containerWidth = self._container.outerWidth();
+			var containerOffset = self._container.offset();
+			if(align == 'right' && (left - containerOffset.left) > filterPanelWidth || left + filterPanelWidth > containerOffset.left + containerWidth) {
+				left = left - filterPanelWidth + width;
+			}
+			self._filterPanel.css({
+				left: left + 'px',
+				top: top + 'px'
 			});
-			dateToDom.datetimepicker($.extend({
-				container: dateToDom[0]
-			}, pickerOpt)).on('changeDate', function(evt) {
-				var date = new Date(evt.date);
-				if(type == 'date') {
-					date.setHours(23);
-					date.setMinutes(59);
-					date.setSeconds(59);
-					date.setMilliseconds(999);
-				}
-				dateToDom.attr('data-value', date.getTime());
-			});
-		}
-		this._filterPanel.show();
-		var filterPanelWidth = this._filterPanel.outerWidth();
-		var containerWidth = this._container.outerWidth();
-		var containerOffset = this._container.offset();
-		if(align == 'right' && (left - containerOffset.left) > filterPanelWidth || left + filterPanelWidth > containerOffset.left + containerWidth) {
-			left = left - filterPanelWidth + width;
-		}
-		this._filterPanel.css({
-			left: left + 'px',
-			top: top + 'px'
+			setTimeout(function() {
+				try {
+					var el = $('input, select', self._filterPanel)[0];
+					el.focus();
+					el.readOnly || el.select();
+				} catch(e) {}
+			}, 0);
 		});
-		setTimeout(function() {
-			try {
-				var el = $('input, select', self._filterPanel)[0];
-				el.focus();
-				el.readOnly || el.select();
-			} catch(e) {}
-		}, 0);
 	},
 
 	setColumns: function(columns, setting) {
@@ -1008,7 +1010,7 @@ $.extend(YomDataGrid.prototype, {
 								filterCriteria.toDisplay = filterOption.formatter(toValue);
 							}
 						} else {
-							value = parts.shift();
+							value = parts.join(',');
 							filterCriteria.value = value;
 						}
 					}
@@ -1072,70 +1074,16 @@ $.extend(YomDataGrid.prototype, {
 		return 'Blob' in window;
 	},
 
-	export: function(data, fileName) {
+	export: function(data, fileName, format) {
 		if(!this.isExportSupported) {
 			throw new Error('Export is not supported!');
 		}
 		data = data || this._data;
-		fileName = (fileName || new Date().getTime()) + '.csv';
-		var blobData = [];
-		var i;
-		for(i = -1; i < data.length; i++) {
-			var columnOffset = 0;
-			var rowData = [];
-			this._lockedColumns.forEach(function(column, j) {
-				if(i === -1) {
-					rowData.push(encodeCellValue(column.name));
-				} else {
-					rowData.push(getCellValue(data[i], column, i, j, columnOffset));
-				}
-			});
-			columnOffset = this._lockedColumns.length;
-			this._scrollColumns.forEach(function(column, j) {
-				if(i === -1) {
-					rowData.push(encodeCellValue(column.name));
-				} else {
-					rowData.push(getCellValue(data[i], column, i, j, columnOffset));
-				}
-			});
-			blobData.push(rowData.join(','));
-		}
-		function encodeCellValue(value) {
-			if((/,|"/).test(value)) {
-				value = '"' + value.replace(/"/g, '""') + '"';
-			}
-			return value;
-		}
-		function getCellValue(data, column, i, j, columnOffset) {
-			var ids = column.id.split('.');
-			var value = data[ids.shift()];
-			while(ids.length && value && typeof value == 'object') {
-				value = value[ids.shift()];
-			}
-			if(value != null && value.toString) {
-				value = value.toString();
-			}
-			var renderer = column.exportRenderer || column.renderer;
-			if(renderer) {
-				value = renderer(encodeHtml(value || ''), i, data, j + columnOffset, column, false);
-				if(value == null) {
-					value = '';
-				}
-			}
-			return encodeCellValue(value);
-		}
-		function encodeHtml(str) {
-			return (str + "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/`/g, "&#96;").replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-		}
-		var blob = new Blob(['\ufeff' + blobData.join('\n')], {type: 'text/csv'});
-		if(window.navigator.msSaveOrOpenBlob) {
-			navigator.msSaveBlob(blob, fileName);
+		var columns = this._lockedColumns.concat(this._scrollColumns);
+		if (format == 'csv') {
+			return exportMod.exportCsv(data, columns, fileName);
 		} else {
-			var link = document.createElement('a');
-			link.href = window.URL.createObjectURL(blob);
-			link.download = fileName;
-			link.click();
-			window.URL.revokeObjectURL(link.href);
+			return exportMod.exportXlsx(data, columns, fileName);
 		}
 	},
 
