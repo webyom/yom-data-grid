@@ -59,7 +59,7 @@ function exportCsv(data, columns, fileName) {
 
 function exportXlsx(data, columns, fileName) {
 	fileName = (fileName || new Date().getTime()) + '.xlsx';
-	window.require(['yom-data-grid-xlsx'], function (XLSX) {
+	window.require(['xlsx'], function (XLSX) {
 		var blobData = [];
 		var i;
 		for(i = -1; i < data.length; i++) {
