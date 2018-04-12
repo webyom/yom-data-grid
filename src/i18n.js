@@ -2,7 +2,8 @@ module.exports = {
 	'en': {
 		ok: 'Ok',
 		cancel: 'Cancel',
-		
+
+		displayAll: 'Display All',
 		filter: 'Filter',
 		clear: 'Clear',
 		equal: 'Equal',
@@ -21,18 +22,19 @@ module.exports = {
 		atLeastOneDateRequired: 'Please at least choose one date',
 		startDateCanNotLaterThanEndDate: 'Start date can not be later than end date',
 		noResultMsg: 'No result',
-		
+
 		setting: 'Setting',
 		displayAndSorting: 'Display and Sorting',
 		locking: 'Locking',
 		noLocking: 'No Locking',
 		column: 'column'
 	},
-	
+
 	'zh-CN': {
 		ok: '确定',
 		cancel: '取消',
-		
+
+		displayAll: '全部显示',
 		filter: '筛选',
 		clear: '清除',
 		equal: '等于',
@@ -51,7 +53,7 @@ module.exports = {
 		atLeastOneDateRequired: '请至少指定一个日期',
 		startDateCanNotLaterThanEndDate: '开始日期不能晚于结束日期',
 		noResultMsg: '找不到结果',
-		
+
 		setting: '设置',
 		displayAndSorting: '显示和排序',
 		locking: '锁定',

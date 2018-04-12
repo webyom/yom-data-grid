@@ -190,6 +190,29 @@ $.extend(YomDataGrid.prototype, {
 		this.render(this._data);
 	},
 
+	_updateSettingColumnCheckboxAll: function () {
+		var checkedCount = 0;
+		var uncheckedCount = 0;
+		var checkboxAll = $('.yom-data-grid-setting-column-all input')[0];
+		$('.yom-data-grid-setting-column-item input', this._container).each(function (i, item) {
+			if (item.checked) {
+				checkedCount++;
+			} else {
+				uncheckedCount++;
+			}
+		});
+		if (checkedCount && uncheckedCount) {
+			checkboxAll.checked = true;
+			checkboxAll.indeterminate = true;
+		} else if (checkedCount) {
+			checkboxAll.indeterminate = false;
+			checkboxAll.checked = true;
+		} else {
+			checkboxAll.indeterminate = false;
+			checkboxAll.checked = false;
+		}
+	},
+
 	_showSettingPanel: function() {
 		this._settingPanel.html(settingPanelTpl.render({
 			MAX_LOCKED_COLUMNS: this._MAX_LOCKED_COLUMNS,
@@ -197,7 +220,8 @@ $.extend(YomDataGrid.prototype, {
 			lockColumnAmount: this._lockColumnAmount,
 			hiddenColumns: this._hiddenColumns,
 			columns: this._allColumns
-		}))
+		}));
+		this._updateSettingColumnCheckboxAll();
 		this._settingPanel.show();
 	},
 
@@ -438,6 +462,13 @@ $.extend(YomDataGrid.prototype, {
 			$('.yom-data-grid-setting-column-item', self._container).removeClass('selected');
 			$(this).addClass('selected');
 			self._updateColumnSortBtnStatus();
+		}).delegate('.yom-data-grid-setting-column-item input', 'click', function(evt) {
+			self._updateSettingColumnCheckboxAll();
+		}).delegate('.yom-data-grid-setting-column-all input', 'click', function(evt) {
+			var checked = evt.currentTarget.checked;
+			$('.yom-data-grid-setting-column-item input', self._container).each(function (i, item) {
+				item.checked = checked;
+			});
 		}).delegate('.yom-data-grid-setting-btn-move-up', 'click', function(evt) {
 			var selectedEl = $('.yom-data-grid-setting-column-item.selected', self._container);
 			if(selectedEl.length) {

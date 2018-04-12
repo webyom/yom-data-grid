@@ -174,7 +174,7 @@ function render($data, $opt) {
         _$out_ += str;
     };
     var MAX_LOCKED_COLUMNS = $data.MAX_LOCKED_COLUMNS, i18n = $data.i18n, lockColumnAmount = $data.lockColumnAmount, hiddenColumns = $data.hiddenColumns, columns = $data.columns;
-    _$out_ += '<h3><i class="fa fa-cog"></i> ' + i18n.setting + '</h3><div class="alert alert-danger hidden"></div><h4>' + i18n.displayAndSorting + '</h4><div class="columns-container"><div class="yom-data-grid-setting-columns-container-inner">';
+    _$out_ += '<h3><i class="fa fa-cog"></i> ' + i18n.setting + '</h3><div class="alert alert-danger hidden"></div><h4>' + i18n.displayAndSorting + '</h4><div class="yom-data-grid-setting-column-all"><label><input type="checkbox" /> ' + i18n.displayAll + '</label></div><div class="columns-container"><div class="yom-data-grid-setting-columns-container-inner">';
     for (var i = 0, l = columns.length; i < l; i++) {
         var column = columns[i];
         _$out_ += '<div class="yom-data-grid-setting-column-item"><input type="checkbox" value="' + $encodeHtml(column.id) + '" ' + (hiddenColumns.indexOf(column.id) >= 0 ? "" : "checked") + " /> " + $encodeHtml(column.name) + "</div>";
@@ -242,7 +242,7 @@ exports.render = render;
 
 var moduleUri = typeof module != "undefined" && module.uri;
 
-var expo = yomCssModuleHelper("", '.yom-data-grid-filter-panel .btn-default,.yom-data-grid-filter-panel .btn-primary,.yom-data-grid-setting-panel .btn-default,.yom-data-grid-setting-panel .btn-primary{min-width:62px}.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:20px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner,.yom-data-grid-bordered-h .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-bordered-v .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}[class*=yom-data-grid-header-rows-].yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:1px}.yom-data-grid-bordered .yom-data-grid-header .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:solid 2px #ccc}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:9px;margin-top:-10px;background-color:#eee;cursor:pointer;color:#555;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-icon{display:block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:252px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .remark{font-style:italic;color:#888}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:145px;margin-bottom:10px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel .btn-confirm{margin-right:10px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:266px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-panel .lock-options .radio-inline{margin-left:0;margin-right:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px;min-width:0!important}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid-btn-confirm-setting{margin-right:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked td{background-color:#ebf5ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked.yom-data-grid-row-hl td{background-color:#d4e9ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip;padding-left:0;padding-right:0}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-row-clickable .yom-data-grid-content-cell{cursor:pointer}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;top:0;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}.yom-data-grid-container-height .yom-data-grid-header-rows-1 .yom-data-grid-body{top:78px}.yom-data-grid-container-height .yom-data-grid-header-rows-2 .yom-data-grid-body{top:117px}.yom-data-grid-container-height .yom-data-grid-header-rows-3 .yom-data-grid-body{top:156px}.yom-data-grid-container-height .yom-data-grid-header-rows-4 .yom-data-grid-body{top:195px}', moduleUri);
+var expo = yomCssModuleHelper("", '.yom-data-grid-filter-panel .btn-default,.yom-data-grid-filter-panel .btn-primary,.yom-data-grid-setting-panel .btn-default,.yom-data-grid-setting-panel .btn-primary{min-width:62px}.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:20px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner,.yom-data-grid-bordered-h .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-bordered-v .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}[class*=yom-data-grid-header-rows-].yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:1px}.yom-data-grid-bordered .yom-data-grid-header .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:solid 2px #ccc}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:9px;margin-top:-10px;background-color:#eee;cursor:pointer;color:#555;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-icon{display:block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:252px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .remark{font-style:italic;color:#888}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:145px;margin-bottom:10px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel .btn-confirm{margin-right:10px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:255px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-panel .lock-options .radio-inline{margin-left:0;margin-right:10px}.yom-data-grid-setting-column-all{padding-left:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px;min-width:0!important}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid-btn-confirm-setting{margin-right:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked td{background-color:#ebf5ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked.yom-data-grid-row-hl td{background-color:#d4e9ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip;padding-left:0;padding-right:0}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-row-clickable .yom-data-grid-content-cell{cursor:pointer}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;top:0;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}.yom-data-grid-container-height .yom-data-grid-header-rows-1 .yom-data-grid-body{top:78px}.yom-data-grid-container-height .yom-data-grid-header-rows-2 .yom-data-grid-body{top:117px}.yom-data-grid-container-height .yom-data-grid-header-rows-3 .yom-data-grid-body{top:156px}.yom-data-grid-container-height .yom-data-grid-header-rows-4 .yom-data-grid-body{top:195px}', moduleUri);
 
 module.exports = expo;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
@@ -881,7 +881,8 @@ module.exports = {
 	'en': {
 		ok: 'Ok',
 		cancel: 'Cancel',
-		
+
+		displayAll: 'Display All',
 		filter: 'Filter',
 		clear: 'Clear',
 		equal: 'Equal',
@@ -900,18 +901,19 @@ module.exports = {
 		atLeastOneDateRequired: 'Please at least choose one date',
 		startDateCanNotLaterThanEndDate: 'Start date can not be later than end date',
 		noResultMsg: 'No result',
-		
+
 		setting: 'Setting',
 		displayAndSorting: 'Display and Sorting',
 		locking: 'Locking',
 		noLocking: 'No Locking',
 		column: 'column'
 	},
-	
+
 	'zh-CN': {
 		ok: '确定',
 		cancel: '取消',
-		
+
+		displayAll: '全部显示',
 		filter: '筛选',
 		clear: '清除',
 		equal: '等于',
@@ -930,7 +932,7 @@ module.exports = {
 		atLeastOneDateRequired: '请至少指定一个日期',
 		startDateCanNotLaterThanEndDate: '开始日期不能晚于结束日期',
 		noResultMsg: '找不到结果',
-		
+
 		setting: '设置',
 		displayAndSorting: '显示和排序',
 		locking: '锁定',
@@ -938,6 +940,7 @@ module.exports = {
 		column: '列'
 	}
 };
+
 
 /***/ }),
 /* 7 */
@@ -1224,6 +1227,29 @@ $.extend(YomDataGrid.prototype, {
 		this.render(this._data);
 	},
 
+	_updateSettingColumnCheckboxAll: function () {
+		var checkedCount = 0;
+		var uncheckedCount = 0;
+		var checkboxAll = $('.yom-data-grid-setting-column-all input')[0];
+		$('.yom-data-grid-setting-column-item input', this._container).each(function (i, item) {
+			if (item.checked) {
+				checkedCount++;
+			} else {
+				uncheckedCount++;
+			}
+		});
+		if (checkedCount && uncheckedCount) {
+			checkboxAll.checked = true;
+			checkboxAll.indeterminate = true;
+		} else if (checkedCount) {
+			checkboxAll.indeterminate = false;
+			checkboxAll.checked = true;
+		} else {
+			checkboxAll.indeterminate = false;
+			checkboxAll.checked = false;
+		}
+	},
+
 	_showSettingPanel: function() {
 		this._settingPanel.html(settingPanelTpl.render({
 			MAX_LOCKED_COLUMNS: this._MAX_LOCKED_COLUMNS,
@@ -1231,7 +1257,8 @@ $.extend(YomDataGrid.prototype, {
 			lockColumnAmount: this._lockColumnAmount,
 			hiddenColumns: this._hiddenColumns,
 			columns: this._allColumns
-		}))
+		}));
+		this._updateSettingColumnCheckboxAll();
 		this._settingPanel.show();
 	},
 
@@ -1472,6 +1499,13 @@ $.extend(YomDataGrid.prototype, {
 			$('.yom-data-grid-setting-column-item', self._container).removeClass('selected');
 			$(this).addClass('selected');
 			self._updateColumnSortBtnStatus();
+		}).delegate('.yom-data-grid-setting-column-item input', 'click', function(evt) {
+			self._updateSettingColumnCheckboxAll();
+		}).delegate('.yom-data-grid-setting-column-all input', 'click', function(evt) {
+			var checked = evt.currentTarget.checked;
+			$('.yom-data-grid-setting-column-item input', self._container).each(function (i, item) {
+				item.checked = checked;
+			});
 		}).delegate('.yom-data-grid-setting-btn-move-up', 'click', function(evt) {
 			var selectedEl = $('.yom-data-grid-setting-column-item.selected', self._container);
 			if(selectedEl.length) {
