@@ -96,7 +96,7 @@ function render($data, $opt) {
     var $print = function(str) {
         _$out_ += str;
     };
-    var i18n = $data.i18n, column = $data.column, filterMap = $data.filterMap;
+    var i18n = $data.i18n, column = $data.column, filterMap = $data.filterMap, normalizeFilterOptions = $opt.normalizeFilterOptions;
     var filterCriteria = filterMap[column.id] || {};
     var filterOption = column.filterOption || {};
     var type = filterOption.type;
@@ -106,40 +106,21 @@ function render($data, $opt) {
     }
     _$out_ += '<div data-column-id="' + $encodeHtml(column.id) + '"><div class="alert alert-danger hidden"></div><div class="filter-option ' + (filterCriteria.findEmpty ? "hidden" : "") + '">';
     if (type == "set") {
-        var options = filterOption.options || [];
+        var options = normalizeFilterOptions(filterOption.options);
         var valueMap = filterCriteria.valueMap || {};
-        if (!Array.isArray(options)) {
-            var tmp = [];
-            for (var p in options) {
-                if (options.hasOwnProperty(p)) {
-                    tmp.push({
-                        value: p,
-                        name: options[p]
-                    });
-                }
-            }
-            options = tmp;
-        }
         if (filterOption.autoComplete) {
             _$out_ += '<div class="form-group"><input type="text" value="" class="form-control auto-complete-box" /></div>';
         } else {
             _$out_ += '<div class="set-container">';
             for (var i = 0, l = options.length; i < l; i++) {
                 var option = options[i];
-                var value, name;
-                if (typeof option == "string") {
-                    value = option;
-                    name = option;
-                } else {
-                    value = option.id || option.key || option.val || option.value;
-                    name = option.label || option.name || option.value || option.val;
-                }
+                var value = option.value, name = option.name;
                 _$out_ += '<div class="checkbox"><label><input type="checkbox" value="' + $encodeHtml(value) + '" ' + (valueMap[value] ? "checked" : "") + " /> " + $encodeHtml(name) + "</label></div>";
             }
             _$out_ += "</div>";
         }
     } else if (type == "number") {
-        _$out_ += '<div class="form-group"><label>' + i18n.compareValue + '</label><input name="value" type="text" maxlength="10" value="' + $encodeHtml(filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "") + '" class="form-control" /></div><div class="form-group"><label>' + i18n.compareMethod + '</label><select name="compareType" class="form-control"><option value="eq" ' + (filterCriteria.compareType == "eq" ? "selected" : "") + ">" + i18n.equal + '</option><option value="lt" ' + (filterCriteria.compareType == "lt" ? "selected" : "") + ">" + i18n.lessThan + '</option><option value="gt" ' + (filterCriteria.compareType == "gt" ? "selected" : "") + ">" + i18n.greaterThan + "</option></select></div>";
+        _$out_ += '<div class="form-group"><label>' + i18n.compareValue + '</label><input name="value" type="text" maxlength="10" value="' + $encodeHtml(filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "") + '" class="form-control" /></div><div class="form-group"><label>' + i18n.compareMethod + '</label><select name="compareType" class="form-control"><option value="eq" ' + (filterCriteria.compareType == "eq" ? "selected" : "") + ">" + i18n.eq + '</option><option value="lt" ' + (filterCriteria.compareType == "lt" ? "selected" : "") + ">" + i18n.lt + '</option><option value="gt" ' + (filterCriteria.compareType == "gt" ? "selected" : "") + ">" + i18n.gt + "</option></select></div>";
     } else if (type == "date" || type == "datetime") {
         _$out_ += '<div class="form-group"><label>' + i18n.start + '</label><div class="datetimepicker-component input-group date date-from" data-date="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.fromValue || "") + '"><input class="form-control" type="text" name="fromDate" value="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div><div class="form-group"><label>' + i18n.end + '</label><div class="datetimepicker-component input-group date date-to" data-date="' + $encodeHtml(filterCriteria.toDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.toValue || "") + '"><input class="form-control" type="text" name="toDate" value="' + $encodeHtml(filterCriteria.toDisplay || "") + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div>';
     } else {
@@ -885,9 +866,9 @@ module.exports = {
 		displayAll: 'Display All',
 		filter: 'Filter',
 		clear: 'Clear',
-		equal: 'Equal',
-		lessThan: 'Less Than',
-		greaterThan: 'Greater Than',
+		eq: 'Equal',
+		lt: 'Less Than',
+		gt: 'Greater Than',
 		compareMethod: 'Compare Method',
 		compareValue: 'Compare Value',
 		start: 'Start',
@@ -916,9 +897,9 @@ module.exports = {
 		displayAll: '全部显示',
 		filter: '筛选',
 		clear: '清除',
-		equal: '等于',
-		lessThan: '小于',
-		greaterThan: '大于',
+		eq: '等于',
+		lt: '小于',
+		gt: '大于',
 		compareMethod: '比较方式',
 		compareValue: '比较值',
 		start: '开始',
@@ -1734,6 +1715,8 @@ $.extend(YomDataGrid.prototype, {
 				i18n: self._i18n,
 				column: column,
 				filterMap: self._filterMap
+			}, {
+				normalizeFilterOptions: self.normalizeFilterOptions
 			}));
 			if(type == 'set' && filterOption.autoComplete) {
 				var filterCriteria = self._filterMap[column.id] || {};
@@ -2035,6 +2018,35 @@ $.extend(YomDataGrid.prototype, {
 		};
 	},
 
+	normalizeFilterOptions(options) {
+		var options = options || [];
+		if(!Array.isArray(options)) {
+			var tmp = [];
+			for(var p in options) {
+				if(options.hasOwnProperty(p)) {
+					tmp.push({value: p, name: options[p]});
+				}
+			}
+			options = tmp;
+		} else {
+			options = options.map(function(option) {
+				var value, name;
+				if(typeof option == 'string') {
+					value = option;
+					name = option;
+				} else {
+					value = option.id || option.key || option.val || option.value;
+					name = option.label || option.name || option.value || option.val;
+				}
+				return {
+					value: value,
+					name: name
+				};
+			});
+		}
+		return options;
+	},
+
 	parseFilterMap: function(filterMap) {
 		var self = this;
 		var res = {};
@@ -2051,21 +2063,31 @@ $.extend(YomDataGrid.prototype, {
 					filterCriteria.type = filterOption.type;
 					filterCriteria.findEmpty = parts.shift() == '1';
 					parts.shift(); // data type indicator
-					if(!filterCriteria.findEmpty) {
+					if(filterCriteria.findEmpty) {
+						filterCriteria.displayValue = self._i18n.empty;
+					} else {
 						var value;
 						if(filterOption.type == 'set') {
 							value = parts;
+							var options = self.normalizeFilterOptions(filterOption.options);
 							var valueMap = {};
+							displayValue = [];
 							value.forEach(function(id) {
+								var option = options.find(function(option) {
+									return option.value == id;
+								});
+								option && displayValue.push(option.name);
 								valueMap[id] = self._opt.getOptionNameById && self._opt.getOptionNameById(id) || 1;
 							});
 							filterCriteria.valueMap = valueMap;
 							filterCriteria.value = value;
+							filterCriteria.displayValue = displayValue.join(', ');
 						} else if(filterOption.type == 'number') {
 							var compareType = parts.shift();
 							value = parseFloat(parts.shift()) || '';
 							filterCriteria.compareType = compareType;
 							filterCriteria.value = value;
+							filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + value;
 						} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
 							var fromValue = (filterOption.parser || parseInt)(parts.shift());
 							var toValue = (filterOption.parser || parseInt)(parts.shift());
@@ -2077,9 +2099,11 @@ $.extend(YomDataGrid.prototype, {
 								filterCriteria.toValue = toValue;
 								filterCriteria.toDisplay = filterOption.formatter(toValue);
 							}
+							filterCriteria.displayValue = (fromValue ? filterCriteria.fromDisplay : '') + ' ~ ' + (toValue ? filterCriteria.toDisplay : '');
 						} else {
 							value = parts.join(',');
 							filterCriteria.value = value;
+							filterCriteria.displayValue = value;
 						}
 					}
 					res[column.id] = filterCriteria;

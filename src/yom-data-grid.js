@@ -697,6 +697,8 @@ $.extend(YomDataGrid.prototype, {
 				i18n: self._i18n,
 				column: column,
 				filterMap: self._filterMap
+			}, {
+				normalizeFilterOptions: self.normalizeFilterOptions
 			}));
 			if(type == 'set' && filterOption.autoComplete) {
 				var filterCriteria = self._filterMap[column.id] || {};
@@ -998,6 +1000,35 @@ $.extend(YomDataGrid.prototype, {
 		};
 	},
 
+	normalizeFilterOptions(options) {
+		var options = options || [];
+		if(!Array.isArray(options)) {
+			var tmp = [];
+			for(var p in options) {
+				if(options.hasOwnProperty(p)) {
+					tmp.push({value: p, name: options[p]});
+				}
+			}
+			options = tmp;
+		} else {
+			options = options.map(function(option) {
+				var value, name;
+				if(typeof option == 'string') {
+					value = option;
+					name = option;
+				} else {
+					value = option.id || option.key || option.val || option.value;
+					name = option.label || option.name || option.value || option.val;
+				}
+				return {
+					value: value,
+					name: name
+				};
+			});
+		}
+		return options;
+	},
+
 	parseFilterMap: function(filterMap) {
 		var self = this;
 		var res = {};
@@ -1014,21 +1045,31 @@ $.extend(YomDataGrid.prototype, {
 					filterCriteria.type = filterOption.type;
 					filterCriteria.findEmpty = parts.shift() == '1';
 					parts.shift(); // data type indicator
-					if(!filterCriteria.findEmpty) {
+					if(filterCriteria.findEmpty) {
+						filterCriteria.displayValue = self._i18n.empty;
+					} else {
 						var value;
 						if(filterOption.type == 'set') {
 							value = parts;
+							var options = self.normalizeFilterOptions(filterOption.options);
 							var valueMap = {};
+							displayValue = [];
 							value.forEach(function(id) {
+								var option = options.find(function(option) {
+									return option.value == id;
+								});
+								option && displayValue.push(option.name);
 								valueMap[id] = self._opt.getOptionNameById && self._opt.getOptionNameById(id) || 1;
 							});
 							filterCriteria.valueMap = valueMap;
 							filterCriteria.value = value;
+							filterCriteria.displayValue = displayValue.join(', ');
 						} else if(filterOption.type == 'number') {
 							var compareType = parts.shift();
 							value = parseFloat(parts.shift()) || '';
 							filterCriteria.compareType = compareType;
 							filterCriteria.value = value;
+							filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + value;
 						} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
 							var fromValue = (filterOption.parser || parseInt)(parts.shift());
 							var toValue = (filterOption.parser || parseInt)(parts.shift());
@@ -1040,9 +1081,11 @@ $.extend(YomDataGrid.prototype, {
 								filterCriteria.toValue = toValue;
 								filterCriteria.toDisplay = filterOption.formatter(toValue);
 							}
+							filterCriteria.displayValue = (fromValue ? filterCriteria.fromDisplay : '') + ' ~ ' + (toValue ? filterCriteria.toDisplay : '');
 						} else {
 							value = parts.join(',');
 							filterCriteria.value = value;
+							filterCriteria.displayValue = value;
 						}
 					}
 					res[column.id] = filterCriteria;

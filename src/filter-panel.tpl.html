@@ -1,7 +1,8 @@
 <%
 var i18n = $data.i18n,
 	column = $data.column,
-	filterMap = $data.filterMap;
+	filterMap = $data.filterMap,
+	normalizeFilterOptions = $opt.normalizeFilterOptions;
 
 var filterCriteria = filterMap[column.id] || {};
 var filterOption = column.filterOption || {};
@@ -19,17 +20,8 @@ var type = filterOption.type;
 	<div class="filter-option <%=filterCriteria.findEmpty ? 'hidden': ''%>">
 		<%
 		if(type == 'set') {
-			var options = filterOption.options || [];
+			var options = normalizeFilterOptions(filterOption.options);
 			var valueMap = filterCriteria.valueMap || {};
-			if(!Array.isArray(options)) {
-				var tmp = [];
-				for(var p in options) {
-					if(options.hasOwnProperty(p)) {
-						tmp.push({value: p, name: options[p]});
-					}
-				}
-				options = tmp;
-			}
 			if(filterOption.autoComplete) {
 		%>
 				<div class="form-group">
@@ -42,14 +34,7 @@ var type = filterOption.type;
 					<%
 					for(var i = 0, l = options.length; i < l; i++) {
 						var option = options[i];
-						var value, name;
-						if(typeof option == 'string') {
-							value = option;
-							name = option;
-						} else {
-							value = option.id || option.key || option.val || option.value;
-							name = option.label || option.name || option.value || option.val;
-						}
+						var value = option.value, name = option.name;
 					%>
 						<div class="checkbox">
 							<label>
@@ -69,9 +54,9 @@ var type = filterOption.type;
 			<div class="form-group">
 				<label><%=i18n.compareMethod%></label>
 				<select name="compareType" class="form-control">
-					<option value="eq" <%=filterCriteria.compareType == 'eq' ? 'selected' : ''%>><%=i18n.equal%></option>
-					<option value="lt" <%=filterCriteria.compareType == 'lt' ? 'selected' : ''%>><%=i18n.lessThan%></option>
-					<option value="gt" <%=filterCriteria.compareType == 'gt' ? 'selected' : ''%>><%=i18n.greaterThan%></option>
+					<option value="eq" <%=filterCriteria.compareType == 'eq' ? 'selected' : ''%>><%=i18n.eq%></option>
+					<option value="lt" <%=filterCriteria.compareType == 'lt' ? 'selected' : ''%>><%=i18n.lt%></option>
+					<option value="gt" <%=filterCriteria.compareType == 'gt' ? 'selected' : ''%>><%=i18n.gt%></option>
 				</select>
 			</div>
 		<%} else if(type == 'date' || type == 'datetime') {%>
