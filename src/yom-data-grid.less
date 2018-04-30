@@ -197,20 +197,18 @@
 		top: 50%;
 		right: 9px;
 		margin-top: -10px;
-		background-color: #eee;
 		cursor: pointer;
 		color: @gray-dark;
-		display: none;
 		.border-radius(2px);
+		&:hover {
+			background-color: #eee;
+		}
 	}
 	.yom-data-grid-filter-icon-left {
 		left: 9px;
 		right: auto;
 	}
 	&:hover {
-		.yom-data-grid-filter-icon {
-			display: block;
-		}
 		.yom-data-grid-filter-remove-icon {
 			.icon-remove {
 				display: inline-block;
@@ -220,6 +218,9 @@
 			}
 		}
 	}
+}
+.yom-data-grid-header-cell-inner-filterable {
+	padding-right: 20px;
 }
 .yom-data-grid-filter-panel {
 	position: absolute;

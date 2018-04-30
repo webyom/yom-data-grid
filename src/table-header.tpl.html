@@ -1,5 +1,6 @@
 <%
 var name = $data.name;
+var filterable = column.filterable && opt.filterable !== false;
 %>
 
 <%->columnWidth%>
@@ -9,7 +10,7 @@ var name = $data.name;
 <%<-%>
 <%->columnHeader%>
 	<th class="<%=column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : ''%> <%=i == l - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>">
-		<div data-column-id="<%=column.id%>" class="yom-data-grid-cell-inner yom-data-grid-header-cell-inner" style="text-align: <%=column.textAlign || 'left'%>;">
+		<div data-column-id="<%=column.id%>" class="yom-data-grid-cell-inner yom-data-grid-header-cell-inner <%=filterable ? 'yom-data-grid-header-cell-inner-filterable' : ''%>" style="text-align: <%=column.textAlign || 'left'%>;">
 			<%if(column.type == 'checkbox') {->columnHeader%>
 				<%if(!(maxSelection > 0)) {->columnHeader%>
 					<input class="yom-data-grid-check-box-all" type="checkbox" <%=isAllChecked ? 'checked' : ''%> />
@@ -35,7 +36,7 @@ var name = $data.name;
 				<%} else {->columnHeader%>
 					<span title="<%==column.name%>"><%=column.name%></span>
 				<%}%>
-				<%if(column.filterable && opt.filterable !== false) {->columnHeader%>
+				<%if(filterable) {->columnHeader%>
 					<a href="javascript:void(0);" class="yom-data-grid-filter-icon <%=column.textAlign == 'right' ? 'yom-data-grid-filter-icon-left' : ''%>">
 						<i class="fa fa-filter"></i>
 					</a>
