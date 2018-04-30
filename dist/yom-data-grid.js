@@ -1262,18 +1262,6 @@ $.extend(YomDataGrid.prototype, {
 		}
 	},
 
-	_showSettingPanel: function() {
-		this._settingPanel.html(settingPanelTpl.render({
-			MAX_LOCKED_COLUMNS: this._MAX_LOCKED_COLUMNS,
-			i18n: this._i18n,
-			lockColumnAmount: this._lockColumnAmount,
-			hiddenColumns: this._hiddenColumns,
-			columns: this._allColumns
-		}));
-		this._updateSettingColumnCheckboxAll();
-		this._settingPanel.show();
-	},
-
 	_hideSettingPanel: function(evt) {
 		if(evt) {
 			var target = $(evt.target);
@@ -1504,7 +1492,7 @@ $.extend(YomDataGrid.prototype, {
 				self._opt.onStateChange(self.getState());
 			}
 		}).delegate('.yom-data-grid-setting-icon', 'click', function(evt) {
-			self._showSettingPanel();
+			self.showSettingPanel();
 		}).delegate('.yom-data-grid-btn-confirm-setting', 'click', function(evt) {
 			self._submitSettingForm();
 		}).delegate('.yom-data-grid-setting-column-item', 'click', function(evt) {
@@ -1728,6 +1716,18 @@ $.extend(YomDataGrid.prototype, {
 			}
 		});
 		return allChecked;
+	},
+
+	showSettingPanel: function() {
+		this._settingPanel.html(settingPanelTpl.render({
+			MAX_LOCKED_COLUMNS: this._MAX_LOCKED_COLUMNS,
+			i18n: this._i18n,
+			lockColumnAmount: this._lockColumnAmount,
+			hiddenColumns: this._hiddenColumns,
+			columns: this._allColumns
+		}));
+		this._updateSettingColumnCheckboxAll();
+		this._settingPanel.show();
 	},
 
 	showFilterPanel: function(column, target, align) {
