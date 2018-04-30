@@ -1000,7 +1000,7 @@ $.extend(YomDataGrid.prototype, {
 		};
 	},
 
-	normalizeFilterOptions(options) {
+	normalizeFilterOptions: function(options) {
 		var options = options || [];
 		if(!Array.isArray(options)) {
 			var tmp = [];
