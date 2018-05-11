@@ -225,7 +225,7 @@ exports.render = render;
 
 var moduleUri = typeof module != "undefined" && module.uri;
 
-var expo = yomCssModuleHelper("", '.yom-data-grid-filter-panel .btn-default,.yom-data-grid-filter-panel .btn-primary,.yom-data-grid-setting-panel .btn-default,.yom-data-grid-setting-panel .btn-primary{min-width:62px}.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:20px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner,.yom-data-grid-bordered-h .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-bordered-v .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}[class*=yom-data-grid-header-rows-].yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:1px}.yom-data-grid-bordered .yom-data-grid-header .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:solid 2px #ccc}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:5px;margin-top:-10px;cursor:pointer;color:#555;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon:hover{background-color:#eee}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-header-cell-inner-filterable{padding-right:24px}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:252px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .remark{font-style:italic;color:#888}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:145px;margin-bottom:10px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel .btn-confirm{margin-right:10px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:255px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-panel .lock-options .radio-inline{margin-left:0;margin-right:10px}.yom-data-grid-setting-column-all{padding-left:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px;min-width:0!important}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid-btn-confirm-setting{margin-right:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked td{background-color:#ebf5ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked.yom-data-grid-row-hl td{background-color:#d4e9ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip;padding-left:0;padding-right:0}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-row-clickable .yom-data-grid-content-cell{cursor:pointer}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;top:0;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}.yom-data-grid-container-height .yom-data-grid-header-rows-1 .yom-data-grid-body{top:78px}.yom-data-grid-container-height .yom-data-grid-header-rows-2 .yom-data-grid-body{top:117px}.yom-data-grid-container-height .yom-data-grid-header-rows-3 .yom-data-grid-body{top:156px}.yom-data-grid-container-height .yom-data-grid-header-rows-4 .yom-data-grid-body{top:195px}', moduleUri);
+var expo = yomCssModuleHelper("", '.yom-data-grid-filter-panel .btn-default,.yom-data-grid-filter-panel .btn-primary,.yom-data-grid-setting-panel .btn-default,.yom-data-grid-setting-panel .btn-primary{min-width:62px}.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:20px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-cell-inner-dummy{height:1px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner,.yom-data-grid-bordered-h .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-bordered-v .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}[class*=yom-data-grid-header-rows-].yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:1px}.yom-data-grid-bordered .yom-data-grid-header .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:solid 2px #ccc}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:5px;margin-top:-10px;cursor:pointer;color:#555;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon:hover{background-color:#eee}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-header-cell-inner-filterable{padding-right:24px}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:252px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .remark{font-style:italic;color:#888}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:145px;margin-bottom:10px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel .btn-confirm{margin-right:10px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:255px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-panel .lock-options .radio-inline{margin-left:0;margin-right:10px}.yom-data-grid-setting-column-all{padding-left:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px;min-width:0!important}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid-btn-confirm-setting{margin-right:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked td{background-color:#ebf5ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked.yom-data-grid-row-hl td{background-color:#d4e9ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip;padding-left:0;padding-right:0}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-row-clickable .yom-data-grid-content-cell{cursor:pointer}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;top:0;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}.yom-data-grid-container-height .yom-data-grid-header-rows-1 .yom-data-grid-body{top:78px}.yom-data-grid-container-height .yom-data-grid-header-rows-2 .yom-data-grid-body{top:117px}.yom-data-grid-container-height .yom-data-grid-header-rows-3 .yom-data-grid-body{top:156px}.yom-data-grid-container-height .yom-data-grid-header-rows-4 .yom-data-grid-body{top:195px}', moduleUri);
 
 module.exports = expo;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8), __webpack_require__(9)(module)))
@@ -388,6 +388,109 @@ function render($data, $opt) {
             (function() {
                 var opt = $data.opt;
                 var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
+                if (renderData.length) {
+                    for (i = 0, l = renderData.length; i < l; i++) {
+                        item = dataProperty ? renderData[i][dataProperty] : renderData[i];
+                        if (isHeaderData) {
+                            isOdd = i % 2 === 0;
+                        } else if (opt.isOddRow) {
+                            isOdd = opt.isOddRow(item, isPrevOdd);
+                        } else {
+                            isOdd = (i + headerData.length) % 2 === 0;
+                        }
+                        isPrevOdd = isOdd;
+                        rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
+                        _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+                        for (j = 0, l2 = columns.length; j < l2; j++) {
+                            column = columns[j];
+                            ids = column.id.split(".");
+                            columnValue = item[ids.shift()];
+                            while (ids.length && columnValue && typeof columnValue == "object") {
+                                columnValue = columnValue[ids.shift()];
+                            }
+                            if (columnValue != null && columnValue.toString) {
+                                columnValue = columnValue.toString();
+                            }
+                            cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
+                            if (column.renderer) {
+                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                                if (displayValue == null) {
+                                    displayValue = "";
+                                } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                    displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + displayValue + "</a>";
+                                }
+                            } else {
+                                if (columnValue && cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                    displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || "") + "</a>";
+                                } else {
+                                    displayValue = $encodeHtml(columnValue || "");
+                                }
+                            }
+                            if (column.titleRenderer) {
+                                title = column.titleRenderer(columnValue, i, item, j + columnOffset, column, isHeaderData);
+                            } else if (typeof column.title != "undefined") {
+                                if (column.title == "__content__") {
+                                    title = displayValue;
+                                } else {
+                                    title = column.title;
+                                }
+                            } else if (column.renderer) {
+                                if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                                    if (title == null) {
+                                        title = "";
+                                    }
+                                } else {
+                                    title = displayValue;
+                                }
+                            } else {
+                                title = columnValue || "";
+                            }
+                            _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
+                            if (column.type == "sequence") {
+                                if (isHeaderData) {
+                                    seq = 0;
+                                } else if (opt.getSequence) {
+                                    seq = opt.getSequence(item, nextSeq);
+                                    nextSeq = seq > 0 ? seq + 1 : nextSeq;
+                                } else {
+                                    seq = i + 1;
+                                }
+                                _$out_ += "" + (seq > 0 ? seq : "&nbsp;") + "";
+                            } else if (column.type == "checkbox") {
+                                checkable = !checkbox || !checkbox.checkable || checkbox.checkable(item, i);
+                                if (isHeaderData) {
+                                    _$out_ += "&nbsp;";
+                                } else if (checkable) {
+                                    _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "checked" : "") + " />";
+                                } else {
+                                    _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" disabled />';
+                                }
+                            } else {
+                                _$out_ += "" + (displayValue || "&nbsp;") + "";
+                            }
+                            _$out_ += "</div></td>";
+                        }
+                        _$out_ += "</tr>";
+                    }
+                } else if (!isHeaderData) {
+                    _$out_ += "\x3c!-- use a dummy row to enable horizental scroll --\x3e<tr>";
+                    for (j = 0, l2 = columns.length; j < l2; j++) {
+                        _$out_ += '<td><div class="yom-data-grid-cell-inner-dummy"></div></td>';
+                    }
+                    _$out_ += "</tr>";
+                }
+            })();
+        }
+        _$out_ += '</tbody></table></div><div class="yom-data-grid-body" style="' + (scrollX ? "overflow-x: scroll;" : "") + " width: " + lockedTableWidth + 'px;"><table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: ' + lockedTableWidth + 'px;">' + lockedColumnWidth + "<tbody>";
+        columnOffset = 0;
+        columns = lockedDisplayColumns;
+        renderData = data;
+        isHeaderData = false;
+        (function() {
+            var opt = $data.opt;
+            var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
+            if (renderData.length) {
                 for (i = 0, l = renderData.length; i < l; i++) {
                     item = dataProperty ? renderData[i][dataProperty] : renderData[i];
                     if (isHeaderData) {
@@ -472,97 +575,10 @@ function render($data, $opt) {
                     }
                     _$out_ += "</tr>";
                 }
-            })();
-        }
-        _$out_ += '</tbody></table></div><div class="yom-data-grid-body" style="' + (scrollX ? "overflow-x: scroll;" : "") + " width: " + lockedTableWidth + 'px;"><table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: ' + lockedTableWidth + 'px;">' + lockedColumnWidth + "<tbody>";
-        columnOffset = 0;
-        columns = lockedDisplayColumns;
-        renderData = data;
-        isHeaderData = false;
-        (function() {
-            var opt = $data.opt;
-            var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
-            for (i = 0, l = renderData.length; i < l; i++) {
-                item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                if (isHeaderData) {
-                    isOdd = i % 2 === 0;
-                } else if (opt.isOddRow) {
-                    isOdd = opt.isOddRow(item, isPrevOdd);
-                } else {
-                    isOdd = (i + headerData.length) % 2 === 0;
-                }
-                isPrevOdd = isOdd;
-                rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
-                _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+            } else if (!isHeaderData) {
+                _$out_ += "\x3c!-- use a dummy row to enable horizental scroll --\x3e<tr>";
                 for (j = 0, l2 = columns.length; j < l2; j++) {
-                    column = columns[j];
-                    ids = column.id.split(".");
-                    columnValue = item[ids.shift()];
-                    while (ids.length && columnValue && typeof columnValue == "object") {
-                        columnValue = columnValue[ids.shift()];
-                    }
-                    if (columnValue != null && columnValue.toString) {
-                        columnValue = columnValue.toString();
-                    }
-                    cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
-                    if (column.renderer) {
-                        displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
-                        if (displayValue == null) {
-                            displayValue = "";
-                        } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                            displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + displayValue + "</a>";
-                        }
-                    } else {
-                        if (columnValue && cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                            displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || "") + "</a>";
-                        } else {
-                            displayValue = $encodeHtml(columnValue || "");
-                        }
-                    }
-                    if (column.titleRenderer) {
-                        title = column.titleRenderer(columnValue, i, item, j + columnOffset, column, isHeaderData);
-                    } else if (typeof column.title != "undefined") {
-                        if (column.title == "__content__") {
-                            title = displayValue;
-                        } else {
-                            title = column.title;
-                        }
-                    } else if (column.renderer) {
-                        if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                            title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
-                            if (title == null) {
-                                title = "";
-                            }
-                        } else {
-                            title = displayValue;
-                        }
-                    } else {
-                        title = columnValue || "";
-                    }
-                    _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
-                    if (column.type == "sequence") {
-                        if (isHeaderData) {
-                            seq = 0;
-                        } else if (opt.getSequence) {
-                            seq = opt.getSequence(item, nextSeq);
-                            nextSeq = seq > 0 ? seq + 1 : nextSeq;
-                        } else {
-                            seq = i + 1;
-                        }
-                        _$out_ += "" + (seq > 0 ? seq : "&nbsp;") + "";
-                    } else if (column.type == "checkbox") {
-                        checkable = !checkbox || !checkbox.checkable || checkbox.checkable(item, i);
-                        if (isHeaderData) {
-                            _$out_ += "&nbsp;";
-                        } else if (checkable) {
-                            _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "checked" : "") + " />";
-                        } else {
-                            _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" disabled />';
-                        }
-                    } else {
-                        _$out_ += "" + (displayValue || "&nbsp;") + "";
-                    }
-                    _$out_ += "</div></td>";
+                    _$out_ += '<td><div class="yom-data-grid-cell-inner-dummy"></div></td>';
                 }
                 _$out_ += "</tr>";
             }
@@ -579,6 +595,109 @@ function render($data, $opt) {
             (function() {
                 var opt = $data.opt;
                 var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
+                if (renderData.length) {
+                    for (i = 0, l = renderData.length; i < l; i++) {
+                        item = dataProperty ? renderData[i][dataProperty] : renderData[i];
+                        if (isHeaderData) {
+                            isOdd = i % 2 === 0;
+                        } else if (opt.isOddRow) {
+                            isOdd = opt.isOddRow(item, isPrevOdd);
+                        } else {
+                            isOdd = (i + headerData.length) % 2 === 0;
+                        }
+                        isPrevOdd = isOdd;
+                        rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
+                        _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+                        for (j = 0, l2 = columns.length; j < l2; j++) {
+                            column = columns[j];
+                            ids = column.id.split(".");
+                            columnValue = item[ids.shift()];
+                            while (ids.length && columnValue && typeof columnValue == "object") {
+                                columnValue = columnValue[ids.shift()];
+                            }
+                            if (columnValue != null && columnValue.toString) {
+                                columnValue = columnValue.toString();
+                            }
+                            cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
+                            if (column.renderer) {
+                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                                if (displayValue == null) {
+                                    displayValue = "";
+                                } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                    displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + displayValue + "</a>";
+                                }
+                            } else {
+                                if (columnValue && cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                    displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || "") + "</a>";
+                                } else {
+                                    displayValue = $encodeHtml(columnValue || "");
+                                }
+                            }
+                            if (column.titleRenderer) {
+                                title = column.titleRenderer(columnValue, i, item, j + columnOffset, column, isHeaderData);
+                            } else if (typeof column.title != "undefined") {
+                                if (column.title == "__content__") {
+                                    title = displayValue;
+                                } else {
+                                    title = column.title;
+                                }
+                            } else if (column.renderer) {
+                                if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                                    if (title == null) {
+                                        title = "";
+                                    }
+                                } else {
+                                    title = displayValue;
+                                }
+                            } else {
+                                title = columnValue || "";
+                            }
+                            _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
+                            if (column.type == "sequence") {
+                                if (isHeaderData) {
+                                    seq = 0;
+                                } else if (opt.getSequence) {
+                                    seq = opt.getSequence(item, nextSeq);
+                                    nextSeq = seq > 0 ? seq + 1 : nextSeq;
+                                } else {
+                                    seq = i + 1;
+                                }
+                                _$out_ += "" + (seq > 0 ? seq : "&nbsp;") + "";
+                            } else if (column.type == "checkbox") {
+                                checkable = !checkbox || !checkbox.checkable || checkbox.checkable(item, i);
+                                if (isHeaderData) {
+                                    _$out_ += "&nbsp;";
+                                } else if (checkable) {
+                                    _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "checked" : "") + " />";
+                                } else {
+                                    _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" disabled />';
+                                }
+                            } else {
+                                _$out_ += "" + (displayValue || "&nbsp;") + "";
+                            }
+                            _$out_ += "</div></td>";
+                        }
+                        _$out_ += "</tr>";
+                    }
+                } else if (!isHeaderData) {
+                    _$out_ += "\x3c!-- use a dummy row to enable horizental scroll --\x3e<tr>";
+                    for (j = 0, l2 = columns.length; j < l2; j++) {
+                        _$out_ += '<td><div class="yom-data-grid-cell-inner-dummy"></div></td>';
+                    }
+                    _$out_ += "</tr>";
+                }
+            })();
+        }
+        _$out_ += '</tbody></table></div><div class="yom-data-grid-body" style="' + (scrollX ? "overflow-x: scroll;" : "") + ' width: 100%;"><table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: ' + (width > lockedTableWidth ? width - lockedTableWidth + "px" : "100%") + ';">' + scrollColumnWidth + "<tbody>";
+        columnOffset = lockedDisplayColumns.length;
+        columns = scrollDisplayColumns;
+        renderData = data;
+        isHeaderData = false;
+        (function() {
+            var opt = $data.opt;
+            var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
+            if (renderData.length) {
                 for (i = 0, l = renderData.length; i < l; i++) {
                     item = dataProperty ? renderData[i][dataProperty] : renderData[i];
                     if (isHeaderData) {
@@ -663,97 +782,10 @@ function render($data, $opt) {
                     }
                     _$out_ += "</tr>";
                 }
-            })();
-        }
-        _$out_ += '</tbody></table></div><div class="yom-data-grid-body" style="' + (scrollX ? "overflow-x: scroll;" : "") + ' width: 100%;"><table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: ' + (width > lockedTableWidth ? width - lockedTableWidth + "px" : "100%") + ';">' + scrollColumnWidth + "<tbody>";
-        columnOffset = lockedDisplayColumns.length;
-        columns = scrollDisplayColumns;
-        renderData = data;
-        isHeaderData = false;
-        (function() {
-            var opt = $data.opt;
-            var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
-            for (i = 0, l = renderData.length; i < l; i++) {
-                item = dataProperty ? renderData[i][dataProperty] : renderData[i];
-                if (isHeaderData) {
-                    isOdd = i % 2 === 0;
-                } else if (opt.isOddRow) {
-                    isOdd = opt.isOddRow(item, isPrevOdd);
-                } else {
-                    isOdd = (i + headerData.length) % 2 === 0;
-                }
-                isPrevOdd = isOdd;
-                rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
-                _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+            } else if (!isHeaderData) {
+                _$out_ += "\x3c!-- use a dummy row to enable horizental scroll --\x3e<tr>";
                 for (j = 0, l2 = columns.length; j < l2; j++) {
-                    column = columns[j];
-                    ids = column.id.split(".");
-                    columnValue = item[ids.shift()];
-                    while (ids.length && columnValue && typeof columnValue == "object") {
-                        columnValue = columnValue[ids.shift()];
-                    }
-                    if (columnValue != null && columnValue.toString) {
-                        columnValue = columnValue.toString();
-                    }
-                    cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
-                    if (column.renderer) {
-                        displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
-                        if (displayValue == null) {
-                            displayValue = "";
-                        } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                            displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + displayValue + "</a>";
-                        }
-                    } else {
-                        if (columnValue && cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                            displayValue = '<a class="yom-data-grid-cell-clickable" href="javascript:void(0);">' + $encodeHtml(columnValue || "") + "</a>";
-                        } else {
-                            displayValue = $encodeHtml(columnValue || "");
-                        }
-                    }
-                    if (column.titleRenderer) {
-                        title = column.titleRenderer(columnValue, i, item, j + columnOffset, column, isHeaderData);
-                    } else if (typeof column.title != "undefined") {
-                        if (column.title == "__content__") {
-                            title = displayValue;
-                        } else {
-                            title = column.title;
-                        }
-                    } else if (column.renderer) {
-                        if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                            title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
-                            if (title == null) {
-                                title = "";
-                            }
-                        } else {
-                            title = displayValue;
-                        }
-                    } else {
-                        title = columnValue || "";
-                    }
-                    _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
-                    if (column.type == "sequence") {
-                        if (isHeaderData) {
-                            seq = 0;
-                        } else if (opt.getSequence) {
-                            seq = opt.getSequence(item, nextSeq);
-                            nextSeq = seq > 0 ? seq + 1 : nextSeq;
-                        } else {
-                            seq = i + 1;
-                        }
-                        _$out_ += "" + (seq > 0 ? seq : "&nbsp;") + "";
-                    } else if (column.type == "checkbox") {
-                        checkable = !checkbox || !checkbox.checkable || checkbox.checkable(item, i);
-                        if (isHeaderData) {
-                            _$out_ += "&nbsp;";
-                        } else if (checkable) {
-                            _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" ' + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "checked" : "") + " />";
-                        } else {
-                            _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" disabled />';
-                        }
-                    } else {
-                        _$out_ += "" + (displayValue || "&nbsp;") + "";
-                    }
-                    _$out_ += "</div></td>";
+                    _$out_ += '<td><div class="yom-data-grid-cell-inner-dummy"></div></td>';
                 }
                 _$out_ += "</tr>";
             }
