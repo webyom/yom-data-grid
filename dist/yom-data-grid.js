@@ -403,7 +403,7 @@ function render($data, $opt) {
                         _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                         for (j = 0, l2 = columns.length; j < l2; j++) {
                             column = columns[j];
-                            ids = column.id.split(".");
+                            ids = column.id.replace(/\[(\w+)\]/g, ".$1").split(".");
                             columnValue = item[ids.shift()];
                             while (ids.length && columnValue && typeof columnValue == "object") {
                                 columnValue = columnValue[ids.shift()];
@@ -505,7 +505,7 @@ function render($data, $opt) {
                     _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                     for (j = 0, l2 = columns.length; j < l2; j++) {
                         column = columns[j];
-                        ids = column.id.split(".");
+                        ids = column.id.replace(/\[(\w+)\]/g, ".$1").split(".");
                         columnValue = item[ids.shift()];
                         while (ids.length && columnValue && typeof columnValue == "object") {
                             columnValue = columnValue[ids.shift()];
@@ -610,7 +610,7 @@ function render($data, $opt) {
                         _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                         for (j = 0, l2 = columns.length; j < l2; j++) {
                             column = columns[j];
-                            ids = column.id.split(".");
+                            ids = column.id.replace(/\[(\w+)\]/g, ".$1").split(".");
                             columnValue = item[ids.shift()];
                             while (ids.length && columnValue && typeof columnValue == "object") {
                                 columnValue = columnValue[ids.shift()];
@@ -712,7 +712,7 @@ function render($data, $opt) {
                     _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                     for (j = 0, l2 = columns.length; j < l2; j++) {
                         column = columns[j];
-                        ids = column.id.split(".");
+                        ids = column.id.replace(/\[(\w+)\]/g, ".$1").split(".");
                         columnValue = item[ids.shift()];
                         while (ids.length && columnValue && typeof columnValue == "object") {
                             columnValue = columnValue[ids.shift()];
