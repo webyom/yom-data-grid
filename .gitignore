@@ -4,4 +4,3 @@ coverage
 *.log
 *~
 .DS_Store
-package-lock.json

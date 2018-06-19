@@ -18,6 +18,9 @@ var MAX_LOCKED_COLUMNS = $data.MAX_LOCKED_COLUMNS,
 		<%
 		for(var i = 0, l = columns.length; i < l; i++) {
 			var column = columns[i];
+			if(!column) {
+				continue;
+			}
 		%>
 			<div class="yom-data-grid-setting-column-item">
 				<input type="checkbox" value="<%==column.id%>" <%=hiddenColumns.indexOf(column.id) >= 0 ? '' : 'checked'%> /> <%==column.name%>

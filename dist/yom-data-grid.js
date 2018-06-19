@@ -158,6 +158,9 @@ function render($data, $opt) {
     _$out_ += '<h3><i class="fa fa-cog"></i> ' + i18n.setting + '</h3><div class="alert alert-danger hidden"></div><h4>' + i18n.displayAndSorting + '</h4><div class="yom-data-grid-setting-column-all"><label><input type="checkbox" /> ' + i18n.displayAll + '</label></div><div class="columns-container"><div class="yom-data-grid-setting-columns-container-inner">';
     for (var i = 0, l = columns.length; i < l; i++) {
         var column = columns[i];
+        if (!column) {
+            continue;
+        }
         _$out_ += '<div class="yom-data-grid-setting-column-item"><input type="checkbox" value="' + $encodeHtml(column.id) + '" ' + (hiddenColumns.indexOf(column.id) >= 0 ? "" : "checked") + " /> " + $encodeHtml(column.name) + "</div>";
     }
     _$out_ += '</div><button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-up disabled" disabled><i class="fa fa-long-arrow-up "></i></button><button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-down disabled" disabled><i class="fa fa-long-arrow-down"></i></button></div><h4>' + i18n.locking + '</h4><div class="lock-options">';
