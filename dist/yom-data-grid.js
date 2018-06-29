@@ -104,7 +104,7 @@ function render($data, $opt) {
     if (filterOption.remark) {
         _$out_ += '<p class="remark">' + filterOption.remark + "</p>";
     }
-    _$out_ += '<div data-column-id="' + $encodeHtml(column.id) + '"><div class="alert alert-danger hidden"></div><div class="filter-option ' + (filterCriteria.findEmpty ? "hidden" : "") + '">';
+    _$out_ += '<div data-column-id="' + $encodeHtml(column.id) + '"><form><div class="alert alert-danger hidden"></div><div class="filter-option ' + (filterCriteria.findEmpty ? "hidden" : "") + '">';
     if (type == "set") {
         var options = normalizeFilterOptions(filterOption.options);
         var valueMap = filterCriteria.valueMap || {};
@@ -130,11 +130,11 @@ function render($data, $opt) {
     if (filterOption.enableEmpty) {
         _$out_ += '<div class="checkbox"><label><input name="findEmpty" type="checkbox" ' + (filterCriteria.findEmpty ? "checked" : "") + " /> " + i18n.empty + "</label></div>";
     }
-    _$out_ += '<div class="row"><div class="col-xs-8"><button type="button" class="btn btn-primary btn-sm btn-confirm">' + i18n.ok + '</button><button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">' + i18n.cancel + '</button></div><div class="col-xs-4 text-right">';
+    _$out_ += '<div class="row"><div class="col-xs-8"><button type="submit" class="btn btn-primary btn-sm btn-confirm">' + i18n.ok + '</button><button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">' + i18n.cancel + '</button></div><div class="col-xs-4 text-right">';
     if (filterMap[column.id]) {
         _$out_ += '<a class="btn btn-remove" href="javascript:void(0);">' + i18n.clear + "</a>";
     }
-    _$out_ += "</div></div></div>";
+    _$out_ += "</div></div></form></div>";
     return _$out_;
 }
 
@@ -1673,8 +1673,6 @@ $.extend(YomDataGrid.prototype, {
 			} else {
 				self._filterPanel.find('.filter-option').removeClass('hidden');
 			}
-		}).delegate('.btn-confirm', 'click', function(evt) {
-			self._submitFilterForm();
 		}).delegate('.btn-remove', 'click', function(evt) {
 			var ele = $(this).closest('[data-column-id]');
 			var columnId = ele.attr('data-column-id');
@@ -1777,6 +1775,7 @@ $.extend(YomDataGrid.prototype, {
 			var height = target.outerHeight();
 			var left = offset.left;
 			var top = offset.top + height;
+			self._filterPanel.find('form').off('submit');
 			self._filterPanel.html(filterPanelTpl.render({
 				i18n: self._i18n,
 				column: column,
@@ -1845,6 +1844,10 @@ $.extend(YomDataGrid.prototype, {
 					dateToDom.attr('data-value', date.getTime());
 				});
 			}
+			self._filterPanel.find('form').on('submit', function(evt) {
+				evt.preventDefault();
+				self._submitFilterForm();
+			});
 			self._filterPanel.show();
 			var filterPanelWidth = self._filterPanel.outerWidth();
 			var containerWidth = self._container.outerWidth();

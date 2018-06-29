@@ -16,86 +16,88 @@ var type = filterOption.type;
 <%}%>
 
 <div data-column-id="<%==column.id%>">
-	<div class="alert alert-danger hidden"></div>
-	<div class="filter-option <%=filterCriteria.findEmpty ? 'hidden': ''%>">
-		<%
-		if(type == 'set') {
-			var options = normalizeFilterOptions(filterOption.options);
-			var valueMap = filterCriteria.valueMap || {};
-			if(filterOption.autoComplete) {
-		%>
+	<form>
+		<div class="alert alert-danger hidden"></div>
+		<div class="filter-option <%=filterCriteria.findEmpty ? 'hidden': ''%>">
+			<%
+			if(type == 'set') {
+				var options = normalizeFilterOptions(filterOption.options);
+				var valueMap = filterCriteria.valueMap || {};
+				if(filterOption.autoComplete) {
+			%>
+					<div class="form-group">
+						<input type="text" value="" class="form-control auto-complete-box" />
+					</div>
+			<%
+				} else {
+			%>
+					<div class="set-container">
+						<%
+						for(var i = 0, l = options.length; i < l; i++) {
+							var option = options[i];
+							var value = option.value, name = option.name;
+						%>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" value="<%==value%>" <%=valueMap[value] ? 'checked': ''%> /> <%==name%>
+								</label>
+							</div>
+						<%}%>
+					</div>
+			<%
+				}
+			} else if(type == 'number') {
+			%>
 				<div class="form-group">
-					<input type="text" value="" class="form-control auto-complete-box" />
+					<label><%=i18n.compareValue%></label>
+					<input name="value" type="text" maxlength="10" value="<%==filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : ''%>" class="form-control" />
 				</div>
-		<%
-			} else {
-		%>
-				<div class="set-container">
-					<%
-					for(var i = 0, l = options.length; i < l; i++) {
-						var option = options[i];
-						var value = option.value, name = option.name;
-					%>
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" value="<%==value%>" <%=valueMap[value] ? 'checked': ''%> /> <%==name%>
-							</label>
-						</div>
-					<%}%>
+				<div class="form-group">
+					<label><%=i18n.compareMethod%></label>
+					<select name="compareType" class="form-control">
+						<option value="eq" <%=filterCriteria.compareType == 'eq' ? 'selected' : ''%>><%=i18n.eq%></option>
+						<option value="lt" <%=filterCriteria.compareType == 'lt' ? 'selected' : ''%>><%=i18n.lt%></option>
+						<option value="gt" <%=filterCriteria.compareType == 'gt' ? 'selected' : ''%>><%=i18n.gt%></option>
+					</select>
 				</div>
-		<%
-			}
-		} else if(type == 'number') {
-		%>
-			<div class="form-group">
-				<label><%=i18n.compareValue%></label>
-				<input name="value" type="text" maxlength="10" value="<%==filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : ''%>" class="form-control" />
-			</div>
-			<div class="form-group">
-				<label><%=i18n.compareMethod%></label>
-				<select name="compareType" class="form-control">
-					<option value="eq" <%=filterCriteria.compareType == 'eq' ? 'selected' : ''%>><%=i18n.eq%></option>
-					<option value="lt" <%=filterCriteria.compareType == 'lt' ? 'selected' : ''%>><%=i18n.lt%></option>
-					<option value="gt" <%=filterCriteria.compareType == 'gt' ? 'selected' : ''%>><%=i18n.gt%></option>
-				</select>
-			</div>
-		<%} else if(type == 'date' || type == 'datetime') {%>
-			<div class="form-group">
-				<label><%=i18n.start%></label>
-				<div class="datetimepicker-component input-group date date-from" data-date="<%==filterCriteria.fromDisplay || ''%>" data-date-format="<%==filterOption.format || (type == 'datetime' ? 'yyyy-mm-dd hh:ii' : 'yyyy-mm-dd')%>" data-value="<%==filterCriteria.fromValue || ''%>">
-					<input class="form-control" type="text" name="fromDate" value="<%==filterCriteria.fromDisplay || ''%>" readonly />
-					<div class="input-group-addon"><i class="fa fa-calendar" /></div>
+			<%} else if(type == 'date' || type == 'datetime') {%>
+				<div class="form-group">
+					<label><%=i18n.start%></label>
+					<div class="datetimepicker-component input-group date date-from" data-date="<%==filterCriteria.fromDisplay || ''%>" data-date-format="<%==filterOption.format || (type == 'datetime' ? 'yyyy-mm-dd hh:ii' : 'yyyy-mm-dd')%>" data-value="<%==filterCriteria.fromValue || ''%>">
+						<input class="form-control" type="text" name="fromDate" value="<%==filterCriteria.fromDisplay || ''%>" readonly />
+						<div class="input-group-addon"><i class="fa fa-calendar" /></div>
+					</div>
 				</div>
-			</div>
-			<div class="form-group">
-				<label><%=i18n.end%></label>
-				<div class="datetimepicker-component input-group date date-to" data-date="<%==filterCriteria.toDisplay || ''%>" data-date-format="<%==filterOption.format || (type == 'datetime' ? 'yyyy-mm-dd hh:ii' : 'yyyy-mm-dd')%>" data-value="<%==filterCriteria.toValue || ''%>">
-					<input class="form-control" type="text" name="toDate" value="<%==filterCriteria.toDisplay || ''%>" readonly />
-					<div class="input-group-addon"><i class="fa fa-calendar" /></div>
+				<div class="form-group">
+					<label><%=i18n.end%></label>
+					<div class="datetimepicker-component input-group date date-to" data-date="<%==filterCriteria.toDisplay || ''%>" data-date-format="<%==filterOption.format || (type == 'datetime' ? 'yyyy-mm-dd hh:ii' : 'yyyy-mm-dd')%>" data-value="<%==filterCriteria.toValue || ''%>">
+						<input class="form-control" type="text" name="toDate" value="<%==filterCriteria.toDisplay || ''%>" readonly />
+						<div class="input-group-addon"><i class="fa fa-calendar" /></div>
+					</div>
 				</div>
-			</div>
-		<%} else {%>
-			<div class="form-group">
-				<input name="value" type="text" value="<%==filterCriteria.value || ''%>" class="form-control" />
-			</div>
-		<%}%>
-	</div>
-	<%if(filterOption.enableEmpty) {%>
-		<div class="checkbox">
-			<label>
-				<input name="findEmpty" type="checkbox" <%=filterCriteria.findEmpty ? 'checked' : ''%> /> <%=i18n.empty%>
-			</label>
-		</div>
-	<%}%>
-	<div class="row">
-		<div class="col-xs-8">
-			<button type="button" class="btn btn-primary btn-sm btn-confirm"><%=i18n.ok%></button>
-			<button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel"><%=i18n.cancel%></button>
-		</div>
-		<div class="col-xs-4 text-right">
-			<%if(filterMap[column.id]) {%>
-				<a class="btn btn-remove" href="javascript:void(0);"><%=i18n.clear%></a>
+			<%} else {%>
+				<div class="form-group">
+					<input name="value" type="text" value="<%==filterCriteria.value || ''%>" class="form-control" />
+				</div>
 			<%}%>
 		</div>
-	</div>
+		<%if(filterOption.enableEmpty) {%>
+			<div class="checkbox">
+				<label>
+					<input name="findEmpty" type="checkbox" <%=filterCriteria.findEmpty ? 'checked' : ''%> /> <%=i18n.empty%>
+				</label>
+			</div>
+		<%}%>
+		<div class="row">
+			<div class="col-xs-8">
+				<button type="submit" class="btn btn-primary btn-sm btn-confirm"><%=i18n.ok%></button>
+				<button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel"><%=i18n.cancel%></button>
+			</div>
+			<div class="col-xs-4 text-right">
+				<%if(filterMap[column.id]) {%>
+					<a class="btn btn-remove" href="javascript:void(0);"><%=i18n.clear%></a>
+				<%}%>
+			</div>
+		</div>
+	</form>
 </div>
