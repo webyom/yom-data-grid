@@ -1815,7 +1815,8 @@ $.extend(YomDataGrid.prototype, {
 					autoclose: true,
 					todayBtn: true,
 					todayHighlight: true,
-					minView: type == 'datetime' ? 0 : 2
+					minView: type == 'datetime' ? 0 : 2,
+					minuteStep: 1
 				};
 				var dateFromDom = $('.date-from', self._filterPanel);
 				var dateToDom = $('.date-to', self._filterPanel);
