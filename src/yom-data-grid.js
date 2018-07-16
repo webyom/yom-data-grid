@@ -743,9 +743,9 @@ $.extend(YomDataGrid.prototype, {
 					if(type == 'date') {
 						date.setHours(0);
 						date.setMinutes(0);
-						date.setSeconds(0);
-						date.setMilliseconds(0);
 					}
+					date.setSeconds(0);
+					date.setMilliseconds(0);
 					dateFromDom.attr('data-value', date.getTime());
 				});
 				dateToDom.datetimepicker($.extend({
@@ -755,9 +755,9 @@ $.extend(YomDataGrid.prototype, {
 					if(type == 'date') {
 						date.setHours(23);
 						date.setMinutes(59);
-						date.setSeconds(59);
-						date.setMilliseconds(999);
 					}
+					date.setSeconds(59);
+					date.setMilliseconds(999);
 					dateToDom.attr('data-value', date.getTime());
 				});
 			}
