@@ -1152,7 +1152,7 @@ var YomDataGrid = function(holder, columns, opt) {
 		}
 	};
 
-	this.setColumns(columns, this.getSetting());
+	this.setColumns(columns, opt.setting || this.getSetting());
 	this._bindEvent();
 };
 
