@@ -1862,6 +1862,122 @@ $.extend(YomDataGrid.prototype, {
 		}, 0);
 	},
 
+	_unmoundReactComponents: function(cb) {
+		var reactElements = $('[data-react-element]', this._container);
+		if(reactElements.length) {
+			window.require(['react-dom'], function(ReactDOM) {
+				reactElements.each(function(i, el) {
+					ReactDOM.unmountComponentAtNode(el.firstChild);
+				});
+				cb();
+			});
+		} else {
+			cb();
+		}
+	},
+
+	_render: function(data, headerData, state, setting, opt) {
+		var that = this;
+		opt = opt || {};
+		var selectedIndex = opt.selectedIndex || [];
+		if(this._opt.maxSelection > 0) {
+			selectedIndex = selectedIndex.slice(0, this._opt.maxSelection);
+		}
+		if(data && data.length) {
+			this._data = data;
+		}
+		if(headerData && headerData.length) {
+			this._headerData = headerData;
+		}
+		if(state) {
+			this._sortColumnId = state.sortColumnId || this._sortColumnId;
+			this._sortOrder = state.sortOrder || this._sortOrder;
+			this._setFilterMap(state.filterMap);
+		}
+		if(setting) {
+			this.setColumns(this._allColumns, setting);
+		}
+		if(this._opt.onBeforeRender) {
+			this._opt.onBeforeRender();
+		}
+		$('.yom-data-grid-header, .yom-data-grid-body', this._container).off('wheel', this._bind.scrollLocked);
+		if(this._lockedBody) {
+			$(this._lockedBody).off('wheel', this._bind.scrollLocked);
+		}
+		this._lockedBody = null;
+		this._scrollHeader = null;
+		this._scrollBody = null;
+		this._settingPanel = null;
+		var noScrollX = false;
+		var width;
+		if(this._allColumns.length - this._hiddenColumns.length < this._opt.minScrollXColumns || this._width == '100%') {
+			noScrollX = true;
+			width = '100%';
+		} else {
+			width = this._width == 'auto' ? this._holder.width() : this._width;
+		}
+		if(!width && this._opt.getHolderWidth) {
+			width = this._opt.getHolderWidth();
+		}
+		this._tmp.reactElements = [];
+		this._tmp.headerReactElements = [];
+		this._container.html(mainTpl.render({
+			_this: this,
+			DEFAULT_COLUMN_WIDTH: this._DEFAULT_COLUMN_WIDTH,
+			i18n: this._i18n,
+			name: this._name,
+			width: width,
+			noScrollX: noScrollX,
+			lockedColumns: this._defaultLockedColumns.concat(this._lockedColumns),
+			scrollColumns: this._scrollColumns,
+			bordered: this._opt.bordered,
+			striped: this._opt.striped,
+			sortColumnId: this._sortColumnId,
+			sortOrder: this._sortOrder,
+			filterMap: this._filterMap,
+			checkbox: this._opt.checkbox,
+			data: this._data,
+			headerData: this._headerData,
+			dataProperty: this._opt.dataProperty,
+			isAllChecked: opt.isAllChecked,
+			selectedIndex: opt.selectedIndex || [],
+			maxSelection: this._opt.maxSelection,
+			disableSetting: this._opt.disableSetting,
+			opt: this._opt
+		}));
+		this._lockedBody = $('.yom-data-grid-locked-columns .yom-data-grid-body', this._container)[0];
+		this._scrollHeader = $('.yom-data-grid-columns .yom-data-grid-header', this._container)[0];
+		this._scrollBody = $('.yom-data-grid-columns .yom-data-grid-body', this._container);
+		this._scrollBody.on('scroll', this._bind.scroll);
+		$('.yom-data-grid-header, .yom-data-grid-body', this._container).on('wheel', this._bind.scrollLocked);
+		this._settingPanel = $('.yom-data-grid-setting-panel', this._container);
+		var scrollBody = this._scrollBody[0];
+		if(scrollBody) {
+			if(this._scrollLeft) {
+				scrollBody.scrollLeft = this._scrollLeft;
+			}
+			if(this._scrollTop) {
+				scrollBody.scrollTop = this._scrollTop;
+			}
+		}
+		this._firstRender();
+		if(this._tmp.reactElements.length || this._tmp.headerReactElements.length) {
+			window.require(['react-dom'], function(ReactDOM) {
+				$('[data-react-element]', that._container).each(function(i, el) {
+					var attrs = el.getAttribute('data-react-element').split('-');
+					var reactElements = attrs[2] == 'header' ? that._tmp.headerReactElements : that._tmp.reactElements;
+					var reactElement = reactElements[attrs[0]][attrs[1]];
+					ReactDOM.render(reactElement, el.firstChild);
+				});
+				that._tmp.reactElements = null;
+				that._tmp.headerReactElements = null;
+				that._opt.onRender && that._opt.onRender();
+			});
+		} else {
+			this._opt.onRender && this._opt.onRender();
+		}
+	},
+
 	isAllChecked: function() {
 		var allChecked = false;
 		$('.yom-data-grid-check-box[data-row-index]', this._container).each(function(i, item) {
@@ -2397,105 +2513,7 @@ $.extend(YomDataGrid.prototype, {
 		if(!this._holder) {
 			return;
 		}
-		var that = this;
-		opt = opt || {};
-		var selectedIndex = opt.selectedIndex || [];
-		if(this._opt.maxSelection > 0) {
-			selectedIndex = selectedIndex.slice(0, this._opt.maxSelection);
-		}
-		if(data && data.length) {
-			this._data = data;
-		}
-		if(headerData && headerData.length) {
-			this._headerData = headerData;
-		}
-		if(state) {
-			this._sortColumnId = state.sortColumnId || this._sortColumnId;
-			this._sortOrder = state.sortOrder || this._sortOrder;
-			this._setFilterMap(state.filterMap);
-		}
-		if(setting) {
-			this.setColumns(this._allColumns, setting);
-		}
-		if(this._opt.onBeforeRender) {
-			this._opt.onBeforeRender();
-		}
-		$('.yom-data-grid-header, .yom-data-grid-body', this._container).off('wheel', this._bind.scrollLocked);
-		if(this._lockedBody) {
-			$(this._lockedBody).off('wheel', this._bind.scrollLocked);
-		}
-		this._lockedBody = null;
-		this._scrollHeader = null;
-		this._scrollBody = null;
-		this._settingPanel = null;
-		var noScrollX = false;
-		var width;
-		if(this._allColumns.length - this._hiddenColumns.length < this._opt.minScrollXColumns || this._width == '100%') {
-			noScrollX = true;
-			width = '100%';
-		} else {
-			width = this._width == 'auto' ? this._holder.width() : this._width;
-		}
-		if(!width && this._opt.getHolderWidth) {
-			width = this._opt.getHolderWidth();
-		}
-		this._tmp.reactElements = [];
-		this._tmp.headerReactElements = [];
-		this._container.html(mainTpl.render({
-			_this: this,
-			DEFAULT_COLUMN_WIDTH: this._DEFAULT_COLUMN_WIDTH,
-			i18n: this._i18n,
-			name: this._name,
-			width: width,
-			noScrollX: noScrollX,
-			lockedColumns: this._defaultLockedColumns.concat(this._lockedColumns),
-			scrollColumns: this._scrollColumns,
-			bordered: this._opt.bordered,
-			striped: this._opt.striped,
-			sortColumnId: this._sortColumnId,
-			sortOrder: this._sortOrder,
-			filterMap: this._filterMap,
-			checkbox: this._opt.checkbox,
-			data: this._data,
-			headerData: this._headerData,
-			dataProperty: this._opt.dataProperty,
-			isAllChecked: opt.isAllChecked,
-			selectedIndex: opt.selectedIndex || [],
-			maxSelection: this._opt.maxSelection,
-			disableSetting: this._opt.disableSetting,
-			opt: this._opt
-		}));
-		this._lockedBody = $('.yom-data-grid-locked-columns .yom-data-grid-body', this._container)[0];
-		this._scrollHeader = $('.yom-data-grid-columns .yom-data-grid-header', this._container)[0];
-		this._scrollBody = $('.yom-data-grid-columns .yom-data-grid-body', this._container);
-		this._scrollBody.on('scroll', this._bind.scroll);
-		$('.yom-data-grid-header, .yom-data-grid-body', this._container).on('wheel', this._bind.scrollLocked);
-		this._settingPanel = $('.yom-data-grid-setting-panel', this._container);
-		var scrollBody = this._scrollBody[0];
-		if(scrollBody) {
-			if(this._scrollLeft) {
-				scrollBody.scrollLeft = this._scrollLeft;
-			}
-			if(this._scrollTop) {
-				scrollBody.scrollTop = this._scrollTop;
-			}
-		}
-		this._firstRender();
-		if(this._tmp.reactElements.length || this._tmp.headerReactElements.length) {
-			window.require(['react-dom'], function(ReactDOM) {
-				$('[data-react-element]', that._container).each(function(i, el) {
-					var attrs = el.getAttribute('data-react-element').split('-');
-					var reactElements = attrs[2] == 'header' ? that._tmp.headerReactElements : that._tmp.reactElements;
-					var reactElement = reactElements[attrs[0]][attrs[1]];
-					ReactDOM.render(reactElement, el.firstChild);
-				});
-				that._tmp.reactElements = null;
-				that._tmp.headerReactElements = null;
-				that._opt.onRender && that._opt.onRender();
-			});
-		} else {
-			this._opt.onRender && this._opt.onRender();
-		}
+		this._unmoundReactComponents(this._render.bind(this, data, headerData, state, setting, opt));
 	},
 
 	destroy: function() {
@@ -2505,17 +2523,9 @@ $.extend(YomDataGrid.prototype, {
 		this._unbindEvent();
 
 		var container = this._container;
-		var reactElements = $('[data-react-element]', this._container);
-		if(reactElements.length) {
-			window.require(['react-dom'], function(ReactDOM) {
-				reactElements.each(function(i, el) {
-					ReactDOM.unmountComponentAtNode(el.firstChild);
-				});
-				container.remove();
-			});
-		} else {
+		this._unmoundReactComponents(function() {
 			container.remove();
-		}
+		});
 
 		this._filterPanel.remove();
 		this._container = null;
