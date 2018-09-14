@@ -228,7 +228,7 @@ exports.render = render;
 
 var moduleUri = typeof module != "undefined" && module.uri;
 
-var expo = yomCssModuleHelper("", '.yom-data-grid-filter-panel .btn-default,.yom-data-grid-filter-panel .btn-primary,.yom-data-grid-setting-panel .btn-default,.yom-data-grid-setting-panel .btn-primary{min-width:62px}.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:20px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-cell-inner-dummy{height:1px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner,.yom-data-grid-bordered-h .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-bordered-v .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}[class*=yom-data-grid-header-rows-].yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:1px}.yom-data-grid-bordered .yom-data-grid-header .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:solid 2px #ccc}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:5px;margin-top:-10px;cursor:pointer;color:#555;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon:hover{background-color:#eee}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-header-cell-inner-filterable{padding-right:24px}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:252px;padding:10px;display:none;z-index:1;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .remark{font-style:italic;color:#888}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:145px;margin-bottom:10px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel .btn-confirm{margin-right:10px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:255px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-panel .lock-options .radio-inline{margin-left:0;margin-right:10px}.yom-data-grid-setting-column-all{padding-left:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px;min-width:0!important}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid-btn-confirm-setting{margin-right:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked td{background-color:#ebf5ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked.yom-data-grid-row-hl td{background-color:#d4e9ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip;padding-left:0;padding-right:0}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-row-clickable .yom-data-grid-content-cell{cursor:pointer}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;top:0;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}.yom-data-grid-container-height .yom-data-grid-header-rows-1 .yom-data-grid-body{top:78px}.yom-data-grid-container-height .yom-data-grid-header-rows-2 .yom-data-grid-body{top:117px}.yom-data-grid-container-height .yom-data-grid-header-rows-3 .yom-data-grid-body{top:156px}.yom-data-grid-container-height .yom-data-grid-header-rows-4 .yom-data-grid-body{top:195px}', moduleUri);
+var expo = yomCssModuleHelper("", '.yom-data-grid-filter-panel .btn-default,.yom-data-grid-filter-panel .btn-primary,.yom-data-grid-setting-panel .btn-default,.yom-data-grid-setting-panel .btn-primary{min-width:62px}.yom-data-grid-container{height:100%;position:relative}.yom-data-grid{border:1px solid #ccc;height:100%;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid:after,.yom-data-grid:before{display:table;content:"";line-height:0}.yom-data-grid:after{clear:both}.yom-data-grid-locked table{table-layout:fixed}.yom-data-grid-locked table td,.yom-data-grid-locked table th{line-height:20px}.yom-data-grid-locked table td i[class^=icon]{font-size:17.5px}.yom-data-grid .yom-data-grid-body,.yom-data-grid .yom-data-grid-header{overflow:hidden}.yom-data-grid-table th{text-align:left}.yom-data-grid-table td{background-color:#fff}.yom-data-grid-cell-inner{line-height:15.4px;font-size:14px;padding:11px 9px}.yom-data-grid-cell-inner-dummy{height:1px}.yom-data-grid-bordered .yom-data-grid-cell-inner{border-bottom:solid 1px #ccc;border-right:solid 1px #ccc}.yom-data-grid-bordered .yom-data-grid-last-cell .yom-data-grid-cell-inner,.yom-data-grid-bordered-h .yom-data-grid-cell-inner{border-right:none}.yom-data-grid-bordered-v .yom-data-grid-cell-inner{border-bottom:none}.yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:2px}.yom-data-grid-bordered .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:none}[class*=yom-data-grid-header-rows-].yom-data-grid-bordered th .yom-data-grid-cell-inner{border-bottom-width:1px}.yom-data-grid-bordered .yom-data-grid-header .yom-data-grid-last-row .yom-data-grid-cell-inner{border-bottom:solid 2px #ccc}.yom-data-grid-locked .yom-data-grid-cell-inner{overflow:hidden;text-overflow:ellipsis;height:38.8px}.yom-data-grid-locked-columns{border-right:solid 2px #ccc}.yom-data-grid-striped .yom-data-grid-table .yom-data-grid-row-odd td{background-color:#f8f8f8}.yom-data-grid-sortable,.yom-data-grid-sortable:hover{color:#555;text-decoration:underline}.yom-data-grid-sort-arrow-down,.yom-data-grid-sort-arrow-up{display:inline-block;width:0;height:0;vertical-align:middle;border-right:4px solid transparent;border-left:4px solid transparent;content:"";margin-left:3px}.yom-data-grid-sort-arrow-down{border-top:4px solid #555}.yom-data-grid-sort-arrow-up{border-bottom:4px solid #555}.yom-data-grid-header-cell-inner{position:relative}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:50%;right:5px;margin-top:-10px;cursor:pointer;color:#555;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon:hover{background-color:#eee}.yom-data-grid-header-cell-inner .yom-data-grid-filter-icon-left{left:9px;right:auto}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-remove{display:inline-block}.yom-data-grid-header-cell-inner:hover .yom-data-grid-filter-remove-icon .icon-filter{display:none}.yom-data-grid-header-cell-inner-filterable{padding-right:24px}.yom-data-grid-filter-panel{position:absolute;border:1px solid #ccc;background-color:#fff;width:252px;padding:10px;display:none;z-index:999;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel h3{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-filter-panel .remark{font-style:italic;color:#888}.yom-data-grid-filter-panel .alert-danger{padding:10px}.yom-data-grid-filter-panel .set-container{background-color:#f8f8f8;padding-left:10px;overflow-x:hidden;overflow-y:auto;max-height:145px;margin-bottom:10px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-filter-panel .btn-confirm{margin-right:10px}.yom-data-grid-filter-remove-icon{color:#555}.yom-data-grid-filter-remove-icon .icon-remove{display:none}.yom-data-grid-filter-remove-icon:hover{color:#555}.yom-data-grid-setting-icon{position:absolute;width:20px;height:20px;line-height:20px;text-align:center;top:-20px;left:0;background-color:#eee;cursor:pointer;color:#555;z-index:1;display:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-container-sequence .yom-data-grid-setting-icon{top:9px;left:9px}.yom-data-grid-container:hover .yom-data-grid-setting-icon{display:block}.yom-data-grid-setting-panel{position:absolute;left:0;top:0;border:1px solid #ccc;background-color:#fff;width:300px;padding:10px;display:none;z-index:2;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel h3,.yom-data-grid-setting-panel h4{font-size:14px;margin:0 0 10px;color:#555}.yom-data-grid-setting-panel h4{margin-top:10px}.yom-data-grid-setting-panel .alert-danger{padding:10px}.yom-data-grid-setting-panel .columns-container{position:relative;padding-right:40px}.yom-data-grid-setting-panel .yom-data-grid-setting-columns-container-inner{background-color:#f8f8f8;overflow-x:hidden;overflow-y:auto;max-height:255px;padding:5px 0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}.yom-data-grid-setting-panel .lock-options{margin-bottom:10px}.yom-data-grid-setting-panel .lock-options .radio-inline{margin-left:0;margin-right:10px}.yom-data-grid-setting-column-all{padding-left:10px}.yom-data-grid-setting-column-item{padding:3px 10px;position:relative;cursor:pointer}.yom-data-grid-setting-column-item.selected{background-color:#ddd}.yom-data-grid-setting-btn-move-down,.yom-data-grid-setting-btn-move-up{position:absolute;right:0;top:50%;margin-top:-40px;min-width:0!important}.yom-data-grid-setting-btn-move-down{position:absolute;right:0;top:50%;margin-top:10px}.yom-data-grid-btn-confirm-setting{margin-right:10px}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked td{background-color:#ebf5ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error td{background-color:#f2dede}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-hl td{background-color:#ffe}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-checked.yom-data-grid-row-hl td{background-color:#d4e9ff}.yom-data-grid .yom-data-grid-table .yom-data-grid-row-error.yom-data-grid-row-hl td{background-color:#ebcccc}.yom-data-grid .yom-data-grid-table .yom-data-grid-sequence-cell{background-color:#fff!important;border-bottom:none;font-weight:700;color:#888}.yom-data-grid-sequence-cell .yom-data-grid-cell-inner{border-bottom:none;text-overflow:clip;padding-left:0;padding-right:0}.yom-data-grid-checkbox-cell .yom-data-grid-cell-inner{text-overflow:clip}.yom-data-grid-checkbox-cell input[type=checkbox]{margin:0}.yom-data-grid-form-cell .yom-data-grid-cell-inner{padding:2px}.yom-data-grid-row-clickable .yom-data-grid-content-cell{cursor:pointer}.yom-data-grid-container-height .yom-data-grid-columns,.yom-data-grid-container-height .yom-data-grid-locked-columns{position:absolute;top:0;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-body{position:absolute;top:39px;left:0;right:0;bottom:0}.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-body,.yom-data-grid-container-height .yom-data-grid-columns .yom-data-grid-header{overflow-y:scroll}.yom-data-grid-container-height .yom-data-grid-header-rows-1 .yom-data-grid-body{top:78px}.yom-data-grid-container-height .yom-data-grid-header-rows-2 .yom-data-grid-body{top:117px}.yom-data-grid-container-height .yom-data-grid-header-rows-3 .yom-data-grid-body{top:156px}.yom-data-grid-container-height .yom-data-grid-header-rows-4 .yom-data-grid-body{top:195px}', moduleUri);
 
 module.exports = expo;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8), __webpack_require__(9)(module)))
@@ -247,7 +247,7 @@ function render($data, $opt) {
     var $print = function(str) {
         _$out_ += str;
     };
-    var DEFAULT_COLUMN_WIDTH = $data.DEFAULT_COLUMN_WIDTH, i18n = $data.i18n, name = $data.name, width = $data.width, noScrollX = $data.noScrollX, lockedColumns = $data.lockedColumns, scrollColumns = $data.scrollColumns, bordered = $data.bordered, striped = $data.striped, sortColumnId = $data.sortColumnId, sortOrder = $data.sortOrder, filterMap = $data.filterMap, checkbox = $data.checkbox, data = $data.data, headerData = $data.headerData, dataProperty = $data.dataProperty, isAllChecked = $data.isAllChecked, selectedIndex = $data.selectedIndex, maxSelection = $data.maxSelection, disableSetting = $data.disableSetting, opt = $data.opt;
+    var _this = $data._this, DEFAULT_COLUMN_WIDTH = $data.DEFAULT_COLUMN_WIDTH, i18n = $data.i18n, name = $data.name, width = $data.width, noScrollX = $data.noScrollX, lockedColumns = $data.lockedColumns, scrollColumns = $data.scrollColumns, bordered = $data.bordered, striped = $data.striped, sortColumnId = $data.sortColumnId, sortOrder = $data.sortOrder, filterMap = $data.filterMap, checkbox = $data.checkbox, data = $data.data, headerData = $data.headerData, dataProperty = $data.dataProperty, isAllChecked = $data.isAllChecked, selectedIndex = $data.selectedIndex, maxSelection = $data.maxSelection, disableSetting = $data.disableSetting, opt = $data.opt;
     var i, l, column, columns, columnWidth, columnHeader, columnOffset, renderData, isHeaderData;
     var nextSeq = 1;
     var isPrevOdd = false;
@@ -390,7 +390,7 @@ function render($data, $opt) {
             isHeaderData = true;
             (function() {
                 var opt = $data.opt;
-                var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
+                var i, l, j, l2, seq, isOdd, item, columnIndex, columnValue, reactElement, displayValue, title, ids, checkable, rowClickable, cellClickable;
                 if (renderData.length) {
                     for (i = 0, l = renderData.length; i < l; i++) {
                         item = dataProperty ? renderData[i][dataProperty] : renderData[i];
@@ -403,8 +403,11 @@ function render($data, $opt) {
                         }
                         isPrevOdd = isOdd;
                         rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
+                        _this._tmp.reactElements[i] = _this._tmp.reactElements[i] || [];
+                        _this._tmp.headerReactElements[i] = _this._tmp.headerReactElements[i] || [];
                         _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                         for (j = 0, l2 = columns.length; j < l2; j++) {
+                            columnIndex = j + columnOffset;
                             column = columns[j];
                             ids = column.id.replace(/\[(\w+)\]/g, ".$1").split(".");
                             columnValue = item[ids.shift()];
@@ -415,8 +418,16 @@ function render($data, $opt) {
                                 columnValue = columnValue.toString();
                             }
                             cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
-                            if (column.renderer) {
-                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                            reactElement = null;
+                            if (column.reactRenderer) {
+                                reactElement = column.reactRenderer(columnValue || "", i, item, columnIndex, column, isHeaderData);
+                                if (reactElement) {
+                                    _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
+                                } else {
+                                    displayValue = $encodeHtml(columnValue || "");
+                                }
+                            } else if (column.renderer) {
+                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
                                 if (displayValue == null) {
                                     displayValue = "";
                                 } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -430,16 +441,18 @@ function render($data, $opt) {
                                 }
                             }
                             if (column.titleRenderer) {
-                                title = column.titleRenderer(columnValue, i, item, j + columnOffset, column, isHeaderData);
+                                title = column.titleRenderer(columnValue, i, item, columnIndex, column, isHeaderData);
                             } else if (typeof column.title != "undefined") {
                                 if (column.title == "__content__") {
                                     title = displayValue;
                                 } else {
                                     title = column.title;
                                 }
+                            } else if (column.reactRenderer) {
+                                title = columnValue || "";
                             } else if (column.renderer) {
                                 if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
                                     if (title == null) {
                                         title = "";
                                     }
@@ -449,7 +462,7 @@ function render($data, $opt) {
                             } else {
                                 title = columnValue || "";
                             }
-                            _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
+                            _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + columnIndex + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : column.type == "form" ? "yom-data-grid-form-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"' + (reactElement ? ' data-react-element="' + i + "-" + columnIndex + "-" + (isHeaderData ? "header-cell" : "cell") + '"' : "") + '><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
                             if (column.type == "sequence") {
                                 if (isHeaderData) {
                                     seq = 0;
@@ -470,7 +483,7 @@ function render($data, $opt) {
                                     _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" disabled />';
                                 }
                             } else {
-                                _$out_ += "" + (displayValue || "&nbsp;") + "";
+                                _$out_ += "" + (reactElement ? "" : displayValue || "&nbsp;") + "";
                             }
                             _$out_ += "</div></td>";
                         }
@@ -492,7 +505,7 @@ function render($data, $opt) {
         isHeaderData = false;
         (function() {
             var opt = $data.opt;
-            var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
+            var i, l, j, l2, seq, isOdd, item, columnIndex, columnValue, reactElement, displayValue, title, ids, checkable, rowClickable, cellClickable;
             if (renderData.length) {
                 for (i = 0, l = renderData.length; i < l; i++) {
                     item = dataProperty ? renderData[i][dataProperty] : renderData[i];
@@ -505,8 +518,11 @@ function render($data, $opt) {
                     }
                     isPrevOdd = isOdd;
                     rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
+                    _this._tmp.reactElements[i] = _this._tmp.reactElements[i] || [];
+                    _this._tmp.headerReactElements[i] = _this._tmp.headerReactElements[i] || [];
                     _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                     for (j = 0, l2 = columns.length; j < l2; j++) {
+                        columnIndex = j + columnOffset;
                         column = columns[j];
                         ids = column.id.replace(/\[(\w+)\]/g, ".$1").split(".");
                         columnValue = item[ids.shift()];
@@ -517,8 +533,16 @@ function render($data, $opt) {
                             columnValue = columnValue.toString();
                         }
                         cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
-                        if (column.renderer) {
-                            displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                        reactElement = null;
+                        if (column.reactRenderer) {
+                            reactElement = column.reactRenderer(columnValue || "", i, item, columnIndex, column, isHeaderData);
+                            if (reactElement) {
+                                _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
+                            } else {
+                                displayValue = $encodeHtml(columnValue || "");
+                            }
+                        } else if (column.renderer) {
+                            displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
                             if (displayValue == null) {
                                 displayValue = "";
                             } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -532,16 +556,18 @@ function render($data, $opt) {
                             }
                         }
                         if (column.titleRenderer) {
-                            title = column.titleRenderer(columnValue, i, item, j + columnOffset, column, isHeaderData);
+                            title = column.titleRenderer(columnValue, i, item, columnIndex, column, isHeaderData);
                         } else if (typeof column.title != "undefined") {
                             if (column.title == "__content__") {
                                 title = displayValue;
                             } else {
                                 title = column.title;
                             }
+                        } else if (column.reactRenderer) {
+                            title = columnValue || "";
                         } else if (column.renderer) {
                             if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                                title = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
                                 if (title == null) {
                                     title = "";
                                 }
@@ -551,7 +577,7 @@ function render($data, $opt) {
                         } else {
                             title = columnValue || "";
                         }
-                        _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
+                        _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + columnIndex + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : column.type == "form" ? "yom-data-grid-form-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"' + (reactElement ? ' data-react-element="' + i + "-" + columnIndex + "-" + (isHeaderData ? "header-cell" : "cell") + '"' : "") + '><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
                         if (column.type == "sequence") {
                             if (isHeaderData) {
                                 seq = 0;
@@ -572,7 +598,7 @@ function render($data, $opt) {
                                 _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" disabled />';
                             }
                         } else {
-                            _$out_ += "" + (displayValue || "&nbsp;") + "";
+                            _$out_ += "" + (reactElement ? "" : displayValue || "&nbsp;") + "";
                         }
                         _$out_ += "</div></td>";
                     }
@@ -597,7 +623,7 @@ function render($data, $opt) {
             isHeaderData = true;
             (function() {
                 var opt = $data.opt;
-                var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
+                var i, l, j, l2, seq, isOdd, item, columnIndex, columnValue, reactElement, displayValue, title, ids, checkable, rowClickable, cellClickable;
                 if (renderData.length) {
                     for (i = 0, l = renderData.length; i < l; i++) {
                         item = dataProperty ? renderData[i][dataProperty] : renderData[i];
@@ -610,8 +636,11 @@ function render($data, $opt) {
                         }
                         isPrevOdd = isOdd;
                         rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
+                        _this._tmp.reactElements[i] = _this._tmp.reactElements[i] || [];
+                        _this._tmp.headerReactElements[i] = _this._tmp.headerReactElements[i] || [];
                         _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                         for (j = 0, l2 = columns.length; j < l2; j++) {
+                            columnIndex = j + columnOffset;
                             column = columns[j];
                             ids = column.id.replace(/\[(\w+)\]/g, ".$1").split(".");
                             columnValue = item[ids.shift()];
@@ -622,8 +651,16 @@ function render($data, $opt) {
                                 columnValue = columnValue.toString();
                             }
                             cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
-                            if (column.renderer) {
-                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                            reactElement = null;
+                            if (column.reactRenderer) {
+                                reactElement = column.reactRenderer(columnValue || "", i, item, columnIndex, column, isHeaderData);
+                                if (reactElement) {
+                                    _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
+                                } else {
+                                    displayValue = $encodeHtml(columnValue || "");
+                                }
+                            } else if (column.renderer) {
+                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
                                 if (displayValue == null) {
                                     displayValue = "";
                                 } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -637,16 +674,18 @@ function render($data, $opt) {
                                 }
                             }
                             if (column.titleRenderer) {
-                                title = column.titleRenderer(columnValue, i, item, j + columnOffset, column, isHeaderData);
+                                title = column.titleRenderer(columnValue, i, item, columnIndex, column, isHeaderData);
                             } else if (typeof column.title != "undefined") {
                                 if (column.title == "__content__") {
                                     title = displayValue;
                                 } else {
                                     title = column.title;
                                 }
+                            } else if (column.reactRenderer) {
+                                title = columnValue || "";
                             } else if (column.renderer) {
                                 if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
                                     if (title == null) {
                                         title = "";
                                     }
@@ -656,7 +695,7 @@ function render($data, $opt) {
                             } else {
                                 title = columnValue || "";
                             }
-                            _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
+                            _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + columnIndex + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : column.type == "form" ? "yom-data-grid-form-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"' + (reactElement ? ' data-react-element="' + i + "-" + columnIndex + "-" + (isHeaderData ? "header-cell" : "cell") + '"' : "") + '><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
                             if (column.type == "sequence") {
                                 if (isHeaderData) {
                                     seq = 0;
@@ -677,7 +716,7 @@ function render($data, $opt) {
                                     _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" disabled />';
                                 }
                             } else {
-                                _$out_ += "" + (displayValue || "&nbsp;") + "";
+                                _$out_ += "" + (reactElement ? "" : displayValue || "&nbsp;") + "";
                             }
                             _$out_ += "</div></td>";
                         }
@@ -699,7 +738,7 @@ function render($data, $opt) {
         isHeaderData = false;
         (function() {
             var opt = $data.opt;
-            var i, l, j, l2, seq, isOdd, item, columnValue, displayValue, title, ids, checkable, rowClickable, cellClickable;
+            var i, l, j, l2, seq, isOdd, item, columnIndex, columnValue, reactElement, displayValue, title, ids, checkable, rowClickable, cellClickable;
             if (renderData.length) {
                 for (i = 0, l = renderData.length; i < l; i++) {
                     item = dataProperty ? renderData[i][dataProperty] : renderData[i];
@@ -712,8 +751,11 @@ function render($data, $opt) {
                     }
                     isPrevOdd = isOdd;
                     rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
+                    _this._tmp.reactElements[i] = _this._tmp.reactElements[i] || [];
+                    _this._tmp.headerReactElements[i] = _this._tmp.headerReactElements[i] || [];
                     _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && (opt.onRowClick || opt.onRowDblclick) ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                     for (j = 0, l2 = columns.length; j < l2; j++) {
+                        columnIndex = j + columnOffset;
                         column = columns[j];
                         ids = column.id.replace(/\[(\w+)\]/g, ".$1").split(".");
                         columnValue = item[ids.shift()];
@@ -724,8 +766,16 @@ function render($data, $opt) {
                             columnValue = columnValue.toString();
                         }
                         cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
-                        if (column.renderer) {
-                            displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                        reactElement = null;
+                        if (column.reactRenderer) {
+                            reactElement = column.reactRenderer(columnValue || "", i, item, columnIndex, column, isHeaderData);
+                            if (reactElement) {
+                                _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
+                            } else {
+                                displayValue = $encodeHtml(columnValue || "");
+                            }
+                        } else if (column.renderer) {
+                            displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
                             if (displayValue == null) {
                                 displayValue = "";
                             } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -739,16 +789,18 @@ function render($data, $opt) {
                             }
                         }
                         if (column.titleRenderer) {
-                            title = column.titleRenderer(columnValue, i, item, j + columnOffset, column, isHeaderData);
+                            title = column.titleRenderer(columnValue, i, item, columnIndex, column, isHeaderData);
                         } else if (typeof column.title != "undefined") {
                             if (column.title == "__content__") {
                                 title = displayValue;
                             } else {
                                 title = column.title;
                             }
+                        } else if (column.reactRenderer) {
+                            title = columnValue || "";
                         } else if (column.renderer) {
                             if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                title = column.renderer($encodeHtml(columnValue || ""), i, item, j + columnOffset, column, isHeaderData);
+                                title = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
                                 if (title == null) {
                                     title = "";
                                 }
@@ -758,7 +810,7 @@ function render($data, $opt) {
                         } else {
                             title = columnValue || "";
                         }
-                        _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + (j + columnOffset) + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
+                        _$out_ += '<td data-grid-column-id="' + column.id + '" id="yom-data-grid-' + name + "-" + (isHeaderData ? "header-cell" : "cell") + "-" + i + "-" + columnIndex + '" class="' + (column.type == "sequence" ? "yom-data-grid-sequence-cell" : column.type == "checkbox" ? "yom-data-grid-checkbox-cell" : column.type == "form" ? "yom-data-grid-form-cell" : "yom-data-grid-content-cell") + " " + (j == l2 - 1 ? "yom-data-grid-last-cell" : "") + " yom-data-grid-column-" + column.id.replace(/\./g, "-") + '"' + (reactElement ? ' data-react-element="' + i + "-" + columnIndex + "-" + (isHeaderData ? "header-cell" : "cell") + '"' : "") + '><div class="yom-data-grid-cell-inner" title="' + $encodeHtml(title) + '" style="text-align: ' + (column.textAlign || "left") + ';">';
                         if (column.type == "sequence") {
                             if (isHeaderData) {
                                 seq = 0;
@@ -779,7 +831,7 @@ function render($data, $opt) {
                                 _$out_ += '<input class="yom-data-grid-check-box" data-row-index="' + i + '" type="checkbox" disabled />';
                             }
                         } else {
-                            _$out_ += "" + (displayValue || "&nbsp;") + "";
+                            _$out_ += "" + (reactElement ? "" : displayValue || "&nbsp;") + "";
                         }
                         _$out_ += "</div></td>";
                     }
@@ -1113,6 +1165,9 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._scrollBody = null;
 	this._scrollLeft = opt.scrollLeft || 0;
 	this._scrollTop = opt.scrollTop || 0;
+
+	// store tmp data during rendering
+	this._tmp = {};
 
 	// sortting
 	this._sortColumnId = '';
@@ -1605,7 +1660,7 @@ $.extend(YomDataGrid.prototype, {
 					return;
 				}
 			} else {
-				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell').length === 0;
+				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell, .yom-data-grid-form-cell').length === 0;
 				if(!clickable || !self._opt.onRowClick || self._rowClickToRef != null) {
 					return;
 				}
@@ -1638,7 +1693,7 @@ $.extend(YomDataGrid.prototype, {
 			var cellClickable = $(evt.currentTarget).hasClass('yom-data-grid-cell-clickable');
 			var target = evt.target;
 			if(!cellClickable) {
-				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell').length === 0;
+				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell, .yom-data-grid-form-cell').length === 0;
 				if(!clickable || !self._opt.onRowDblclick) {
 					return;
 				}
@@ -1988,6 +2043,10 @@ $.extend(YomDataGrid.prototype, {
 		return res;
 	},
 
+	getData: function() {
+		return this._data;
+	},
+
 	getDataByRowIndex: function(rowIndex, dataProperty, columnId) {
 		var res = this._data[rowIndex];
 		if(!res) {
@@ -2255,6 +2314,7 @@ $.extend(YomDataGrid.prototype, {
 		if(!this._holder) {
 			return;
 		}
+		var that = this;
 		opt = opt || {};
 		var selectedIndex = opt.selectedIndex || [];
 		if(this._opt.maxSelection > 0) {
@@ -2296,7 +2356,10 @@ $.extend(YomDataGrid.prototype, {
 		if(!width && this._opt.getHolderWidth) {
 			width = this._opt.getHolderWidth();
 		}
+		this._tmp.reactElements = [];
+		this._tmp.headerReactElements = [];
 		this._container.html(mainTpl.render({
+			_this: this,
 			DEFAULT_COLUMN_WIDTH: this._DEFAULT_COLUMN_WIDTH,
 			i18n: this._i18n,
 			name: this._name,
@@ -2335,8 +2398,20 @@ $.extend(YomDataGrid.prototype, {
 			}
 		}
 		this._firstRender();
-		if(this._opt.onRender) {
-			this._opt.onRender();
+		if(this._tmp.reactElements.length || this._tmp.headerReactElements.length) {
+			window.require(['react-dom'], function(ReactDOM) {
+				$('[data-react-element]', that._container).each(function(i, el) {
+					var attrs = el.getAttribute('data-react-element').split('-');
+					var reactElements = attrs[2] == 'header' ? that._tmp.headerReactElements : that._tmp.reactElements;
+					var reactElement = reactElements[attrs[0]][attrs[1]];
+					ReactDOM.render(reactElement, el.firstChild);
+				});
+				that._tmp.reactElements = null;
+				that._tmp.headerReactElements = null;
+				that._opt.onRender && that._opt.onRender();
+			});
+		} else {
+			this._opt.onRender && this._opt.onRender();
 		}
 	},
 
@@ -2345,7 +2420,20 @@ $.extend(YomDataGrid.prototype, {
 			this._scrollBody.off('scroll', this._bind.scroll);
 		}
 		this._unbindEvent();
-		this._container.remove();
+
+		var container = this._container;
+		var reactElements = $('[data-react-element]', this._container);
+		if(reactElements.length) {
+			window.require(['react-dom'], function(ReactDOM) {
+				reactElements.each(function(i, el) {
+					ReactDOM.unmountComponentAtNode(el.firstChild);
+				});
+				container.remove();
+			});
+		} else {
+			container.remove();
+		}
+
 		this._filterPanel.remove();
 		this._container = null;
 		this._lockedBody = null;

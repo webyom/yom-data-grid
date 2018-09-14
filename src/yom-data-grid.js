@@ -30,6 +30,9 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._scrollLeft = opt.scrollLeft || 0;
 	this._scrollTop = opt.scrollTop || 0;
 
+	// store tmp data during rendering
+	this._tmp = {};
+
 	// sortting
 	this._sortColumnId = '';
 	this._sortOrder = '';
@@ -521,7 +524,7 @@ $.extend(YomDataGrid.prototype, {
 					return;
 				}
 			} else {
-				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell').length === 0;
+				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell, .yom-data-grid-form-cell').length === 0;
 				if(!clickable || !self._opt.onRowClick || self._rowClickToRef != null) {
 					return;
 				}
@@ -554,7 +557,7 @@ $.extend(YomDataGrid.prototype, {
 			var cellClickable = $(evt.currentTarget).hasClass('yom-data-grid-cell-clickable');
 			var target = evt.target;
 			if(!cellClickable) {
-				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell').length === 0;
+				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell, .yom-data-grid-form-cell').length === 0;
 				if(!clickable || !self._opt.onRowDblclick) {
 					return;
 				}
@@ -904,6 +907,10 @@ $.extend(YomDataGrid.prototype, {
 		return res;
 	},
 
+	getData: function() {
+		return this._data;
+	},
+
 	getDataByRowIndex: function(rowIndex, dataProperty, columnId) {
 		var res = this._data[rowIndex];
 		if(!res) {
@@ -1171,6 +1178,7 @@ $.extend(YomDataGrid.prototype, {
 		if(!this._holder) {
 			return;
 		}
+		var that = this;
 		opt = opt || {};
 		var selectedIndex = opt.selectedIndex || [];
 		if(this._opt.maxSelection > 0) {
@@ -1212,7 +1220,10 @@ $.extend(YomDataGrid.prototype, {
 		if(!width && this._opt.getHolderWidth) {
 			width = this._opt.getHolderWidth();
 		}
+		this._tmp.reactElements = [];
+		this._tmp.headerReactElements = [];
 		this._container.html(mainTpl.render({
+			_this: this,
 			DEFAULT_COLUMN_WIDTH: this._DEFAULT_COLUMN_WIDTH,
 			i18n: this._i18n,
 			name: this._name,
@@ -1251,8 +1262,20 @@ $.extend(YomDataGrid.prototype, {
 			}
 		}
 		this._firstRender();
-		if(this._opt.onRender) {
-			this._opt.onRender();
+		if(this._tmp.reactElements.length || this._tmp.headerReactElements.length) {
+			window.require(['react-dom'], function(ReactDOM) {
+				$('[data-react-element]', that._container).each(function(i, el) {
+					var attrs = el.getAttribute('data-react-element').split('-');
+					var reactElements = attrs[2] == 'header' ? that._tmp.headerReactElements : that._tmp.reactElements;
+					var reactElement = reactElements[attrs[0]][attrs[1]];
+					ReactDOM.render(reactElement, el.firstChild);
+				});
+				that._tmp.reactElements = null;
+				that._tmp.headerReactElements = null;
+				that._opt.onRender && that._opt.onRender();
+			});
+		} else {
+			this._opt.onRender && this._opt.onRender();
 		}
 	},
 
@@ -1261,7 +1284,20 @@ $.extend(YomDataGrid.prototype, {
 			this._scrollBody.off('scroll', this._bind.scroll);
 		}
 		this._unbindEvent();
-		this._container.remove();
+
+		var container = this._container;
+		var reactElements = $('[data-react-element]', this._container);
+		if(reactElements.length) {
+			window.require(['react-dom'], function(ReactDOM) {
+				reactElements.each(function(i, el) {
+					ReactDOM.unmountComponentAtNode(el.firstChild);
+				});
+				container.remove();
+			});
+		} else {
+			container.remove();
+		}
+
 		this._filterPanel.remove();
 		this._container = null;
 		this._lockedBody = null;

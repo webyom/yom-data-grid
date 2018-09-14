@@ -233,7 +233,7 @@
 	width: 252px;
 	padding: 10px;
 	display: none;
-	z-index: 1;
+	z-index: 999;
 	.border-radius(2px);
 	h3 {
 		font-size: @font-size-base;
@@ -408,6 +408,11 @@
 }
 .yom-data-grid-checkbox-cell input[type="checkbox"] {
 	margin: 0;
+}
+
+// Checkbox
+.yom-data-grid-form-cell .yom-data-grid-cell-inner {
+	padding: 2px;
 }
 
 // Clickable
