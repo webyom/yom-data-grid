@@ -420,14 +420,24 @@ function render($data, $opt) {
                             cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                             reactElement = null;
                             if (column.reactRenderer) {
-                                reactElement = column.reactRenderer(columnValue || "", i, item, columnIndex, column, isHeaderData);
+                                reactElement = column.reactRenderer(columnValue || "", i, item, {
+                                    columnIndex: columnIndex,
+                                    column: column,
+                                    isHeaderData: isHeaderData,
+                                    dataGrid: _this
+                                });
                                 if (reactElement) {
                                     _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
                                 } else {
                                     displayValue = $encodeHtml(columnValue || "");
                                 }
                             } else if (column.renderer) {
-                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
+                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                    columnIndex: columnIndex,
+                                    column: column,
+                                    isHeaderData: isHeaderData,
+                                    dataGrid: _this
+                                });
                                 if (displayValue == null) {
                                     displayValue = "";
                                 } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -441,7 +451,12 @@ function render($data, $opt) {
                                 }
                             }
                             if (column.titleRenderer) {
-                                title = column.titleRenderer(columnValue, i, item, columnIndex, column, isHeaderData);
+                                title = column.titleRenderer(columnValue, i, item, {
+                                    columnIndex: columnIndex,
+                                    column: column,
+                                    isHeaderData: isHeaderData,
+                                    dataGrid: _this
+                                });
                             } else if (typeof column.title != "undefined") {
                                 if (column.title == "__content__") {
                                     title = displayValue;
@@ -452,7 +467,12 @@ function render($data, $opt) {
                                 title = columnValue || "";
                             } else if (column.renderer) {
                                 if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
+                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                        columnIndex: columnIndex,
+                                        column: column,
+                                        isHeaderData: isHeaderData,
+                                        dataGrid: _this
+                                    });
                                     if (title == null) {
                                         title = "";
                                     }
@@ -535,14 +555,24 @@ function render($data, $opt) {
                         cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                         reactElement = null;
                         if (column.reactRenderer) {
-                            reactElement = column.reactRenderer(columnValue || "", i, item, columnIndex, column, isHeaderData);
+                            reactElement = column.reactRenderer(columnValue || "", i, item, {
+                                columnIndex: columnIndex,
+                                column: column,
+                                isHeaderData: isHeaderData,
+                                dataGrid: _this
+                            });
                             if (reactElement) {
                                 _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
                             } else {
                                 displayValue = $encodeHtml(columnValue || "");
                             }
                         } else if (column.renderer) {
-                            displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
+                            displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                columnIndex: columnIndex,
+                                column: column,
+                                isHeaderData: isHeaderData,
+                                dataGrid: _this
+                            });
                             if (displayValue == null) {
                                 displayValue = "";
                             } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -556,7 +586,12 @@ function render($data, $opt) {
                             }
                         }
                         if (column.titleRenderer) {
-                            title = column.titleRenderer(columnValue, i, item, columnIndex, column, isHeaderData);
+                            title = column.titleRenderer(columnValue, i, item, {
+                                columnIndex: columnIndex,
+                                column: column,
+                                isHeaderData: isHeaderData,
+                                dataGrid: _this
+                            });
                         } else if (typeof column.title != "undefined") {
                             if (column.title == "__content__") {
                                 title = displayValue;
@@ -567,7 +602,12 @@ function render($data, $opt) {
                             title = columnValue || "";
                         } else if (column.renderer) {
                             if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                title = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
+                                title = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                    columnIndex: columnIndex,
+                                    column: column,
+                                    isHeaderData: isHeaderData,
+                                    dataGrid: _this
+                                });
                                 if (title == null) {
                                     title = "";
                                 }
@@ -653,14 +693,24 @@ function render($data, $opt) {
                             cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                             reactElement = null;
                             if (column.reactRenderer) {
-                                reactElement = column.reactRenderer(columnValue || "", i, item, columnIndex, column, isHeaderData);
+                                reactElement = column.reactRenderer(columnValue || "", i, item, {
+                                    columnIndex: columnIndex,
+                                    column: column,
+                                    isHeaderData: isHeaderData,
+                                    dataGrid: _this
+                                });
                                 if (reactElement) {
                                     _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
                                 } else {
                                     displayValue = $encodeHtml(columnValue || "");
                                 }
                             } else if (column.renderer) {
-                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
+                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                    columnIndex: columnIndex,
+                                    column: column,
+                                    isHeaderData: isHeaderData,
+                                    dataGrid: _this
+                                });
                                 if (displayValue == null) {
                                     displayValue = "";
                                 } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -674,7 +724,12 @@ function render($data, $opt) {
                                 }
                             }
                             if (column.titleRenderer) {
-                                title = column.titleRenderer(columnValue, i, item, columnIndex, column, isHeaderData);
+                                title = column.titleRenderer(columnValue, i, item, {
+                                    columnIndex: columnIndex,
+                                    column: column,
+                                    isHeaderData: isHeaderData,
+                                    dataGrid: _this
+                                });
                             } else if (typeof column.title != "undefined") {
                                 if (column.title == "__content__") {
                                     title = displayValue;
@@ -685,7 +740,12 @@ function render($data, $opt) {
                                 title = columnValue || "";
                             } else if (column.renderer) {
                                 if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
+                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                        columnIndex: columnIndex,
+                                        column: column,
+                                        isHeaderData: isHeaderData,
+                                        dataGrid: _this
+                                    });
                                     if (title == null) {
                                         title = "";
                                     }
@@ -768,14 +828,24 @@ function render($data, $opt) {
                         cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                         reactElement = null;
                         if (column.reactRenderer) {
-                            reactElement = column.reactRenderer(columnValue || "", i, item, columnIndex, column, isHeaderData);
+                            reactElement = column.reactRenderer(columnValue || "", i, item, {
+                                columnIndex: columnIndex,
+                                column: column,
+                                isHeaderData: isHeaderData,
+                                dataGrid: _this
+                            });
                             if (reactElement) {
                                 _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
                             } else {
                                 displayValue = $encodeHtml(columnValue || "");
                             }
                         } else if (column.renderer) {
-                            displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
+                            displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                columnIndex: columnIndex,
+                                column: column,
+                                isHeaderData: isHeaderData,
+                                dataGrid: _this
+                            });
                             if (displayValue == null) {
                                 displayValue = "";
                             } else if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -789,7 +859,12 @@ function render($data, $opt) {
                             }
                         }
                         if (column.titleRenderer) {
-                            title = column.titleRenderer(columnValue, i, item, columnIndex, column, isHeaderData);
+                            title = column.titleRenderer(columnValue, i, item, {
+                                columnIndex: columnIndex,
+                                column: column,
+                                isHeaderData: isHeaderData,
+                                dataGrid: _this
+                            });
                         } else if (typeof column.title != "undefined") {
                             if (column.title == "__content__") {
                                 title = displayValue;
@@ -800,7 +875,12 @@ function render($data, $opt) {
                             title = columnValue || "";
                         } else if (column.renderer) {
                             if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                title = column.renderer($encodeHtml(columnValue || ""), i, item, columnIndex, column, isHeaderData);
+                                title = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                    columnIndex: columnIndex,
+                                    column: column,
+                                    isHeaderData: isHeaderData,
+                                    dataGrid: _this
+                                });
                                 if (title == null) {
                                     title = "";
                                 }
@@ -2044,7 +2124,10 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	getData: function() {
-		return this._data;
+		return {
+			data: this._data,
+			headerData: this._headerData
+		};
 	},
 
 	getDataByRowIndex: function(rowIndex, dataProperty, columnId) {

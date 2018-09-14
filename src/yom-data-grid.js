@@ -908,7 +908,10 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	getData: function() {
-		return this._data;
+		return {
+			data: this._data,
+			headerData: this._headerData
+		};
 	},
 
 	getDataByRowIndex: function(rowIndex, dataProperty, columnId) {
