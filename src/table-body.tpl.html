@@ -31,14 +31,14 @@ if(renderData.length) {
 				cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
 				reactElement = null;
 				if(column.reactRenderer) {
-					reactElement = column.reactRenderer(columnValue || '', i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData, dataGrid: _this});
+					reactElement = column.reactRenderer.call(_this, columnValue || '', i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData});
 					if(reactElement) {
 						_this._tmp[isHeaderData ? 'headerReactElements' : 'reactElements'][i][columnIndex] = reactElement;
 					} else {
 						displayValue = $encodeHtml(columnValue || '');
 					}
 				} else if(column.renderer) {
-					displayValue = column.renderer($encodeHtml(columnValue || ''), i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData, dataGrid: _this});
+					displayValue = column.renderer.call(_this, $encodeHtml(columnValue || ''), i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData});
 					if(displayValue == null) {
 						displayValue = '';
 					} else if(cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
@@ -52,7 +52,7 @@ if(renderData.length) {
 					}
 				}
 				if(column.titleRenderer) {
-					title = column.titleRenderer(columnValue, i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData, dataGrid: _this});
+					title = column.titleRenderer.call(_this, columnValue, i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData});
 				} else if(typeof column.title != 'undefined') {
 					if(column.title == '__content__') {
 						title = displayValue;
@@ -63,7 +63,7 @@ if(renderData.length) {
 					title = columnValue || '';
 				} else if(column.renderer) {
 					if(cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-						title = column.renderer($encodeHtml(columnValue || ''), i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData, dataGrid: _this});
+						title = column.renderer.call(_this, $encodeHtml(columnValue || ''), i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData});
 						if(title == null) {
 							title = '';
 						}

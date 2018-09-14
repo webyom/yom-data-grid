@@ -290,7 +290,7 @@ function render($data, $opt) {
                     columnHeader += '<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="' + i18n.clearFilterCriteria + '"><i class="fa fa-filter icon-filter"></i><i class="fa fa-remove icon-remove"></i></a>';
                 }
                 if (column.headerRenderer) {
-                    columnHeader += "" + column.headerRenderer(column.name, i, column, sortColumnId, sortOrder) + "";
+                    columnHeader += "" + column.headerRenderer.call(_this, column.name, i, column, sortColumnId, sortOrder) + "";
                 } else if (column.sortable && opt.sortable !== false) {
                     columnHeader += '<a class="yom-data-grid-sortable" href="javascript:void(0);" onclick="return false" title="' + $encodeHtml(column.name) + '">' + column.name + "" + (sortColumnId == column.id ? sortOrder == "desc" ? '<span class="yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow-up"></span>' : "") + "</a>";
                 } else {
@@ -338,7 +338,7 @@ function render($data, $opt) {
                     columnHeader += '<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="' + i18n.clearFilterCriteria + '"><i class="fa fa-filter icon-filter"></i><i class="fa fa-remove icon-remove"></i></a>';
                 }
                 if (column.headerRenderer) {
-                    columnHeader += "" + column.headerRenderer(column.name, i, column, sortColumnId, sortOrder) + "";
+                    columnHeader += "" + column.headerRenderer.call(_this, column.name, i, column, sortColumnId, sortOrder) + "";
                 } else if (column.sortable && opt.sortable !== false) {
                     columnHeader += '<a class="yom-data-grid-sortable" href="javascript:void(0);" onclick="return false" title="' + $encodeHtml(column.name) + '">' + column.name + "" + (sortColumnId == column.id ? sortOrder == "desc" ? '<span class="yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow-up"></span>' : "") + "</a>";
                 } else {
@@ -420,11 +420,10 @@ function render($data, $opt) {
                             cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                             reactElement = null;
                             if (column.reactRenderer) {
-                                reactElement = column.reactRenderer(columnValue || "", i, item, {
+                                reactElement = column.reactRenderer.call(_this, columnValue || "", i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
-                                    isHeaderData: isHeaderData,
-                                    dataGrid: _this
+                                    isHeaderData: isHeaderData
                                 });
                                 if (reactElement) {
                                     _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
@@ -432,11 +431,10 @@ function render($data, $opt) {
                                     displayValue = $encodeHtml(columnValue || "");
                                 }
                             } else if (column.renderer) {
-                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                displayValue = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
-                                    isHeaderData: isHeaderData,
-                                    dataGrid: _this
+                                    isHeaderData: isHeaderData
                                 });
                                 if (displayValue == null) {
                                     displayValue = "";
@@ -451,11 +449,10 @@ function render($data, $opt) {
                                 }
                             }
                             if (column.titleRenderer) {
-                                title = column.titleRenderer(columnValue, i, item, {
+                                title = column.titleRenderer.call(_this, columnValue, i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
-                                    isHeaderData: isHeaderData,
-                                    dataGrid: _this
+                                    isHeaderData: isHeaderData
                                 });
                             } else if (typeof column.title != "undefined") {
                                 if (column.title == "__content__") {
@@ -467,11 +464,10 @@ function render($data, $opt) {
                                 title = columnValue || "";
                             } else if (column.renderer) {
                                 if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                    title = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                         columnIndex: columnIndex,
                                         column: column,
-                                        isHeaderData: isHeaderData,
-                                        dataGrid: _this
+                                        isHeaderData: isHeaderData
                                     });
                                     if (title == null) {
                                         title = "";
@@ -555,11 +551,10 @@ function render($data, $opt) {
                         cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                         reactElement = null;
                         if (column.reactRenderer) {
-                            reactElement = column.reactRenderer(columnValue || "", i, item, {
+                            reactElement = column.reactRenderer.call(_this, columnValue || "", i, item, {
                                 columnIndex: columnIndex,
                                 column: column,
-                                isHeaderData: isHeaderData,
-                                dataGrid: _this
+                                isHeaderData: isHeaderData
                             });
                             if (reactElement) {
                                 _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
@@ -567,11 +562,10 @@ function render($data, $opt) {
                                 displayValue = $encodeHtml(columnValue || "");
                             }
                         } else if (column.renderer) {
-                            displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                            displayValue = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                 columnIndex: columnIndex,
                                 column: column,
-                                isHeaderData: isHeaderData,
-                                dataGrid: _this
+                                isHeaderData: isHeaderData
                             });
                             if (displayValue == null) {
                                 displayValue = "";
@@ -586,11 +580,10 @@ function render($data, $opt) {
                             }
                         }
                         if (column.titleRenderer) {
-                            title = column.titleRenderer(columnValue, i, item, {
+                            title = column.titleRenderer.call(_this, columnValue, i, item, {
                                 columnIndex: columnIndex,
                                 column: column,
-                                isHeaderData: isHeaderData,
-                                dataGrid: _this
+                                isHeaderData: isHeaderData
                             });
                         } else if (typeof column.title != "undefined") {
                             if (column.title == "__content__") {
@@ -602,11 +595,10 @@ function render($data, $opt) {
                             title = columnValue || "";
                         } else if (column.renderer) {
                             if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                title = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                title = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
-                                    isHeaderData: isHeaderData,
-                                    dataGrid: _this
+                                    isHeaderData: isHeaderData
                                 });
                                 if (title == null) {
                                     title = "";
@@ -693,11 +685,10 @@ function render($data, $opt) {
                             cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                             reactElement = null;
                             if (column.reactRenderer) {
-                                reactElement = column.reactRenderer(columnValue || "", i, item, {
+                                reactElement = column.reactRenderer.call(_this, columnValue || "", i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
-                                    isHeaderData: isHeaderData,
-                                    dataGrid: _this
+                                    isHeaderData: isHeaderData
                                 });
                                 if (reactElement) {
                                     _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
@@ -705,11 +696,10 @@ function render($data, $opt) {
                                     displayValue = $encodeHtml(columnValue || "");
                                 }
                             } else if (column.renderer) {
-                                displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                displayValue = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
-                                    isHeaderData: isHeaderData,
-                                    dataGrid: _this
+                                    isHeaderData: isHeaderData
                                 });
                                 if (displayValue == null) {
                                     displayValue = "";
@@ -724,11 +714,10 @@ function render($data, $opt) {
                                 }
                             }
                             if (column.titleRenderer) {
-                                title = column.titleRenderer(columnValue, i, item, {
+                                title = column.titleRenderer.call(_this, columnValue, i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
-                                    isHeaderData: isHeaderData,
-                                    dataGrid: _this
+                                    isHeaderData: isHeaderData
                                 });
                             } else if (typeof column.title != "undefined") {
                                 if (column.title == "__content__") {
@@ -740,11 +729,10 @@ function render($data, $opt) {
                                 title = columnValue || "";
                             } else if (column.renderer) {
                                 if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                    title = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                    title = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                         columnIndex: columnIndex,
                                         column: column,
-                                        isHeaderData: isHeaderData,
-                                        dataGrid: _this
+                                        isHeaderData: isHeaderData
                                     });
                                     if (title == null) {
                                         title = "";
@@ -828,11 +816,10 @@ function render($data, $opt) {
                         cellClickable = opt.getCellClickable ? opt.getCellClickable(i, item, column.id, column, isHeaderData) : !isHeaderData;
                         reactElement = null;
                         if (column.reactRenderer) {
-                            reactElement = column.reactRenderer(columnValue || "", i, item, {
+                            reactElement = column.reactRenderer.call(_this, columnValue || "", i, item, {
                                 columnIndex: columnIndex,
                                 column: column,
-                                isHeaderData: isHeaderData,
-                                dataGrid: _this
+                                isHeaderData: isHeaderData
                             });
                             if (reactElement) {
                                 _this._tmp[isHeaderData ? "headerReactElements" : "reactElements"][i][columnIndex] = reactElement;
@@ -840,11 +827,10 @@ function render($data, $opt) {
                                 displayValue = $encodeHtml(columnValue || "");
                             }
                         } else if (column.renderer) {
-                            displayValue = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                            displayValue = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                 columnIndex: columnIndex,
                                 column: column,
-                                isHeaderData: isHeaderData,
-                                dataGrid: _this
+                                isHeaderData: isHeaderData
                             });
                             if (displayValue == null) {
                                 displayValue = "";
@@ -859,11 +845,10 @@ function render($data, $opt) {
                             }
                         }
                         if (column.titleRenderer) {
-                            title = column.titleRenderer(columnValue, i, item, {
+                            title = column.titleRenderer.call(_this, columnValue, i, item, {
                                 columnIndex: columnIndex,
                                 column: column,
-                                isHeaderData: isHeaderData,
-                                dataGrid: _this
+                                isHeaderData: isHeaderData
                             });
                         } else if (typeof column.title != "undefined") {
                             if (column.title == "__content__") {
@@ -875,11 +860,10 @@ function render($data, $opt) {
                             title = columnValue || "";
                         } else if (column.renderer) {
                             if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
-                                title = column.renderer($encodeHtml(columnValue || ""), i, item, {
+                                title = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
-                                    isHeaderData: isHeaderData,
-                                    dataGrid: _this
+                                    isHeaderData: isHeaderData
                                 });
                                 if (title == null) {
                                     title = "";
