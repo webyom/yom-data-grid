@@ -383,6 +383,7 @@ function render($data, $opt) {
     _$out_ += '<div class="yom-data-grid-setting-panel"></div><div class="yom-data-grid ' + (lockedDisplayColumns.length ? "yom-data-grid-locked" : "") + " " + (bordered ? "yom-data-grid-bordered" : "") + " " + (bordered == "h" || bordered == "v" ? "yom-data-grid-bordered-" + bordered : "") + " " + (striped ? "yom-data-grid-striped" : "") + " " + (headerData.length > 0 ? "yom-data-grid-header-rows-" + headerData.length : "") + '" style="overflow: hidden;"><table border="0" cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;"><tr>';
     if (lockedDisplayColumns.length) {
         _$out_ += '<td class="yom-data-grid-columns-container" style="width: ' + lockedTableWidth + 'px;"><div class="yom-data-grid-locked-columns" style="width: ' + lockedTableWidth + 'px; overflow: hidden;"><div class="yom-data-grid-header"><table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: ' + lockedTableWidth + 'px;">' + lockedColumnWidth + "<tbody><tr>" + lockedColumnHeader + "</tr>";
+        isPrevOdd = false;
         if (headerData.length) {
             columnOffset = 0;
             columns = lockedDisplayColumns;
@@ -648,6 +649,7 @@ function render($data, $opt) {
     }
     if (scrollDisplayColumns.length) {
         _$out_ += '<td class="yom-data-grid-columns-container"><div class="yom-data-grid-columns" style="left: ' + lockedTableWidth + 'px;"><div class="yom-data-grid-header" style="width: 100%;"><table class="yom-data-grid-table" border="0" cellspacing="0" cellpadding="0" style="width: ' + (width > lockedTableWidth ? width - lockedTableWidth + "px" : "100%") + ';">' + scrollColumnWidth + "<tbody><tr>" + scrollColumnHeader + "</tr>";
+        isPrevOdd = false;
         if (headerData.length) {
             columnOffset = lockedDisplayColumns.length;
             columns = scrollDisplayColumns;
