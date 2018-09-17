@@ -1,6 +1,7 @@
 // Variables
 @yom-data-grid-border-color: #ccc;
 @gray-dark: #555;
+@primary-color: #238bfa;
 @font-size-base: 14px;
 @line-height-base: 20px;
 @header-row-height: 39px;
@@ -170,23 +171,39 @@
 // Sortable
 .yom-data-grid-sortable, .yom-data-grid-sortable:hover {
 	color: @gray-dark;
-	text-decoration: underline;
+	text-decoration: none;
 }
-.yom-data-grid-sort-arrow-down, .yom-data-grid-sort-arrow-up {
+.yom-data-grid-sort-arrow {
 	display: inline-block;
+	width: 8px;
+	height: 10px;
+	vertical-align: middle;
+	margin-left: 3px;
+	position: relative;
+}
+.yom-data-grid-sort-arrow:before, .yom-data-grid-sort-arrow:after {
+	display: block;
 	width: 0;
 	height: 0;
-	vertical-align: middle;
 	border-right: 4px solid transparent;
 	border-left: 4px solid transparent;
 	content: "";
-	margin-left: 3px;
+	position: absolute;
+	left: 0;
 }
-.yom-data-grid-sort-arrow-down {
+.yom-data-grid-sort-arrow:before {
+	bottom: 0;
 	border-top: 4px solid @gray-dark;
 }
-.yom-data-grid-sort-arrow-up {
+.yom-data-grid-sort-arrow:after {
+	top: 0;
 	border-bottom: 4px solid @gray-dark;
+}
+.yom-data-grid-sort-arrow-down:before {
+	border-top: 4px solid @primary-color;
+}
+.yom-data-grid-sort-arrow-up:after {
+	border-bottom: 4px solid @primary-color;
 }
 
 // Filterable

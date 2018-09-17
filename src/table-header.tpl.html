@@ -31,7 +31,7 @@ var filterable = column.filterable && opt.filterable !== false;
 				<%} else if(column.sortable && opt.sortable !== false) {->columnHeader%>
 					<a class="yom-data-grid-sortable" href="javascript:void(0);" onclick="return false" title="<%==column.name%>">
 						<%=column.name%>
-						<%=sortColumnId == column.id ? (sortOrder == 'desc' ? '<span class="yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow-up"></span>') : ''%>
+						<%=sortColumnId == column.id ? (sortOrder == 'desc' ? '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-up"></span>') : '<span class="yom-data-grid-sort-arrow"></span>'%>
 					</a>
 				<%} else {->columnHeader%>
 					<span title="<%==column.name%>"><%=column.name%></span>
