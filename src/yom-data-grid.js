@@ -533,58 +533,47 @@ $.extend(YomDataGrid.prototype, {
 				self._rowClickToRef = null;
 				var columnId = $(target).closest('[data-grid-column-id]').attr('data-grid-column-id');
 				var column = self.getColumnById(columnId);
-				var rowIndex = $(target).closest('[data-grid-row]').attr('data-grid-row');
-				var headerRowIndex, item;
+				var rowIndex = +$(target).closest('[data-grid-row]').attr('data-grid-row');
+				var isHeaderRow = false, item;
 				if(rowIndex >= 0) {
 					item = self._data[rowIndex];
 				} else {
-					headerRowIndex = $(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
+					isHeaderRow = true;
+					rowIndex = +$(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
 					item = self._headerData[headerRowIndex];
 				}
 				if(cellClickable) {
 					if(column.onClick) {
-						column.onClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
+						column.onClick(evt, rowIndex, item, columnId, column, isHeaderRow);
 					} else if(self._opt.onCellClick) {
-						self._opt.onCellClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
+						self._opt.onCellClick(evt, rowIndex, item, columnId, column, isHeaderRow);
 					} else if(self._opt.onRowClick) {
-						self._opt.onRowClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
+						self._opt.onRowClick(evt, rowIndex, item, columnId, column, isHeaderRow);
 					}
 				} else {
-					self._opt.onRowClick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
+					self._opt.onRowClick(evt, rowIndex, item, columnId, column, isHeaderRow);
 				}
 			}, self._opt.onRowDblclick ? 300 : 0);
-		}).delegate('.yom-data-grid-row-clickable', 'dblclick', function(evt) {
-			var cellClickable = $(evt.currentTarget).hasClass('yom-data-grid-cell-clickable');
+		}).delegate('.yom-data-grid-row-dblclickable', 'dblclick', function(evt) {
 			var target = evt.target;
-			if(!cellClickable) {
-				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell, .yom-data-grid-form-cell').length === 0;
-				if(!clickable || !self._opt.onRowDblclick) {
-					return;
-				}
+			var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell, .yom-data-grid-form-cell').length === 0;
+			if(!clickable || !self._opt.onRowDblclick) {
+				return;
 			}
 			clearTimeout(self._rowClickToRef);
 			self._rowClickToRef = null;
 			var columnId = $(target).closest('[data-grid-column-id]').attr('data-grid-column-id');
 			var column = self.getColumnById(columnId);
-			var rowIndex = $(target).closest('[data-grid-row]').attr('data-grid-row');
-			var headerRowIndex, item;
+			var rowIndex = +$(target).closest('[data-grid-row]').attr('data-grid-row');
+			var isHeaderRow = false, item;
 			if(rowIndex >= 0) {
 				item = self._data[rowIndex];
 			} else {
-				headerRowIndex = $(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
+				isHeaderRow = true;
+				rowIndex = +$(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
 				item = self._headerData[headerRowIndex];
 			}
-			if(cellClickable) {
-				if(column.onDblclick) {
-					column.onDblclick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
-				} else if(self._opt.onCellDblclick) {
-					self._opt.onCellDblclick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
-				} else if(self._opt.onRowDblclick) {
-					self._opt.onRowDblclick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
-				}
-			} else {
-				self._opt.onRowDblclick(evt, rowIndex, item, columnId, column, !!headerRowIndex);
-			}
+			self._opt.onRowDblclick(evt, rowIndex, item, columnId, column, isHeaderRow);
 		});
 		this._filterPanel.delegate('[name="findEmpty"]', 'click', function(evt) {
 			if(evt.target.checked) {
