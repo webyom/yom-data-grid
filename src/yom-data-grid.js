@@ -171,7 +171,9 @@ $.extend(YomDataGrid.prototype, {
 			}
 			scrollBody.scrollTop = top;
 			this._scrollTop = top;
-			(scrollBody.scrollHeight == scrollBody.clientHeight) || evt.preventDefault();
+			if(y > 0 && scrollBody.clientHeight + top < scrollBody.scrollHeight || y < 0 && top > 0) {
+				evt.preventDefault();
+			}
 		}
 	},
 
