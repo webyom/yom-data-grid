@@ -1484,6 +1484,8 @@ $.extend(YomDataGrid.prototype, {
 			box.data('autoComplete', null);
 		}
 
+		$('[name="value"]', this._filterPanel).off('paste');
+
 		this._filterPanel.hide();
 		this._activeFilterColumn = null;
 	},
@@ -2071,6 +2073,24 @@ $.extend(YomDataGrid.prototype, {
 					date.setSeconds(59);
 					date.setMilliseconds(999);
 					dateToDom.attr('data-value', date.getTime());
+				});
+			} else {
+				$('[name="value"]', self._filterPanel).on('paste', function(evt) {
+					var text = '';
+					try {
+						text = evt.originalEvent.clipboardData.getData('text');
+					} catch(e) {}
+					var newText = text.trim().replace(/[\r\n]+/g, ',');
+					var input = this;
+					var oldValue = input.value.trim();
+					var prefix = oldValue.slice(0, this.selectionStart);
+					var postfix = oldValue.slice(this.selectionEnd);
+					if(text != newText) {
+						setTimeout(function() {
+							input.value = prefix + newText + postfix;
+							input.selectionStart = input.selectionEnd = (prefix + newText).length;
+						}, 0);
+					}
 				});
 			}
 			self._filterPanel.find('form').on('submit', function(evt) {
