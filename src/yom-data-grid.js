@@ -1207,7 +1207,10 @@ $.extend(YomDataGrid.prototype, {
 							filterCriteria.displayValue = displayValue.join(', ');
 						} else if(filterOption.type == 'number') {
 							var compareType = parts.shift();
-							value = parseFloat(parts.shift()) || '';
+							value = parseFloat(parts.shift());
+							if(isNaN(value)) {
+								value = '';
+							}
 							filterCriteria.compareType = compareType;
 							filterCriteria.value = value;
 							filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + value;
