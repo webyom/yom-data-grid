@@ -111,7 +111,7 @@ function render($data, $opt) {
         if (filterOption.autoComplete) {
             _$out_ += '<div class="form-group"><input type="text" value="" class="form-control auto-complete-box" /></div>';
         } else {
-            _$out_ += '<div class="set-container">';
+            _$out_ += "" + i18n.all + ' <a class="btn-check-all" href="javascript:;">' + i18n.check + '</a> / <a class="btn-uncheck-all" href="javascript:;">' + i18n.uncheck + '</a><div class="set-container">';
             for (var i = 0, l = options.length; i < l; i++) {
                 var option = options[i];
                 var value = option.value, name = option.name;
@@ -132,7 +132,7 @@ function render($data, $opt) {
     }
     _$out_ += '<div class="row"><div class="col-xs-8"><button type="submit" class="btn btn-primary btn-sm btn-confirm">' + i18n.ok + '</button><button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-filter-panel">' + i18n.cancel + '</button></div><div class="col-xs-4 text-right">';
     if (filterMap[column.id]) {
-        _$out_ += '<a class="btn btn-remove" href="javascript:void(0);">' + i18n.clear + "</a>";
+        _$out_ += '<a class="btn btn-link btn-remove" href="javascript:void(0);">' + i18n.clear + "</a>";
     }
     _$out_ += "</div></div></form></div>";
     return _$out_;
@@ -1020,6 +1020,9 @@ module.exports = {
 		ok: 'Ok',
 		cancel: 'Cancel',
 
+		all: 'All',
+		check: 'Check',
+		uncheck: 'Uncheck',
 		displayAll: 'Display All',
 		filter: 'Filter',
 		clear: 'Clear',
@@ -1051,6 +1054,9 @@ module.exports = {
 		ok: '确定',
 		cancel: '取消',
 
+		all: '全部',
+		check: '选择',
+		uncheck: '取消选择',
 		displayAll: '全部显示',
 		filter: '筛选',
 		clear: '清除',
@@ -1791,6 +1797,14 @@ $.extend(YomDataGrid.prototype, {
 			var ele = $(this).closest('[data-column-id]');
 			var columnId = ele.attr('data-column-id');
 			self._removeFilter(columnId);
+		}).delegate('.btn-check-all', 'click', function(evt) {
+			$('.set-container input', self._filterPanel).each(function(i, item) {
+				item.checked = true;
+			});
+		}).delegate('.btn-uncheck-all', 'click', function(evt) {
+			$('.set-container input', self._filterPanel).each(function(i, item) {
+				item.checked = false;
+			});
 		});
 		if(this._opt.hightLightRow) {
 			this._container.delegate('[data-grid-row]', 'mouseenter', function(evt) {

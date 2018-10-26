@@ -31,6 +31,7 @@ var type = filterOption.type;
 			<%
 				} else {
 			%>
+					<%=i18n.all%> <a class="btn-check-all" href="javascript:;"><%=i18n.check%></a> / <a class="btn-uncheck-all" href="javascript:;"><%=i18n.uncheck%></a>
 					<div class="set-container">
 						<%
 						for(var i = 0, l = options.length; i < l; i++) {
@@ -95,7 +96,7 @@ var type = filterOption.type;
 			</div>
 			<div class="col-xs-4 text-right">
 				<%if(filterMap[column.id]) {%>
-					<a class="btn btn-remove" href="javascript:void(0);"><%=i18n.clear%></a>
+					<a class="btn btn-link btn-remove" href="javascript:void(0);"><%=i18n.clear%></a>
 				<%}%>
 			</div>
 		</div>

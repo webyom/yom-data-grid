@@ -589,6 +589,14 @@ $.extend(YomDataGrid.prototype, {
 			var ele = $(this).closest('[data-column-id]');
 			var columnId = ele.attr('data-column-id');
 			self._removeFilter(columnId);
+		}).delegate('.btn-check-all', 'click', function(evt) {
+			$('.set-container input', self._filterPanel).each(function(i, item) {
+				item.checked = true;
+			});
+		}).delegate('.btn-uncheck-all', 'click', function(evt) {
+			$('.set-container input', self._filterPanel).each(function(i, item) {
+				item.checked = false;
+			});
 		});
 		if(this._opt.hightLightRow) {
 			this._container.delegate('[data-grid-row]', 'mouseenter', function(evt) {
