@@ -16,7 +16,7 @@ if(renderData.length) {
 		_this._tmp.reactElements[i] = _this._tmp.reactElements[i] || [];
 		_this._tmp.headerReactElements[i] = _this._tmp.headerReactElements[i] || [];
 	%>
-		<tr data-grid-<%=isHeaderData ? 'header-row' : 'row'%>="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=isOdd ? 'yom-data-grid-row-odd' : ''%> <%=rowClickable && opt.onRowClick ? 'yom-data-grid-row-clickable' : ''%> <%=rowClickable && opt.onRowDblclick ? 'yom-data-grid-row-dblclickable' : ''%> <%=opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : ''%> <%=selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? 'yom-data-grid-row-checked' : ''%>">
+		<tr data-grid-<%=isHeaderData ? 'header-row' : 'row'%>="<%=i%>" class="<%=i == l - 1 ? 'yom-data-grid-last-row' : ''%> <%=isOdd ? 'yom-data-grid-row-odd' : ''%> <%=rowClickable && opt.onRowClick ? 'yom-data-grid-row-clickable' : ''%> <%=opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : ''%> <%=selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? 'yom-data-grid-row-checked' : ''%>">
 			<%for(j = 0, l2 = columns.length; j < l2; j++) {
 				columnIndex = j + columnOffset;
 				column = columns[j];
@@ -62,7 +62,7 @@ if(renderData.length) {
 				} else if(column.reactRenderer) {
 					title = columnValue || '';
 				} else if(column.renderer) {
-					if(cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+					if(cellClickable && (column.clickable || column.onClick)) {
 						title = column.renderer.call(_this, $encodeHtml(columnValue || ''), i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData});
 						if(title == null) {
 							title = '';

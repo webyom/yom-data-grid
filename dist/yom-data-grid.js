@@ -406,7 +406,7 @@ function render($data, $opt) {
                         rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
                         _this._tmp.reactElements[i] = _this._tmp.reactElements[i] || [];
                         _this._tmp.headerReactElements[i] = _this._tmp.headerReactElements[i] || [];
-                        _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (rowClickable && opt.onRowDblclick ? "yom-data-grid-row-dblclickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+                        _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                         for (j = 0, l2 = columns.length; j < l2; j++) {
                             columnIndex = j + columnOffset;
                             column = columns[j];
@@ -464,7 +464,7 @@ function render($data, $opt) {
                             } else if (column.reactRenderer) {
                                 title = columnValue || "";
                             } else if (column.renderer) {
-                                if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                if (cellClickable && (column.clickable || column.onClick)) {
                                     title = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                         columnIndex: columnIndex,
                                         column: column,
@@ -537,7 +537,7 @@ function render($data, $opt) {
                     rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
                     _this._tmp.reactElements[i] = _this._tmp.reactElements[i] || [];
                     _this._tmp.headerReactElements[i] = _this._tmp.headerReactElements[i] || [];
-                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (rowClickable && opt.onRowDblclick ? "yom-data-grid-row-dblclickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                     for (j = 0, l2 = columns.length; j < l2; j++) {
                         columnIndex = j + columnOffset;
                         column = columns[j];
@@ -595,7 +595,7 @@ function render($data, $opt) {
                         } else if (column.reactRenderer) {
                             title = columnValue || "";
                         } else if (column.renderer) {
-                            if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                            if (cellClickable && (column.clickable || column.onClick)) {
                                 title = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
@@ -672,7 +672,7 @@ function render($data, $opt) {
                         rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
                         _this._tmp.reactElements[i] = _this._tmp.reactElements[i] || [];
                         _this._tmp.headerReactElements[i] = _this._tmp.headerReactElements[i] || [];
-                        _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (rowClickable && opt.onRowDblclick ? "yom-data-grid-row-dblclickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+                        _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                         for (j = 0, l2 = columns.length; j < l2; j++) {
                             columnIndex = j + columnOffset;
                             column = columns[j];
@@ -730,7 +730,7 @@ function render($data, $opt) {
                             } else if (column.reactRenderer) {
                                 title = columnValue || "";
                             } else if (column.renderer) {
-                                if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                                if (cellClickable && (column.clickable || column.onClick)) {
                                     title = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                         columnIndex: columnIndex,
                                         column: column,
@@ -803,7 +803,7 @@ function render($data, $opt) {
                     rowClickable = opt.getRowClickable ? opt.getRowClickable(i, item, isHeaderData) : !isHeaderData;
                     _this._tmp.reactElements[i] = _this._tmp.reactElements[i] || [];
                     _this._tmp.headerReactElements[i] = _this._tmp.headerReactElements[i] || [];
-                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (rowClickable && opt.onRowDblclick ? "yom-data-grid-row-dblclickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
+                    _$out_ += "<tr data-grid-" + (isHeaderData ? "header-row" : "row") + '="' + i + '" class="' + (i == l - 1 ? "yom-data-grid-last-row" : "") + " " + (isOdd ? "yom-data-grid-row-odd" : "") + " " + (rowClickable && opt.onRowClick ? "yom-data-grid-row-clickable" : "") + " " + (opt.getRowClassName ? opt.getRowClassName(i, item, isHeaderData) : "") + " " + (selectedIndex.length && selectedIndex.indexOf(i) >= 0 ? "yom-data-grid-row-checked" : "") + '">';
                     for (j = 0, l2 = columns.length; j < l2; j++) {
                         columnIndex = j + columnOffset;
                         column = columns[j];
@@ -861,7 +861,7 @@ function render($data, $opt) {
                         } else if (column.reactRenderer) {
                             title = columnValue || "";
                         } else if (column.renderer) {
-                            if (cellClickable && (column.clickable || column.onClick || column.onDblclick)) {
+                            if (cellClickable && (column.clickable || column.onClick)) {
                                 title = column.renderer.call(_this, $encodeHtml(columnValue || ""), i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
@@ -1254,6 +1254,8 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._columnSequence = [];
 	this._hiddenColumns = [];
 
+	this._lastRowMousedownPos = [0, 0];
+	this._lastRowClickTime = 0;
 	this._rowClickToRef = null;
 
 	this._bind = {
@@ -1728,21 +1730,25 @@ $.extend(YomDataGrid.prototype, {
 			if(self._opt.onSelect) {
 				self._opt.onSelect(rowIndex, checked, rowIndex >= 0 && self._data[rowIndex] || undefined, allChecked);
 			}
+		}).delegate('.yom-data-grid-row-clickable, .yom-data-grid-cell-clickable', 'mousedown', function(evt) {
+			self._lastRowMousedownPos = [evt.pageX, evt.pageY];
 		}).delegate('.yom-data-grid-row-clickable, .yom-data-grid-cell-clickable', 'click', function(evt) {
+			clearTimeout(self._rowClickToRef);
+			var rowClickTime = new Date().getTime();
+			if(rowClickTime - self._lastRowClickTime < 300 || Math.abs(evt.pageX - self._lastRowMousedownPos[0]) > 3 || Math.abs(evt.pageY - self._lastRowMousedownPos[1]) > 3) {
+				self._lastRowClickTime = rowClickTime;
+				return;
+			}
+			self._lastRowClickTime = rowClickTime;
 			var cellClickable = $(evt.currentTarget).hasClass('yom-data-grid-cell-clickable');
 			var target = evt.target;
-			if(cellClickable) {
-				if(self._rowClickToRef != null) {
-					return;
-				}
-			} else {
+			if(!cellClickable) {
 				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell, .yom-data-grid-form-cell').length === 0;
-				if(!clickable || !self._opt.onRowClick || self._rowClickToRef != null) {
+				if(!clickable || !self._opt.onRowClick) {
 					return;
 				}
 			}
 			self._rowClickToRef = setTimeout(function() {
-				self._rowClickToRef = null;
 				var columnId = $(target).closest('[data-grid-column-id]').attr('data-grid-column-id');
 				var column = self.getColumnById(columnId);
 				var rowIndex = +$(target).closest('[data-grid-row]').attr('data-grid-row');
@@ -1765,27 +1771,7 @@ $.extend(YomDataGrid.prototype, {
 				} else {
 					self._opt.onRowClick(evt, rowIndex, item, columnId, column, isHeaderRow);
 				}
-			}, self._opt.onRowDblclick ? 300 : 0);
-		}).delegate('.yom-data-grid-row-dblclickable', 'dblclick', function(evt) {
-			var target = evt.target;
-			var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell, .yom-data-grid-form-cell').length === 0;
-			if(!clickable || !self._opt.onRowDblclick) {
-				return;
-			}
-			clearTimeout(self._rowClickToRef);
-			self._rowClickToRef = null;
-			var columnId = $(target).closest('[data-grid-column-id]').attr('data-grid-column-id');
-			var column = self.getColumnById(columnId);
-			var rowIndex = +$(target).closest('[data-grid-row]').attr('data-grid-row');
-			var isHeaderRow = false, item;
-			if(rowIndex >= 0) {
-				item = self._data[rowIndex];
-			} else {
-				isHeaderRow = true;
-				rowIndex = +$(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
-				item = self._headerData[headerRowIndex];
-			}
-			self._opt.onRowDblclick(evt, rowIndex, item, columnId, column, isHeaderRow);
+			}, 300);
 		});
 		this._filterPanel.delegate('[name="findEmpty"]', 'click', function(evt) {
 			if(evt.target.checked) {
