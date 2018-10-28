@@ -1732,21 +1732,40 @@ $.extend(YomDataGrid.prototype, {
 			}
 		}).delegate('.yom-data-grid-row-clickable, .yom-data-grid-cell-clickable', 'mousedown', function(evt) {
 			self._lastRowMousedownPos = [evt.pageX, evt.pageY];
-		}).delegate('.yom-data-grid-row-clickable, .yom-data-grid-cell-clickable', 'click', function(evt) {
-			clearTimeout(self._rowClickToRef);
+		}).delegate('.yom-data-grid-cell-clickable', 'click', function(evt) {
+			var target = evt.target;
 			var rowClickTime = new Date().getTime();
-			if(rowClickTime - self._lastRowClickTime < 300 || Math.abs(evt.pageX - self._lastRowMousedownPos[0]) > 3 || Math.abs(evt.pageY - self._lastRowMousedownPos[1]) > 3) {
-				self._lastRowClickTime = rowClickTime;
+			self._lastRowClickTime = rowClickTime;
+			var columnId = $(target).closest('[data-grid-column-id]').attr('data-grid-column-id');
+			var column = self.getColumnById(columnId);
+			var rowIndex = +$(target).closest('[data-grid-row]').attr('data-grid-row');
+			var isHeaderRow = false, item;
+			if(rowIndex >= 0) {
+				item = self._data[rowIndex];
+			} else {
+				isHeaderRow = true;
+				rowIndex = +$(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
+				item = self._headerData[headerRowIndex];
+			}
+			if(column.onClick) {
+				column.onClick(evt, rowIndex, item, columnId, column, isHeaderRow);
+			} else if(self._opt.onCellClick) {
+				self._opt.onCellClick(evt, rowIndex, item, columnId, column, isHeaderRow);
+			} else if(self._opt.onRowClick) {
+				self._opt.onRowClick(evt, rowIndex, item, columnId, column, isHeaderRow);
+			}
+		}).delegate('.yom-data-grid-row-clickable', 'click', function(evt) {
+			clearTimeout(self._rowClickToRef);
+			var target = evt.target;
+			var rowClickTime = new Date().getTime();
+			var lastRowClickTime = self._lastRowClickTime;
+			self._lastRowClickTime = rowClickTime;
+			if(rowClickTime - lastRowClickTime < 300 || Math.abs(evt.pageX - self._lastRowMousedownPos[0]) > 3 || Math.abs(evt.pageY - self._lastRowMousedownPos[1]) > 3) {
 				return;
 			}
-			self._lastRowClickTime = rowClickTime;
-			var cellClickable = $(evt.currentTarget).hasClass('yom-data-grid-cell-clickable');
-			var target = evt.target;
-			if(!cellClickable) {
-				var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell, .yom-data-grid-form-cell').length === 0;
-				if(!clickable || !self._opt.onRowClick) {
-					return;
-				}
+			var clickable = $(target).closest('.yom-data-grid-sequence-cell, .yom-data-grid-checkbox-cell, .yom-data-grid-form-cell').length === 0;
+			if(!clickable || !self._opt.onRowClick) {
+				return;
 			}
 			self._rowClickToRef = setTimeout(function() {
 				var columnId = $(target).closest('[data-grid-column-id]').attr('data-grid-column-id');
@@ -1760,17 +1779,7 @@ $.extend(YomDataGrid.prototype, {
 					rowIndex = +$(target).closest('[data-grid-header-row]').attr('data-grid-header-row');
 					item = self._headerData[headerRowIndex];
 				}
-				if(cellClickable) {
-					if(column.onClick) {
-						column.onClick(evt, rowIndex, item, columnId, column, isHeaderRow);
-					} else if(self._opt.onCellClick) {
-						self._opt.onCellClick(evt, rowIndex, item, columnId, column, isHeaderRow);
-					} else if(self._opt.onRowClick) {
-						self._opt.onRowClick(evt, rowIndex, item, columnId, column, isHeaderRow);
-					}
-				} else {
-					self._opt.onRowClick(evt, rowIndex, item, columnId, column, isHeaderRow);
-				}
+				self._opt.onRowClick(evt, rowIndex, item, columnId, column, isHeaderRow);
 			}, 300);
 		});
 		this._filterPanel.delegate('[name="findEmpty"]', 'click', function(evt) {
