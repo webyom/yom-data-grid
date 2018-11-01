@@ -111,7 +111,7 @@ function render($data, $opt) {
         if (filterOption.autoComplete) {
             _$out_ += '<div class="form-group"><input type="text" value="" class="form-control auto-complete-box" /></div>';
         } else {
-            _$out_ += "" + i18n.all + ' <a class="btn-check-all" href="javascript:;">' + i18n.check + '</a> / <a class="btn-uncheck-all" href="javascript:;">' + i18n.uncheck + '</a><div class="set-container">';
+            _$out_ += '<a class="btn-check-all" href="javascript:;">' + i18n.checkAll + '</a> / <a class="btn-uncheck-all" href="javascript:;">' + i18n.uncheckAll + '</a><div class="set-container">';
             for (var i = 0, l = options.length; i < l; i++) {
                 var option = options[i];
                 var value = option.value, name = option.name;
@@ -1020,9 +1020,8 @@ module.exports = {
 		ok: 'Ok',
 		cancel: 'Cancel',
 
-		all: 'All',
-		check: 'Check',
-		uncheck: 'Uncheck',
+		checkAll: 'Check All',
+		uncheckAll: 'Uncheck All',
 		displayAll: 'Display All',
 		filter: 'Filter',
 		clear: 'Clear',
@@ -1054,9 +1053,8 @@ module.exports = {
 		ok: '确定',
 		cancel: '取消',
 
-		all: '全部',
-		check: '选择',
-		uncheck: '取消选择',
+		checkAll: '全选',
+		uncheckAll: '取消全选',
 		displayAll: '全部显示',
 		filter: '筛选',
 		clear: '清除',

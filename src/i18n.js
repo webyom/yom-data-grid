@@ -3,9 +3,8 @@ module.exports = {
 		ok: 'Ok',
 		cancel: 'Cancel',
 
-		all: 'All',
-		check: 'Check',
-		uncheck: 'Uncheck',
+		checkAll: 'Check All',
+		uncheckAll: 'Uncheck All',
 		displayAll: 'Display All',
 		filter: 'Filter',
 		clear: 'Clear',
@@ -37,9 +36,8 @@ module.exports = {
 		ok: '确定',
 		cancel: '取消',
 
-		all: '全部',
-		check: '选择',
-		uncheck: '取消选择',
+		checkAll: '全选',
+		uncheckAll: '取消全选',
 		displayAll: '全部显示',
 		filter: '筛选',
 		clear: '清除',
