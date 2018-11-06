@@ -120,9 +120,9 @@ function render($data, $opt) {
             _$out_ += "</div>";
         }
     } else if (type == "number") {
-        _$out_ += '<div class="form-group"><label>' + i18n.compareValue + '</label><input name="value" type="text" maxlength="10" value="' + $encodeHtml(filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "") + '" class="form-control" /></div><div class="form-group"><label>' + i18n.compareMethod + '</label><select name="compareType" class="form-control"><option value="eq" ' + (filterCriteria.compareType == "eq" ? "selected" : "") + ">" + i18n.eq + '</option><option value="lt" ' + (filterCriteria.compareType == "lt" ? "selected" : "") + ">" + i18n.lt + '</option><option value="gt" ' + (filterCriteria.compareType == "gt" ? "selected" : "") + ">" + i18n.gt + "</option></select></div>";
+        _$out_ += '<div class="form-group"><select name="compareType" class="form-control"><option value="eq" ' + (filterCriteria.compareType == "eq" ? "selected" : "") + ">" + i18n.eq + '</option><option value="lt" ' + (filterCriteria.compareType == "lt" ? "selected" : "") + ">" + i18n.lt + '</option><option value="gt" ' + (filterCriteria.compareType == "gt" ? "selected" : "") + ">" + i18n.gt + '</option></select></div><div class="form-group"><input name="value" type="number" maxlength="10" value="' + $encodeHtml(filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "") + '" placeholder="' + i18n.compareValue + '" class="form-control" /></div>';
     } else if (type == "date" || type == "datetime") {
-        _$out_ += '<div class="form-group"><label>' + i18n.start + '</label><div class="datetimepicker-component input-group date date-from" data-date="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.fromValue || "") + '"><input class="form-control" type="text" name="fromDate" value="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div><div class="form-group"><label>' + i18n.end + '</label><div class="datetimepicker-component input-group date date-to" data-date="' + $encodeHtml(filterCriteria.toDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.toValue || "") + '"><input class="form-control" type="text" name="toDate" value="' + $encodeHtml(filterCriteria.toDisplay || "") + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div>';
+        _$out_ += '<div class="form-group"><div class="datetimepicker-component input-group date date-from" data-date="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.fromValue || "") + '"><input class="form-control" type="text" name="fromDate" value="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" placeholder="' + i18n.start + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div><div class="form-group"><div class="datetimepicker-component input-group date date-to" data-date="' + $encodeHtml(filterCriteria.toDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.toValue || "") + '"><input class="form-control" type="text" name="toDate" value="' + $encodeHtml(filterCriteria.toDisplay || "") + '" placeholder="' + i18n.end + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div>';
     } else {
         _$out_ += '<div class="form-group"><input name="value" type="text" value="' + $encodeHtml(filterCriteria.value || "") + '" class="form-control" /></div>';
     }
@@ -1028,7 +1028,6 @@ module.exports = {
 		eq: 'Equal',
 		lt: 'Less Than',
 		gt: 'Greater Than',
-		compareMethod: 'Compare Method',
 		compareValue: 'Compare Value',
 		start: 'Start',
 		end: 'End',
@@ -1061,7 +1060,6 @@ module.exports = {
 		eq: '等于',
 		lt: '小于',
 		gt: '大于',
-		compareMethod: '比较方式',
 		compareValue: '比较值',
 		start: '开始',
 		end: '结束',
