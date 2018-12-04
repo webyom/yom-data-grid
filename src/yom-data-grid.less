@@ -177,8 +177,8 @@
 	display: inline-block;
 	width: 8px;
 	height: 10px;
-	vertical-align: middle;
-	margin-left: 3px;
+	vertical-align: baseline;
+	margin-right: 3px;
 	position: relative;
 }
 .yom-data-grid-sort-arrow:before, .yom-data-grid-sort-arrow:after {
@@ -238,6 +238,9 @@
 				display: none;
 			}
 		}
+	}
+	> a, > span {
+		white-space: nowrap;
 	}
 }
 .yom-data-grid-header-cell-inner-filterable {
@@ -427,9 +430,23 @@
 	margin: 0;
 }
 
-// Checkbox
+// Form Cell
 .yom-data-grid-form-cell .yom-data-grid-cell-inner {
 	padding: 2px;
+	> .btn-icon {
+		min-width: 36px;
+		margin-right: 2px;
+		padding-left: 0;
+		padding-right: 0;
+		&.btn-sm {
+			min-width: 32px;
+			margin-left: 2px;
+			margin-top: 2px;
+		}
+		&:last-child {
+			margin-right: 0;
+		}
+	}
 }
 
 // Clickable
