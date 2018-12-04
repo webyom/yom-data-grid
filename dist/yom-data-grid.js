@@ -247,7 +247,7 @@ function render($data, $opt) {
     var $print = function(str) {
         _$out_ += str;
     };
-    var _this = $data._this, DEFAULT_COLUMN_WIDTH = $data.DEFAULT_COLUMN_WIDTH, i18n = $data.i18n, name = $data.name, width = $data.width, noScrollX = $data.noScrollX, lockedColumns = $data.lockedColumns, scrollColumns = $data.scrollColumns, bordered = $data.bordered, striped = $data.striped, sortColumnId = $data.sortColumnId, sortOrder = $data.sortOrder, filterMap = $data.filterMap, checkbox = $data.checkbox, data = $data.data, headerData = $data.headerData, dataProperty = $data.dataProperty, isAllChecked = $data.isAllChecked, selectedIndex = $data.selectedIndex, maxSelection = $data.maxSelection, disableSetting = $data.disableSetting, opt = $data.opt;
+    var _this = $data._this, DEFAULT_COLUMN_WIDTH = $data.DEFAULT_COLUMN_WIDTH, i18n = $data.i18n, name = $data.name, width = $data.width, noScrollX = $data.noScrollX, lockedColumns = $data.lockedColumns, scrollColumns = $data.scrollColumns, bordered = $data.bordered, striped = $data.striped, sortBy = $data.sortBy, sortOrder = $data.sortOrder, filterMap = $data.filterMap, checkbox = $data.checkbox, data = $data.data, headerData = $data.headerData, dataProperty = $data.dataProperty, isAllChecked = $data.isAllChecked, selectedIndex = $data.selectedIndex, maxSelection = $data.maxSelection, disableSetting = $data.disableSetting, opt = $data.opt;
     var i, l, column, columns, columnWidth, columnHeader, columnOffset, renderData, isHeaderData;
     var nextSeq = 1;
     var isPrevOdd = false;
@@ -290,9 +290,9 @@ function render($data, $opt) {
                     columnHeader += '<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="' + i18n.clearFilterCriteria + '"><i class="fa fa-filter icon-filter"></i><i class="fa fa-remove icon-remove"></i></a>';
                 }
                 if (column.headerRenderer) {
-                    columnHeader += "" + column.headerRenderer.call(_this, column.name, i, column, sortColumnId, sortOrder) + "";
+                    columnHeader += "" + column.headerRenderer.call(_this, column.name, i, column, sortBy, sortOrder) + "";
                 } else if (column.sortable && opt.sortable !== false) {
-                    columnHeader += '<a class="yom-data-grid-sortable" href="javascript:void(0);" onclick="return false" title="' + $encodeHtml(column.name) + '">' + (sortColumnId == column.id ? sortOrder == "desc" ? '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-up"></span>' : '<span class="yom-data-grid-sort-arrow"></span>') + "" + column.name + "</a>";
+                    columnHeader += '<a class="yom-data-grid-sortable" href="javascript:void(0);" onclick="return false" title="' + $encodeHtml(column.name) + '">' + (sortBy == column.id ? sortOrder == "desc" ? '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-up"></span>' : '<span class="yom-data-grid-sort-arrow"></span>') + "" + column.name + "</a>";
                 } else {
                     columnHeader += '<span title="' + $encodeHtml(column.name) + '">' + column.name + "</span>";
                 }
@@ -338,9 +338,9 @@ function render($data, $opt) {
                     columnHeader += '<a class="yom-data-grid-filter-remove-icon" href="javascript:void(0);" title="' + i18n.clearFilterCriteria + '"><i class="fa fa-filter icon-filter"></i><i class="fa fa-remove icon-remove"></i></a>';
                 }
                 if (column.headerRenderer) {
-                    columnHeader += "" + column.headerRenderer.call(_this, column.name, i, column, sortColumnId, sortOrder) + "";
+                    columnHeader += "" + column.headerRenderer.call(_this, column.name, i, column, sortBy, sortOrder) + "";
                 } else if (column.sortable && opt.sortable !== false) {
-                    columnHeader += '<a class="yom-data-grid-sortable" href="javascript:void(0);" onclick="return false" title="' + $encodeHtml(column.name) + '">' + (sortColumnId == column.id ? sortOrder == "desc" ? '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-up"></span>' : '<span class="yom-data-grid-sort-arrow"></span>') + "" + column.name + "</a>";
+                    columnHeader += '<a class="yom-data-grid-sortable" href="javascript:void(0);" onclick="return false" title="' + $encodeHtml(column.name) + '">' + (sortBy == column.id ? sortOrder == "desc" ? '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-up"></span>' : '<span class="yom-data-grid-sort-arrow"></span>') + "" + column.name + "</a>";
                 } else {
                     columnHeader += '<span title="' + $encodeHtml(column.name) + '">' + column.name + "</span>";
                 }
@@ -1238,7 +1238,7 @@ var YomDataGrid = function(holder, columns, opt) {
 	this._tmp = {};
 
 	// sortting
-	this._sortColumnId = '';
+	this._sortBy = '';
 	this._sortOrder = '';
 
 	// filter
@@ -1385,7 +1385,7 @@ $.extend(YomDataGrid.prototype, {
 
 	_clientSort: function() {
 		var sortOrder = this._sortOrder;
-		var columnId = this._sortColumnId;
+		var columnId = this._sortBy;
 		var dataProperty = this._opt.dataProperty;
 		this._data = mergeSort(this._data, function(a, b) {
 			if(dataProperty) {
@@ -1649,7 +1649,7 @@ $.extend(YomDataGrid.prototype, {
 			var columnId = $(this).closest('[data-column-id]').attr('data-column-id');
 			var sortOrder = $('.yom-data-grid-sort-arrow-down', this).length ? 'asc' : 'desc';
 			self._sortOrder = sortOrder;
-			self._sortColumnId = columnId;
+			self._sortBy = columnId;
 			if(self._opt.clientSort) {
 				self._clientSort();
 			} else if(self._opt.onStateChange) {
@@ -1874,7 +1874,7 @@ $.extend(YomDataGrid.prototype, {
 			this._headerData = headerData;
 		}
 		if(state) {
-			this._sortColumnId = state.sortColumnId || this._sortColumnId;
+			this._sortBy = state.sortBy || this._sortBy;
 			this._sortOrder = state.sortOrder || this._sortOrder;
 			this._setFilterMap(state.filterMap);
 		}
@@ -1916,7 +1916,7 @@ $.extend(YomDataGrid.prototype, {
 			scrollColumns: this._scrollColumns,
 			bordered: this._opt.bordered,
 			striped: this._opt.striped,
-			sortColumnId: this._sortColumnId,
+			sortBy: this._sortBy,
 			sortOrder: this._sortOrder,
 			filterMap: this._filterMap,
 			checkbox: this._opt.checkbox,
@@ -2343,7 +2343,7 @@ $.extend(YomDataGrid.prototype, {
 	getState: function() {
 		return {
 			sortOrder: this._sortOrder,
-			sortColumnId: this._sortColumnId,
+			sortBy: this._sortBy,
 			filterMap: $.extend({}, this._filterMap)
 		};
 	},
@@ -2483,8 +2483,8 @@ $.extend(YomDataGrid.prototype, {
 	getQueryString: function() {
 		var all = [];
 		var filterMapString = this.getFilterMapString();
-		if(this._sortColumnId) {
-			all.push('sortBy=' + encodeURIComponent(this._sortColumnId));
+		if(this._sortBy) {
+			all.push('sortBy=' + encodeURIComponent(this._sortBy));
 		}
 		if(this._sortOrder) {
 			all.push('sortOrder=' + this._sortOrder);

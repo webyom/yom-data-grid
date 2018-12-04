@@ -27,10 +27,10 @@ var filterable = column.filterable && opt.filterable !== false;
 					</a>
 				<%}%>
 				<%if(column.headerRenderer) {->columnHeader%>
-					<%=column.headerRenderer.call(_this, column.name, i, column, sortColumnId, sortOrder)%>
+					<%=column.headerRenderer.call(_this, column.name, i, column, sortBy, sortOrder)%>
 				<%} else if(column.sortable && opt.sortable !== false) {->columnHeader%>
 					<a class="yom-data-grid-sortable" href="javascript:void(0);" onclick="return false" title="<%==column.name%>">
-						<%=sortColumnId == column.id ? (sortOrder == 'desc' ? '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-up"></span>') : '<span class="yom-data-grid-sort-arrow"></span>'%>
+						<%=sortBy == column.id ? (sortOrder == 'desc' ? '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-down"></span>' : '<span class="yom-data-grid-sort-arrow yom-data-grid-sort-arrow-up"></span>') : '<span class="yom-data-grid-sort-arrow"></span>'%>
 						<%=column.name%>
 					</a>
 				<%} else {->columnHeader%>
