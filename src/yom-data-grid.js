@@ -84,8 +84,8 @@ YomDataGrid.getVisibleColumns = function(columns, setting) {
 		columns = mergeSort(columns, function(a, b) {
 			var as = setting.columnSequence.indexOf(a.id);
 			var bs = setting.columnSequence.indexOf(b.id);
-			as = as >= 0 ? as : 9999;
-			bs = bs >= 0 ? bs : 9999;
+			as = as >= 0 ? as : -9999;
+			bs = bs >= 0 ? bs : -9999;
 			return as - bs;
 		});
 	}
@@ -202,16 +202,16 @@ $.extend(YomDataGrid.prototype, {
 		var uncheckedCount = 0;
 		var checkboxAll = $('.yom-data-grid-setting-column-all input')[0];
 		$('.yom-data-grid-setting-column-item input', this._container).each(function (i, item) {
-			if (item.checked) {
+			if(item.checked) {
 				checkedCount++;
-			} else {
+			} else if(!item.disabled) {
 				uncheckedCount++;
 			}
 		});
-		if (checkedCount && uncheckedCount) {
+		if(checkedCount && uncheckedCount) {
 			checkboxAll.checked = true;
 			checkboxAll.indeterminate = true;
-		} else if (checkedCount) {
+		} else if(checkedCount) {
 			checkboxAll.indeterminate = false;
 			checkboxAll.checked = true;
 		} else {
@@ -238,7 +238,7 @@ $.extend(YomDataGrid.prototype, {
 	},
 
 	_submitSettingForm: function() {
-		var hiddenColumns = $('.columns-container input:not(:checked)', this._settingPanel).map(function(i, item) {
+		var hiddenColumns = $('.columns-container input:not(:checked,:disabled)', this._settingPanel).map(function(i, item) {
 			return item.value;
 		}).get();
 		if(hiddenColumns.length == this._allColumns.length) {
@@ -464,6 +464,9 @@ $.extend(YomDataGrid.prototype, {
 		}).delegate('.yom-data-grid-setting-column-all input', 'click', function(evt) {
 			var checked = evt.currentTarget.checked;
 			$('.yom-data-grid-setting-column-item input', self._container).each(function (i, item) {
+				if(item.disabled) {
+					return;
+				}
 				item.checked = checked;
 			});
 		}).delegate('.yom-data-grid-setting-btn-move-up', 'click', function(evt) {
@@ -954,8 +957,8 @@ $.extend(YomDataGrid.prototype, {
 		this._allColumns = mergeSort(this._allColumns, function(a, b) {
 			var as = self._columnSequence.indexOf(a.id);
 			var bs = self._columnSequence.indexOf(b.id);
-			as = as >= 0 ? as : 9999;
-			bs = bs >= 0 ? bs : 9999;
+			as = as >= 0 ? as : -9999;
+			bs = bs >= 0 ? bs : -9999;
 			return as - bs;
 		});
 		$.each(this._allColumns, function(i, column) {
@@ -964,7 +967,7 @@ $.extend(YomDataGrid.prototype, {
 				if(column.width > 0) {
 					column.width = Math.min(Math.max(column.width, self._MIN_COLUMN_WIDTH), self._MAX_COLUMN_WIDTH);
 				}
-				if(self._hiddenColumns.indexOf(column.id) >= 0) {
+				if(column.searchOnly || self._hiddenColumns.indexOf(column.id) >= 0) {
 					column.hidden = true;
 				} else {
 					column.hidden = false;
@@ -1303,7 +1306,7 @@ $.extend(YomDataGrid.prototype, {
 		var columns = this._lockedColumns.concat(this._scrollColumns).filter(function (column) {
 			return !column.hidden;
 		});
-		if (format == 'csv') {
+		if(format == 'csv') {
 			return exportMod.exportCsv(data, columns, fileName);
 		} else {
 			return exportMod.exportXlsx(data, columns, fileName);

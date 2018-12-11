@@ -23,7 +23,11 @@ var MAX_LOCKED_COLUMNS = $data.MAX_LOCKED_COLUMNS,
 			}
 		%>
 			<div class="yom-data-grid-setting-column-item">
-				<input type="checkbox" value="<%==column.id%>" <%=hiddenColumns.indexOf(column.id) >= 0 ? '' : 'checked'%> /> <%==column.name%>
+				<%if(column.searchOnly) {%>
+					<input type="checkbox" value="<%==column.id%>" disabled /> <%==column.name%>
+				<%} else {%>
+					<input type="checkbox" value="<%==column.id%>" <%=hiddenColumns.indexOf(column.id) >= 0 ? '' : 'checked'%> /> <%==column.name%>
+				<%}%>
 			</div>
 		<%}%>
 	</div>
