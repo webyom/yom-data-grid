@@ -26,9 +26,8 @@ module.exports = {
 
 		setting: 'Setting',
 		displayAndSorting: 'Display and Sorting',
-		locking: 'Locking',
-		noLocking: 'No Locking',
-		column: 'column'
+		lockingColumns: 'Locking Columns',
+		noLocking: 'No Locking'
 	},
 
 	'zh-CN': {
@@ -58,8 +57,7 @@ module.exports = {
 
 		setting: '设置',
 		displayAndSorting: '显示和排序',
-		locking: '锁定',
-		noLocking: '不锁定',
-		column: '列'
+		lockingColumns: '锁定列',
+		noLocking: '不锁定'
 	}
 };

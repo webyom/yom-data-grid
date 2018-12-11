@@ -102,7 +102,7 @@ YomDataGrid.getVisibleColumns = function(columns, setting) {
 };
 
 $.extend(YomDataGrid.prototype, {
-	_MAX_LOCKED_COLUMNS: 3,
+	_MAX_LOCKED_COLUMNS: 4,
 	_MIN_COLUMN_WIDTH: 38,
 	_MAX_COLUMN_WIDTH: 999,
 	_MAX_LOCKED_COLUMN_WIDTH: 300,

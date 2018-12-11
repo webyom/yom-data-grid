@@ -169,9 +169,9 @@ function render($data, $opt) {
         }
         _$out_ += "</div>";
     }
-    _$out_ += '</div><button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-up disabled" disabled><i class="fa fa-long-arrow-up "></i></button><button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-down disabled" disabled><i class="fa fa-long-arrow-down"></i></button></div><h4>' + i18n.locking + '</h4><div class="lock-options">';
+    _$out_ += '</div><button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-up disabled" disabled><i class="fa fa-long-arrow-up "></i></button><button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-down disabled" disabled><i class="fa fa-long-arrow-down"></i></button></div><h4>' + i18n.lockingColumns + '</h4><div class="lock-options">';
     for (var i = 1; i <= MAX_LOCKED_COLUMNS; i++) {
-        _$out_ += '<label class="radio-inline"><input type="radio" name="lock" value="' + i + '" ' + (lockColumnAmount == i ? "checked" : "") + " /> " + i + " " + i18n.column + "</label>";
+        _$out_ += '<label class="radio-inline"><input type="radio" name="lock" value="' + i + '" ' + (lockColumnAmount == i ? "checked" : "") + " /> " + i + "</label>";
     }
     _$out_ += '<label class="radio-inline"><input type="radio" name="lock" value="0" ' + (lockColumnAmount == 0 ? "checked" : "") + " /> " + i18n.noLocking + '</label></div><button type="button" class="btn btn-primary btn-sm yom-data-grid-btn-confirm-setting">' + i18n.ok + '</button><button type="button" class="btn btn-default btn-sm" data-toggle="yom-data-grid-setting-panel">' + i18n.cancel + "</button>";
     return _$out_;
@@ -1049,9 +1049,8 @@ module.exports = {
 
 		setting: 'Setting',
 		displayAndSorting: 'Display and Sorting',
-		locking: 'Locking',
-		noLocking: 'No Locking',
-		column: 'column'
+		lockingColumns: 'Locking Columns',
+		noLocking: 'No Locking'
 	},
 
 	'zh-CN': {
@@ -1081,9 +1080,8 @@ module.exports = {
 
 		setting: '设置',
 		displayAndSorting: '显示和排序',
-		locking: '锁定',
-		noLocking: '不锁定',
-		column: '列'
+		lockingColumns: '锁定列',
+		noLocking: '不锁定'
 	}
 };
 
@@ -1312,7 +1310,7 @@ YomDataGrid.getVisibleColumns = function(columns, setting) {
 };
 
 $.extend(YomDataGrid.prototype, {
-	_MAX_LOCKED_COLUMNS: 3,
+	_MAX_LOCKED_COLUMNS: 4,
 	_MIN_COLUMN_WIDTH: 38,
 	_MAX_COLUMN_WIDTH: 999,
 	_MAX_LOCKED_COLUMN_WIDTH: 300,

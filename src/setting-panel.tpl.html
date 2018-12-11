@@ -34,10 +34,10 @@ var MAX_LOCKED_COLUMNS = $data.MAX_LOCKED_COLUMNS,
 	<button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-up disabled" disabled><i class="fa fa-long-arrow-up "></i></button>
 	<button class="btn btn-default btn-sm yom-data-grid-setting-btn-move-down disabled" disabled><i class="fa fa-long-arrow-down"></i></button>
 </div>
-<h4><%=i18n.locking%></h4>
+<h4><%=i18n.lockingColumns%></h4>
 <div class="lock-options">
 	<%for(var i = 1; i <= MAX_LOCKED_COLUMNS; i++) {%>
-		<label class="radio-inline"><input type="radio" name="lock" value="<%=i%>" <%=lockColumnAmount == i ? 'checked' : ''%> /> <%=i%> <%=i18n.column%></label>
+		<label class="radio-inline"><input type="radio" name="lock" value="<%=i%>" <%=lockColumnAmount == i ? 'checked' : ''%> /> <%=i%></label>
 	<%}%>
 	<label class="radio-inline"><input type="radio" name="lock" value="0" <%=lockColumnAmount == 0 ? 'checked' : ''%> /> <%=i18n.noLocking%></label>
 </div>
