@@ -382,7 +382,7 @@ $.extend(YomDataGrid.prototype, {
 		}
 		filterCriteria.type = filterOption.type;
 		filterCriteria.findEmpty = findEmpty;
-		this._filterMap[column.id] = filterCriteria;
+		this._filterMap[this.getFilterKeyById(column.id)] = filterCriteria;
 		this._hideFilterPanel();
 		if(this._opt.onStateChange) {
 			this._opt.onStateChange(this.getState());
@@ -391,7 +391,7 @@ $.extend(YomDataGrid.prototype, {
 
 	_removeFilter: function(columnId) {
 		this._hideFilterPanel();
-		delete this._filterMap[columnId];
+		delete this._filterMap[this.getFilterKeyById(columnId)];
 		if(this._opt.onStateChange) {
 			this._opt.onStateChange(this.getState());
 		}
@@ -445,7 +445,7 @@ $.extend(YomDataGrid.prototype, {
 			var columnId = $(this).closest('[data-column-id]').attr('data-column-id');
 			var sortOrder = $('.yom-data-grid-sort-arrow-down', this).length ? 'asc' : 'desc';
 			self._sortOrder = sortOrder;
-			self._sortBy = columnId;
+			self._sortBy = self.getSortKeyById(columnId);
 			if(self._opt.clientSort) {
 				self._clientSort();
 			} else if(self._opt.onStateChange) {
@@ -818,7 +818,7 @@ $.extend(YomDataGrid.prototype, {
 				normalizeFilterOptions: self.normalizeFilterOptions
 			}));
 			if(type == 'set' && filterOption.autoComplete) {
-				var filterCriteria = self._filterMap[column.id] || {};
+				var filterCriteria = self._filterMap[this.getFilterKeyById(column.id)] || {};
 				var valueMap = filterCriteria.valueMap || {};
 				var box = $('.auto-complete-box', self._filterPanel);
 				self._filterPanel.show();
@@ -999,6 +999,23 @@ $.extend(YomDataGrid.prototype, {
 			return item.id == id;
 		})[0];
 		return column;
+	},
+
+	getColumnByFilterKey: function(key) {
+		var column = this._allColumns.filter(function(item) {
+			return item.filterable && (item.filterKey == key || item.id == key);
+		})[0];
+		return column;
+	},
+
+	getFilterKeyById: function(id) {
+		var column = this.getColumnById(id);
+		return column && column.filterKey || id;
+	},
+
+	getSortKeyById: function(id) {
+		var column = this.getColumnById(id);
+		return column && column.sortKey || id;
 	},
 
 	getAllColumns: function() {
@@ -1186,7 +1203,7 @@ $.extend(YomDataGrid.prototype, {
 				}
 				var filterCriteria = {};
 				var parts  = item.split(',');
-				var column = self.getColumnById(parts.shift());
+				var column = self.getColumnByFilterKey(parts.shift());
 				if(column) {
 					var filterOption = column.filterOption || {};
 					filterCriteria.type = filterOption.type;
@@ -1238,7 +1255,7 @@ $.extend(YomDataGrid.prototype, {
 							filterCriteria.displayValue = value;
 						}
 					}
-					res[column.id] = filterCriteria;
+					res[self.getFilterKeyById(column.id)] = filterCriteria;
 				}
 			});
 		} else {
