@@ -226,10 +226,6 @@
 			background-color: #eee;
 		}
 	}
-	.yom-data-grid-filter-icon-left {
-		left: 9px;
-		right: auto;
-	}
 	&:hover {
 		.yom-data-grid-filter-remove-icon {
 			.icon-remove {
@@ -246,6 +242,14 @@
 }
 .yom-data-grid-header-cell-inner-filterable {
 	padding-right: 24px;
+	&.yom-data-grid-header-cell-inner-align-right {
+		padding-right: 9px;
+		padding-left: 24px;
+		.yom-data-grid-filter-icon {
+			left: 5px;
+			right: auto;
+		}
+	}
 }
 .yom-data-grid-filter-panel {
 	position: absolute;

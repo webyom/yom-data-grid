@@ -11,7 +11,7 @@ var sortKey = column.sortKey || column.id;
 <%<-%>
 <%->columnHeader%>
 	<th class="<%=column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : ''%> <%=i == l - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>">
-		<div data-column-id="<%=column.id%>" class="yom-data-grid-cell-inner yom-data-grid-header-cell-inner <%=filterable ? 'yom-data-grid-header-cell-inner-filterable' : ''%>" style="text-align: <%=column.textAlign || 'left'%>;">
+		<div data-column-id="<%=column.id%>" class="yom-data-grid-cell-inner yom-data-grid-header-cell-inner <%='yom-data-grid-header-cell-inner-align-' + (column.textAlign || 'left')%> <%=filterable ? 'yom-data-grid-header-cell-inner-filterable' : ''%>" style="text-align: <%=column.textAlign || 'left'%>;">
 			<%if(column.type == 'checkbox') {->columnHeader%>
 				<%if(!(maxSelection > 0)) {->columnHeader%>
 					<input class="yom-data-grid-check-box-all" type="checkbox" <%=isAllChecked ? 'checked' : ''%> />
@@ -38,7 +38,7 @@ var sortKey = column.sortKey || column.id;
 					<span title="<%==column.name%>"><%=column.name%></span>
 				<%}%>
 				<%if(filterable) {->columnHeader%>
-					<a href="javascript:void(0);" class="yom-data-grid-filter-icon <%=column.textAlign == 'right' ? 'yom-data-grid-filter-icon-left' : ''%>">
+					<a href="javascript:void(0);" class="yom-data-grid-filter-icon">
 						<i class="fa fa-filter"></i>
 					</a>
 				<%}%>
