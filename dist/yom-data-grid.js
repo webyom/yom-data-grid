@@ -2391,7 +2391,7 @@ $.extend(YomDataGrid.prototype, {
 					value = option;
 					name = option;
 				} else {
-					value = option.id || option.key || option.val || option.value;
+					value = option.id || option.key || option.code || option.val || option.value;
 					name = option.label || option.name || option.value || option.val;
 				}
 				return {
