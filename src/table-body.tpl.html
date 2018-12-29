@@ -75,7 +75,7 @@ if(renderData.length) {
 				}
 			%>
 				<td data-grid-column-id="<%=column.id%>" id="yom-data-grid-<%=name%>-<%=isHeaderData ? 'header-cell' : 'cell'%>-<%=i%>-<%=columnIndex%>" class="<%=column.type == 'sequence' ? 'yom-data-grid-sequence-cell' : column.type == 'checkbox' ? 'yom-data-grid-checkbox-cell' : column.type == 'form' ? 'yom-data-grid-form-cell' : 'yom-data-grid-content-cell'%> <%=j == l2 - 1 ? 'yom-data-grid-last-cell' : ''%> yom-data-grid-column-<%=column.id.replace(/\./g, '-')%>"<%=reactElement ? ' data-react-element="' + i + '-' + columnIndex + '-' + (isHeaderData ? 'header-cell' : 'cell') + '"' : ''%>>
-					<div class="yom-data-grid-cell-inner" title="<%==title%>" style="text-align: <%=column.textAlign || 'left'%>;">
+					<div class="yom-data-grid-cell-inner yom-data-grid-cell-inner-<%=column.textAlign || 'left'%>" title="<%==title%>">
 						<%if(column.type == 'sequence') {
 							if(isHeaderData) {
 								seq = 0;

@@ -122,6 +122,16 @@
 	padding: 11px 9px;
 }
 
+.yom-data-grid-cell-inner-left {
+	text-align: left;
+}
+.yom-data-grid-cell-inner-center {
+	text-align: center;
+}
+.yom-data-grid-cell-inner-right {
+	text-align: right;
+}
+
 .yom-data-grid-cell-inner-dummy {
 	height: 1px;
 }
@@ -445,11 +455,21 @@
 		padding-right: 0;
 		&.btn-sm {
 			min-width: 32px;
-			margin-left: 2px;
+			margin-right: 4px;
 			margin-top: 2px;
 		}
 		&:last-child {
 			margin-right: 0;
+		}
+	}
+}
+.yom-data-grid-bordered .yom-data-grid-form-cell .yom-data-grid-cell-inner {
+	padding-right: 4px;
+}
+.yom-data-grid-form-cell .yom-data-grid-cell-inner-left {
+	.btn-icon.btn-sm {
+		&:first-child {
+			margin-left: 2px;
 		}
 	}
 }
