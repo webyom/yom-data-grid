@@ -2481,11 +2481,11 @@ $.extend(YomDataGrid.prototype, {
 								var toValue = parseFloat(parts.shift());
 								filterCriteria.fromValue = fromValue;
 								filterCriteria.toValue = toValue;
-								filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + (fromValue || '') + ' ~ ' + (toValue || '');
+								filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + (fromValue === 0 ? 0 : (fromValue || '')) + ' ~ ' + (toValue === 0 ? 0 : (toValue || ''));
 							} else {
 								value = parseFloat(parts.shift());
 								filterCriteria.value = value;
-								filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + (value || '');
+								filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + (value === 0 ? 0 : (value || ''));
 							}
 							filterCriteria.compareType = compareType;
 						} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
