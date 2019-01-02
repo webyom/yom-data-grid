@@ -341,7 +341,7 @@ $.extend(YomDataGrid.prototype, {
 					var fromValue = parseFloat(fromValueEl.val());
 					var toValue = parseFloat(toValueEl.val());
 					if(isNaN(fromValue) && isNaN(toValue)) {
-						this._showFilterErrMsg(this._i18n.compareValueRequired);
+						this._showFilterErrMsg(this._i18n.atLeastOneRangeValueRequired);
 						return;
 					}
 					if(fromValue >= toValue) {

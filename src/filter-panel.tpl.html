@@ -48,22 +48,23 @@ var type = filterOption.type;
 			<%
 				}
 			} else if(type == 'number') {
+				var compareType = filterCriteria.compareType || filterOption.defaultCompareType;
 			%>
 				<div class="form-group">
 					<select name="compareType" class="form-control">
-						<option value="eq" <%=filterCriteria.compareType == 'eq' ? 'selected' : ''%>><%=i18n.eq%></option>
-						<option value="lt" <%=filterCriteria.compareType == 'lt' ? 'selected' : ''%>><%=i18n.lt%></option>
-						<option value="gt" <%=filterCriteria.compareType == 'gt' ? 'selected' : ''%>><%=i18n.gt%></option>
-						<option value="range" <%=filterCriteria.compareType == 'range' ? 'selected' : ''%>><%=i18n.range%></option>
+						<option value="eq" <%=compareType == 'eq' ? 'selected' : ''%>><%=i18n.eq%></option>
+						<option value="lt" <%=compareType == 'lt' ? 'selected' : ''%>><%=i18n.lt%></option>
+						<option value="gt" <%=compareType == 'gt' ? 'selected' : ''%>><%=i18n.gt%></option>
+						<option value="range" <%=compareType == 'range' ? 'selected' : ''%>><%=i18n.range%></option>
 					</select>
 				</div>
-				<div class="form-group <%=filterCriteria.compareType == 'range' ? '' : 'hidden'%>">
+				<div class="form-group <%=compareType == 'range' ? '' : 'hidden'%>">
 					<input name="fromValue" type="number" maxlength="10" step="<%=filterOption.step || '0.01'%>" value="<%==filterCriteria.fromValue || filterCriteria.fromValue === 0 ? filterCriteria.fromValue : ''%>" placeholder="<%=i18n.gte%>" class="form-control" />
 				</div>
-				<div class="form-group <%=filterCriteria.compareType == 'range' ? '' : 'hidden'%>">
+				<div class="form-group <%=compareType == 'range' ? '' : 'hidden'%>">
 					<input name="toValue" type="number" maxlength="10" step="<%=filterOption.step || '0.01'%>" value="<%==filterCriteria.toValue || filterCriteria.toValue === 0 ? filterCriteria.toValue : ''%>" placeholder="<%=i18n.lte%>" class="form-control" />
 				</div>
-				<div class="form-group <%=filterCriteria.compareType != 'range' ? '' : 'hidden'%>">
+				<div class="form-group <%=compareType != 'range' ? '' : 'hidden'%>">
 					<input name="value" type="number" maxlength="10" step="<%=filterOption.step || '0.01'%>" value="<%==filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : ''%>" placeholder="<%=i18n.compareValue%>" class="form-control" />
 				</div>
 			<%} else if(type == 'date' || type == 'datetime') {%>
