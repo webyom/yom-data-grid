@@ -120,7 +120,7 @@ function render($data, $opt) {
             _$out_ += "</div>";
         }
     } else if (type == "number") {
-        _$out_ += '<div class="form-group"><select name="compareType" class="form-control"><option value="eq" ' + (filterCriteria.compareType == "eq" ? "selected" : "") + ">" + i18n.eq + '</option><option value="lt" ' + (filterCriteria.compareType == "lt" ? "selected" : "") + ">" + i18n.lt + '</option><option value="gt" ' + (filterCriteria.compareType == "gt" ? "selected" : "") + ">" + i18n.gt + '</option></select></div><div class="form-group"><input name="value" type="number" maxlength="10" value="' + $encodeHtml(filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "") + '" placeholder="' + i18n.compareValue + '" class="form-control" /></div>';
+        _$out_ += '<div class="form-group"><select name="compareType" class="form-control"><option value="eq" ' + (filterCriteria.compareType == "eq" ? "selected" : "") + ">" + i18n.eq + '</option><option value="lt" ' + (filterCriteria.compareType == "lt" ? "selected" : "") + ">" + i18n.lt + '</option><option value="gt" ' + (filterCriteria.compareType == "gt" ? "selected" : "") + ">" + i18n.gt + '</option><option value="range" ' + (filterCriteria.compareType == "range" ? "selected" : "") + ">" + i18n.range + '</option></select></div><div class="form-group ' + (filterCriteria.compareType == "range" ? "" : "hidden") + '"><input name="fromValue" type="number" maxlength="10" step="' + (filterOption.step || "0.01") + '" value="' + $encodeHtml(filterCriteria.fromValue || filterCriteria.fromValue === 0 ? filterCriteria.fromValue : "") + '" placeholder="' + i18n.gte + ' 1" class="form-control" /></div><div class="form-group ' + (filterCriteria.compareType == "range" ? "" : "hidden") + '"><input name="toValue" type="number" maxlength="10" step="' + (filterOption.step || "0.01") + '" value="' + $encodeHtml(filterCriteria.toValue || filterCriteria.toValue === 0 ? filterCriteria.toValue : "") + '" placeholder="' + i18n.lte + ' 2" class="form-control" /></div><div class="form-group ' + (filterCriteria.compareType != "range" ? "" : "hidden") + '"><input name="value" type="number" maxlength="10" step="' + (filterOption.step || "0.01") + '" value="' + $encodeHtml(filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "") + '" placeholder="' + i18n.compareValue + '" class="form-control" /></div>';
     } else if (type == "date" || type == "datetime") {
         _$out_ += '<div class="form-group"><div class="datetimepicker-component input-group date date-from" data-date="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.fromValue || "") + '"><input class="form-control" type="text" name="fromDate" value="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" placeholder="' + i18n.start + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div><div class="form-group"><div class="datetimepicker-component input-group date date-to" data-date="' + $encodeHtml(filterCriteria.toDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.toValue || "") + '"><input class="form-control" type="text" name="toDate" value="' + $encodeHtml(filterCriteria.toDisplay || "") + '" placeholder="' + i18n.end + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div>';
     } else {
@@ -1036,6 +1036,10 @@ module.exports = {
 		eq: 'Equal',
 		lt: 'Less Than',
 		gt: 'Greater Than',
+		lte: 'Less Than or Equal',
+		gte: 'Greater Than or Equal',
+		range: 'Range',
+		rangeStartNotLessThanEnd: 'Range start must be less than range end',
 		compareValue: 'Compare Value',
 		start: 'Start',
 		end: 'End',
@@ -1067,6 +1071,10 @@ module.exports = {
 		eq: '等于',
 		lt: '小于',
 		gt: '大于',
+		lte: '小于等于',
+		gte: '大于等于',
+		range: '范围',
+		rangeStartNotLessThanEnd: '起始范围必须小于结束范围',
 		compareValue: '比较值',
 		start: '开始',
 		end: '结束',
@@ -1545,18 +1553,31 @@ $.extend(YomDataGrid.prototype, {
 				filterCriteria.value = value;
 			} else if(filterOption.type == 'number') {
 				var compareType = $('[name="compareType"]', this._filterPanel).val();
-				valueEl = $('[name="value"]', this._filterPanel);
-				if((/;/).test(valueEl.val())) {
-					this._showFilterErrMsg(this._i18n.filterValueContainIllegalChar);
-					return;
-				}
-				value = parseFloat($.trim(valueEl.val()));
-				if(isNaN(value)) {
-					this._showFilterErrMsg(this._i18n.compareValueRequired);
-					return;
+				if(compareType == 'range') {
+					var fromValueEl = $('[name="fromValue"]', this._filterPanel);
+					var toValueEl = $('[name="toValue"]', this._filterPanel);
+					var fromValue = parseFloat(fromValueEl.val());
+					var toValue = parseFloat(toValueEl.val());
+					if(isNaN(fromValue) && isNaN(toValue)) {
+						this._showFilterErrMsg(this._i18n.compareValueRequired);
+						return;
+					}
+					if(fromValue >= toValue) {
+						this._showFilterErrMsg(this._i18n.rangeStartNotLessThanEnd);
+						return;
+					}
+					filterCriteria.fromValue = fromValue;
+					filterCriteria.toValue = toValue;
+				} else {
+					valueEl = $('[name="value"]', this._filterPanel);
+					value = parseFloat(valueEl.val());
+					if(isNaN(value)) {
+						this._showFilterErrMsg(this._i18n.compareValueRequired);
+						return;
+					}
+					filterCriteria.value = value;
 				}
 				filterCriteria.compareType = compareType;
-				filterCriteria.value = value;
 			} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
 				var dateFromDom = $('.date-from', this._filterPanel);
 				var dateToDom = $('.date-to', this._filterPanel);
@@ -2088,6 +2109,18 @@ $.extend(YomDataGrid.prototype, {
 					date.setMilliseconds(999);
 					dateToDom.attr('data-value', date.getTime());
 				});
+			} else if(type == 'number') {
+				self._filterPanel.find('[name="compareType"]').on('change', function(evt) {
+					var formAndToValueEl = $('[name="fromValue"], [name="toValue"]', self._filterPanel).closest('.form-group');
+					var valueEl = $('[name="value"]', self._filterPanel).closest('.form-group');
+					if(evt.currentTarget.value == 'range') {
+						formAndToValueEl.removeClass('hidden');
+						valueEl.addClass('hidden');
+					} else {
+						formAndToValueEl.addClass('hidden');
+						valueEl.removeClass('hidden');
+					}
+				});
 			} else {
 				$('[name="value"]', self._filterPanel).on('paste', function(evt) {
 					var text = '';
@@ -2440,13 +2473,18 @@ $.extend(YomDataGrid.prototype, {
 							filterCriteria.displayValue = displayValue.join(', ');
 						} else if(filterOption.type == 'number') {
 							var compareType = parts.shift();
-							value = parseFloat(parts.shift());
-							if(isNaN(value)) {
-								value = '';
+							if(compareType == 'range') {
+								var fromValue = parseFloat(parts.shift());
+								var toValue = parseFloat(parts.shift());
+								filterCriteria.fromValue = fromValue;
+								filterCriteria.toValue = toValue;
+								filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + (fromValue || '') + ' ~ ' + (toValue || '');
+							} else {
+								value = parseFloat(parts.shift());
+								filterCriteria.value = value;
+								filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + (value || '');
 							}
 							filterCriteria.compareType = compareType;
-							filterCriteria.value = value;
-							filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + value;
 						} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
 							var fromValue = (filterOption.parser || parseInt)(parts.shift());
 							var toValue = (filterOption.parser || parseInt)(parts.shift());
@@ -2492,7 +2530,11 @@ $.extend(YomDataGrid.prototype, {
 					if(criteria.type == 'set') {
 						filters.push(p + ',0,set,' + criteria.value.join(','));
 					} else if(criteria.type == 'number') {
-						filters.push(p + ',0,number,' + criteria.compareType + ',' +  criteria.value);
+						if(criteria.compareType == 'range') {
+							filters.push(p + ',0,number,' + criteria.compareType + ',' +  (criteria.fromValue || '') + ',' +  (criteria.toValue || ''));
+						} else {
+							filters.push(p + ',0,number,' + criteria.compareType + ',' +  (criteria.value || ''));
+						}
 					} else if(criteria.type == 'date') {
 						filters.push(p + ',0,date,' + (criteria.fromValue || '') + ',' +  (criteria.toValue || ''));
 					} else if(criteria.type == 'datetime') {

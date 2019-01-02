@@ -335,18 +335,31 @@ $.extend(YomDataGrid.prototype, {
 				filterCriteria.value = value;
 			} else if(filterOption.type == 'number') {
 				var compareType = $('[name="compareType"]', this._filterPanel).val();
-				valueEl = $('[name="value"]', this._filterPanel);
-				if((/;/).test(valueEl.val())) {
-					this._showFilterErrMsg(this._i18n.filterValueContainIllegalChar);
-					return;
-				}
-				value = parseFloat($.trim(valueEl.val()));
-				if(isNaN(value)) {
-					this._showFilterErrMsg(this._i18n.compareValueRequired);
-					return;
+				if(compareType == 'range') {
+					var fromValueEl = $('[name="fromValue"]', this._filterPanel);
+					var toValueEl = $('[name="toValue"]', this._filterPanel);
+					var fromValue = parseFloat(fromValueEl.val());
+					var toValue = parseFloat(toValueEl.val());
+					if(isNaN(fromValue) && isNaN(toValue)) {
+						this._showFilterErrMsg(this._i18n.compareValueRequired);
+						return;
+					}
+					if(fromValue >= toValue) {
+						this._showFilterErrMsg(this._i18n.rangeStartNotLessThanEnd);
+						return;
+					}
+					filterCriteria.fromValue = fromValue;
+					filterCriteria.toValue = toValue;
+				} else {
+					valueEl = $('[name="value"]', this._filterPanel);
+					value = parseFloat(valueEl.val());
+					if(isNaN(value)) {
+						this._showFilterErrMsg(this._i18n.compareValueRequired);
+						return;
+					}
+					filterCriteria.value = value;
 				}
 				filterCriteria.compareType = compareType;
-				filterCriteria.value = value;
 			} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
 				var dateFromDom = $('.date-from', this._filterPanel);
 				var dateToDom = $('.date-to', this._filterPanel);
@@ -878,6 +891,18 @@ $.extend(YomDataGrid.prototype, {
 					date.setMilliseconds(999);
 					dateToDom.attr('data-value', date.getTime());
 				});
+			} else if(type == 'number') {
+				self._filterPanel.find('[name="compareType"]').on('change', function(evt) {
+					var formAndToValueEl = $('[name="fromValue"], [name="toValue"]', self._filterPanel).closest('.form-group');
+					var valueEl = $('[name="value"]', self._filterPanel).closest('.form-group');
+					if(evt.currentTarget.value == 'range') {
+						formAndToValueEl.removeClass('hidden');
+						valueEl.addClass('hidden');
+					} else {
+						formAndToValueEl.addClass('hidden');
+						valueEl.removeClass('hidden');
+					}
+				});
 			} else {
 				$('[name="value"]', self._filterPanel).on('paste', function(evt) {
 					var text = '';
@@ -1230,13 +1255,18 @@ $.extend(YomDataGrid.prototype, {
 							filterCriteria.displayValue = displayValue.join(', ');
 						} else if(filterOption.type == 'number') {
 							var compareType = parts.shift();
-							value = parseFloat(parts.shift());
-							if(isNaN(value)) {
-								value = '';
+							if(compareType == 'range') {
+								var fromValue = parseFloat(parts.shift());
+								var toValue = parseFloat(parts.shift());
+								filterCriteria.fromValue = fromValue;
+								filterCriteria.toValue = toValue;
+								filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + (fromValue || '') + ' ~ ' + (toValue || '');
+							} else {
+								value = parseFloat(parts.shift());
+								filterCriteria.value = value;
+								filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + (value || '');
 							}
 							filterCriteria.compareType = compareType;
-							filterCriteria.value = value;
-							filterCriteria.displayValue = (self._i18n[compareType] || '') + ' ' + value;
 						} else if(filterOption.type == 'date' || filterOption.type == 'datetime') {
 							var fromValue = (filterOption.parser || parseInt)(parts.shift());
 							var toValue = (filterOption.parser || parseInt)(parts.shift());
@@ -1282,7 +1312,11 @@ $.extend(YomDataGrid.prototype, {
 					if(criteria.type == 'set') {
 						filters.push(p + ',0,set,' + criteria.value.join(','));
 					} else if(criteria.type == 'number') {
-						filters.push(p + ',0,number,' + criteria.compareType + ',' +  criteria.value);
+						if(criteria.compareType == 'range') {
+							filters.push(p + ',0,number,' + criteria.compareType + ',' +  (criteria.fromValue || '') + ',' +  (criteria.toValue || ''));
+						} else {
+							filters.push(p + ',0,number,' + criteria.compareType + ',' +  (criteria.value || ''));
+						}
 					} else if(criteria.type == 'date') {
 						filters.push(p + ',0,date,' + (criteria.fromValue || '') + ',' +  (criteria.toValue || ''));
 					} else if(criteria.type == 'datetime') {
