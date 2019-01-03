@@ -96,7 +96,7 @@ function render($data, $opt) {
     var $print = function(str) {
         _$out_ += str;
     };
-    var i18n = $data.i18n, column = $data.column, filterMap = $data.filterMap, normalizeFilterOptions = $opt.normalizeFilterOptions;
+    var i18n = $data.i18n, column = $data.column, filterMap = $data.filterMap, dateFormat = $data.dateFormat || "yyyy-mm-dd", datetimeFormat = $data.datetimeFormat || "yyyy-mm-dd hh:ii", normalizeFilterOptions = $opt.normalizeFilterOptions;
     var filterCriteria = filterMap[column.id] || {};
     var filterOption = column.filterOption || {};
     var type = filterOption.type;
@@ -123,7 +123,7 @@ function render($data, $opt) {
         var compareType = filterCriteria.compareType || filterOption.defaultCompareType;
         _$out_ += '<div class="form-group"><select name="compareType" class="form-control"><option value="eq" ' + (compareType == "eq" ? "selected" : "") + ">" + i18n.eq + '</option><option value="lt" ' + (compareType == "lt" ? "selected" : "") + ">" + i18n.lt + '</option><option value="gt" ' + (compareType == "gt" ? "selected" : "") + ">" + i18n.gt + '</option><option value="range" ' + (compareType == "range" ? "selected" : "") + ">" + i18n.range + '</option></select></div><div class="form-group ' + (compareType == "range" ? "" : "hidden") + '"><input name="fromValue" type="number" maxlength="10" step="' + (filterOption.step || "0.01") + '" value="' + $encodeHtml(filterCriteria.fromValue || filterCriteria.fromValue === 0 ? filterCriteria.fromValue : "") + '" placeholder="' + i18n.gte + '" class="form-control" /></div><div class="form-group ' + (compareType == "range" ? "" : "hidden") + '"><input name="toValue" type="number" maxlength="10" step="' + (filterOption.step || "0.01") + '" value="' + $encodeHtml(filterCriteria.toValue || filterCriteria.toValue === 0 ? filterCriteria.toValue : "") + '" placeholder="' + i18n.lte + '" class="form-control" /></div><div class="form-group ' + (compareType != "range" ? "" : "hidden") + '"><input name="value" type="number" maxlength="10" step="' + (filterOption.step || "0.01") + '" value="' + $encodeHtml(filterCriteria.value || filterCriteria.value === 0 ? filterCriteria.value : "") + '" placeholder="' + i18n.compareValue + '" class="form-control" /></div>';
     } else if (type == "date" || type == "datetime") {
-        _$out_ += '<div class="form-group"><div class="datetimepicker-component input-group date date-from" data-date="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.fromValue || "") + '"><input class="form-control" type="text" name="fromDate" value="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" placeholder="' + i18n.start + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div><div class="form-group"><div class="datetimepicker-component input-group date date-to" data-date="' + $encodeHtml(filterCriteria.toDisplay || "") + '" data-date-format="' + $encodeHtml(filterOption.format || (type == "datetime" ? "yyyy-mm-dd hh:ii" : "yyyy-mm-dd")) + '" data-value="' + $encodeHtml(filterCriteria.toValue || "") + '"><input class="form-control" type="text" name="toDate" value="' + $encodeHtml(filterCriteria.toDisplay || "") + '" placeholder="' + i18n.end + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div>';
+        _$out_ += '<div class="form-group"><div class="datetimepicker-component input-group date date-from" data-date="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" data-date-format="' + $encodeHtml(type == "datetime" ? datetimeFormat : dateFormat) + '" data-value="' + $encodeHtml(filterCriteria.fromValue || "") + '"><input class="form-control" type="text" name="fromDate" value="' + $encodeHtml(filterCriteria.fromDisplay || "") + '" placeholder="' + i18n.start + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div><div class="form-group"><div class="datetimepicker-component input-group date date-to" data-date="' + $encodeHtml(filterCriteria.toDisplay || "") + '" data-date-format="' + $encodeHtml(type == "datetime" ? datetimeFormat : dateFormat) + '" data-value="' + $encodeHtml(filterCriteria.toValue || "") + '"><input class="form-control" type="text" name="toDate" value="' + $encodeHtml(filterCriteria.toDisplay || "") + '" placeholder="' + i18n.end + '" readonly /><div class="input-group-addon"><i class="fa fa-calendar" /></div></div></div>';
     } else {
         _$out_ += '<div class="form-group"><input name="value" type="text" value="' + $encodeHtml(filterCriteria.value || "") + '" class="form-control" /></div>';
     }
@@ -2047,7 +2047,9 @@ $.extend(YomDataGrid.prototype, {
 			self._filterPanel.html(filterPanelTpl.render({
 				i18n: self._i18n,
 				column: column,
-				filterMap: self._filterMap
+				filterMap: self._filterMap,
+				dateFormat: self._opt.dateFormat,
+				datetimeFormat: self._opt.datetimeFormat
 			}, {
 				normalizeFilterOptions: self.normalizeFilterOptions
 			}));

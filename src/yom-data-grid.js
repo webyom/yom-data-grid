@@ -826,7 +826,9 @@ $.extend(YomDataGrid.prototype, {
 			self._filterPanel.html(filterPanelTpl.render({
 				i18n: self._i18n,
 				column: column,
-				filterMap: self._filterMap
+				filterMap: self._filterMap,
+				dateFormat: self._opt.dateFormat,
+				datetimeFormat: self._opt.datetimeFormat
 			}, {
 				normalizeFilterOptions: self.normalizeFilterOptions
 			}));
