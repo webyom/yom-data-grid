@@ -459,7 +459,7 @@ function render($data, $opt) {
                                 }
                             }
                             if (column.titleRenderer) {
-                                title = column.titleRenderer.call(_this, columnValue, i, item, {
+                                title = column.titleRenderer.call(_this, columnValue || "", i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
                                     isHeaderData: isHeaderData
@@ -590,7 +590,7 @@ function render($data, $opt) {
                             }
                         }
                         if (column.titleRenderer) {
-                            title = column.titleRenderer.call(_this, columnValue, i, item, {
+                            title = column.titleRenderer.call(_this, columnValue || "", i, item, {
                                 columnIndex: columnIndex,
                                 column: column,
                                 isHeaderData: isHeaderData
@@ -725,7 +725,7 @@ function render($data, $opt) {
                                 }
                             }
                             if (column.titleRenderer) {
-                                title = column.titleRenderer.call(_this, columnValue, i, item, {
+                                title = column.titleRenderer.call(_this, columnValue || "", i, item, {
                                     columnIndex: columnIndex,
                                     column: column,
                                     isHeaderData: isHeaderData
@@ -856,7 +856,7 @@ function render($data, $opt) {
                             }
                         }
                         if (column.titleRenderer) {
-                            title = column.titleRenderer.call(_this, columnValue, i, item, {
+                            title = column.titleRenderer.call(_this, columnValue || "", i, item, {
                                 columnIndex: columnIndex,
                                 column: column,
                                 isHeaderData: isHeaderData

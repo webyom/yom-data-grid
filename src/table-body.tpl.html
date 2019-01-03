@@ -52,7 +52,7 @@ if(renderData.length) {
 					}
 				}
 				if(column.titleRenderer) {
-					title = column.titleRenderer.call(_this, columnValue, i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData});
+					title = column.titleRenderer.call(_this, columnValue || '', i, item, {columnIndex: columnIndex, column: column, isHeaderData: isHeaderData});
 				} else if(typeof column.title != 'undefined') {
 					if(column.title == '__content__') {
 						title = displayValue;
