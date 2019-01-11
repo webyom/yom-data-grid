@@ -1208,8 +1208,18 @@ $.extend(YomDataGrid.prototype, {
 					value = option;
 					name = option;
 				} else {
-					value = option.id || option.key || option.code || option.val || option.value;
-					name = option.label || option.name || option.value || option.val;
+					['id', 'key', 'code', 'val', 'value'].find(function (key) {
+						if (option[key] != null) {
+							value = option[key];
+							return true;
+						}
+					});
+					['label', 'name', 'value', 'val'].find(function (key) {
+						if (option[key] != null) {
+							name = option[key];
+							return true;
+						}
+					});
 				}
 				return {
 					value: value,
