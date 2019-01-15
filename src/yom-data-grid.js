@@ -615,13 +615,16 @@ $.extend(YomDataGrid.prototype, {
 				$('[data-grid-row="' + $(this).attr('data-grid-row') + '"]', self._container).addClass('yom-data-grid-row-hl');
 			}).delegate('[data-grid-row]', 'mouseleave', function(evt) {
 				$('[data-grid-row="' + $(this).attr('data-grid-row') + '"]', self._container).removeClass('yom-data-grid-row-hl');
-			})
+			}).delegate('[data-grid-row]', 'click', function(evt) {
+				$('[data-grid-row]', self._container).removeClass('yom-data-grid-row-click-hl');
+				$('[data-grid-row="' + $(this).attr('data-grid-row') + '"]', self._container).addClass('yom-data-grid-row-click-hl');
+			});
 			this._container.delegate('[data-grid-header-row]', 'mouseenter', function(evt) {
 				$('[data-grid-header-row]', self._container).removeClass('yom-data-grid-row-hl');
 				$('[data-grid-header-row="' + $(this).attr('data-grid-header-row') + '"]', self._container).addClass('yom-data-grid-row-hl');
 			}).delegate('[data-grid-header-row]', 'mouseleave', function(evt) {
 				$('[data-grid-header-row="' + $(this).attr('data-grid-header-row') + '"]', self._container).removeClass('yom-data-grid-row-hl');
-			})
+			});
 		}
 		$(document).on('click', this._bind.documentClick);
 		if(this._width == 'auto') {
