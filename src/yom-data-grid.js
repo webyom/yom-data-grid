@@ -836,7 +836,7 @@ $.extend(YomDataGrid.prototype, {
 				normalizeFilterOptions: self.normalizeFilterOptions
 			}));
 			if(type == 'set' && filterOption.autoComplete) {
-				var filterCriteria = self._filterMap[this.getFilterKeyById(column.id)] || {};
+				var filterCriteria = self._filterMap[self.getFilterKeyById(column.id)] || {};
 				var valueMap = filterCriteria.valueMap || {};
 				var box = $('.auto-complete-box', self._filterPanel);
 				self._filterPanel.show();
