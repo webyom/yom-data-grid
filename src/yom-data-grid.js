@@ -818,8 +818,8 @@ $.extend(YomDataGrid.prototype, {
 		window.require(['yom-auto-complete'], function (YomAutoComplete) {
 			target = $(target);
 			self._activeFilterColumn = column;
-			var filterOption = column.filterOption;
-			var type = filterOption && filterOption.type;
+			var filterOption = column.filterOption || {};
+			var type = filterOption.type;
 			var offset = target.offset();
 			var width = target.outerWidth();
 			var height = target.outerHeight();
@@ -831,7 +831,8 @@ $.extend(YomDataGrid.prototype, {
 				column: column,
 				filterMap: self._filterMap,
 				dateFormat: self._opt.dateFormat,
-				datetimeFormat: self._opt.datetimeFormat
+				datetimeFormat: self._opt.datetimeFormat,
+				datetimeWithSeconds: self._opt.datetimeWithSeconds
 			}, {
 				normalizeFilterOptions: self.normalizeFilterOptions
 			}));
@@ -867,7 +868,8 @@ $.extend(YomDataGrid.prototype, {
 					autoclose: true,
 					todayBtn: true,
 					todayHighlight: true,
-					minView: type == 'datetime' ? 0 : 2,
+					showSeconds: filterOption.showSeconds,
+					minView: type == 'datetime' ? (filterOption.showSeconds ? -1 : 0) : 2,
 					minuteStep: 1
 				};
 				var dateFromDom = $('.date-from', self._filterPanel);
@@ -880,7 +882,9 @@ $.extend(YomDataGrid.prototype, {
 						date.setHours(0);
 						date.setMinutes(0);
 					}
-					date.setSeconds(0);
+					if(!filterOption.showSeconds) {
+						date.setSeconds(0);
+					}
 					date.setMilliseconds(0);
 					dateFromDom.attr('data-value', date.getTime());
 				});
@@ -892,7 +896,9 @@ $.extend(YomDataGrid.prototype, {
 						date.setHours(23);
 						date.setMinutes(59);
 					}
-					date.setSeconds(59);
+					if(!filterOption.showSeconds) {
+						date.setSeconds(59);
+					}
 					date.setMilliseconds(999);
 					dateToDom.attr('data-value', date.getTime());
 				});

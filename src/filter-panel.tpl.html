@@ -4,6 +4,7 @@ var i18n = $data.i18n,
 	filterMap = $data.filterMap,
 	dateFormat = $data.dateFormat || 'yyyy-mm-dd',
 	datetimeFormat = $data.datetimeFormat || 'yyyy-mm-dd hh:ii',
+	datetimeWithSeconds = $data.datetimeWithSeconds || 'yyyy-mm-dd hh:ii:ss',
 	normalizeFilterOptions = $opt.normalizeFilterOptions;
 
 var filterCriteria = filterMap[column.id] || {};
@@ -71,13 +72,13 @@ var type = filterOption.type;
 				</div>
 			<%} else if(type == 'date' || type == 'datetime') {%>
 				<div class="form-group">
-					<div class="datetimepicker-component input-group date date-from" data-date="<%==filterCriteria.fromDisplay || ''%>" data-date-format="<%==type == 'datetime' ? datetimeFormat : dateFormat%>" data-value="<%==filterCriteria.fromValue || ''%>">
+					<div class="datetimepicker-component input-group date date-from" data-date="<%==filterCriteria.fromDisplay || ''%>" data-date-format="<%==type == 'datetime' ? (filterOption.showSeconds ? datetimeWithSeconds : datetimeFormat) : dateFormat%>" data-value="<%==filterCriteria.fromValue || ''%>">
 						<input class="form-control" type="text" name="fromDate" value="<%==filterCriteria.fromDisplay || ''%>" placeholder="<%=i18n.start%>" readonly />
 						<div class="input-group-addon"><i class="fa fa-calendar" /></div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="datetimepicker-component input-group date date-to" data-date="<%==filterCriteria.toDisplay || ''%>" data-date-format="<%==type == 'datetime' ? datetimeFormat : dateFormat%>" data-value="<%==filterCriteria.toValue || ''%>">
+					<div class="datetimepicker-component input-group date date-to" data-date="<%==filterCriteria.toDisplay || ''%>" data-date-format="<%==type == 'datetime' ? (filterOption.showSeconds ? datetimeWithSeconds : datetimeFormat) : dateFormat%>" data-value="<%==filterCriteria.toValue || ''%>">
 						<input class="form-control" type="text" name="toDate" value="<%==filterCriteria.toDisplay || ''%>" placeholder="<%=i18n.end%>" readonly />
 						<div class="input-group-addon"><i class="fa fa-calendar" /></div>
 					</div>
